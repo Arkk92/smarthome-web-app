@@ -18,6 +18,14 @@ create:
 	npm create vue@latest
 
 .ONESHELL:
+run-npm-cmd:
+	rm -rf node_modules/
+	. ${HOME}/.nvm/nvm.sh
+	nvm install $(NODE_VERSION)
+	nvm use $(NODE_VERSION)
+	npm $(cmd)
+
+.ONESHELL:
 install-package:
 	rm -rf node_modules/
 	. ${HOME}/.nvm/nvm.sh
