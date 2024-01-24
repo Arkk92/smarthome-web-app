@@ -9,3 +9,18 @@ services:
       - '3000:3000'
     volumes:
       - ./backend:/app
+  
+  frontend:
+    image: smart-home-project/frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - '8080:8080'
+    volumes:
+      - ./frontend:/app
+
+networks:
+  default:
+    external:
+      name: agroupadvisor
