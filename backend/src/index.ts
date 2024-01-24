@@ -2,7 +2,7 @@ import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { routes } from '@/routes';
-//import Database from '@/database';
+import Database from '@/database';
 import Swagger from '@/utils/swagger';
 import dotenv from "dotenv";
 
