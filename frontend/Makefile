@@ -1,6 +1,8 @@
 .DEFAULT_GOAL := dev
 MAIN_SERVICE_NAME := home-web-app
+MAIN_SERVICE_PORT := 8080
 NODE_VERSION := 20
+
 
 .ONESHELL:
 .PHONY:
@@ -57,3 +59,21 @@ deploy:
 	nvm use $(NODE_VERSION)
 	npm install --legacy-peer-deps
 	npm run build
+
+docker-dev-build:
+	docker build -t $(MAIN_SERVICE_NAME)-dev -f Dockerfile.dev . --pull
+
+docker-dev-run:
+	docker run --env-file='.env' -v $(shell pwd):/app -p $(MAIN_SERVICE_PORT):$(MAIN_SERVICE_PORT) $(MAIN_SERVICE_NAME)-dev
+
+.ONESHELL:
+docker-dev-stop:
+	docker stop $(shell docker ps --filter ancestor="$(MAIN_SERVICE_NAME)-dev" -q)
+	docker rm $(shell docker ps --filter ancestor="$(MAIN_SERVICE_NAME)-dev" -q)
+
+docker-run:	
+	docker build -t $(MAIN_SERVICE_NAME) . && docker run --env-file='.env' -p $(MAIN_SERVICE_PORT):$(MAIN_SERVICE_PORT) $(MAIN_SERVICE_NAME)
+
+docker-stop:
+	docker stop $(shell docker ps --filter ancestor="$(MAIN_SERVICE_NAME)" -q)
+	docker rm $(shell docker ps --filter ancestor="$(MAIN_SERVICE_NAME)" -q)
