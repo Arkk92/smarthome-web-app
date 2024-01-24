@@ -3,7 +3,7 @@ MAIN_SERVICE_NAME := smart-home-project
 NETWORK_NAME := smart-home-network
 
 build:
-	docker-compose build
+	docker-compose pull && docker-compose build
 
 run:
 	docker-compose run $(MAIN_SERVICE_NAME)
@@ -27,4 +27,4 @@ deploy:
 	$(MAKE) up-d
 
 dev:
-	docker-compose -f docker-compose.dev.yml up --build
+	docker-compose pull && docker-compose -f docker-compose.dev.yml up --build

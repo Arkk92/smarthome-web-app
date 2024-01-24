@@ -1,7 +1,11 @@
 .DEFAULT_GOAL := dev
 MAIN_SERVICE_NAME := home-backend
+MAIN_SERVICE_PORT := 3000
 NODE_VERSION := 20
 
+
+## LOCAL COMMANDS ##
+## Note: To be used for local development ##
 .ONESHELL:
 .PHONY:
 nvm-use:
@@ -64,21 +68,25 @@ deploy:
 	npm install --legacy-peer-deps
 	npm run build
 
+## Containerized Commands ##
+## The following commands require Docker to be installed ##
+## Containerized development commands
 .ONESHELL:
 docker-dev-build:
-	docker build -t $(MAIN_SERVICE_NAME)-dev -f Dockerfile.dev .
+	docker build -t $(MAIN_SERVICE_NAME)-dev -f Dockerfile.dev . --pull
 
 .ONESHELL:
 docker-dev-run:
-	docker run --env-file='.env' -v $(shell pwd):/app -p 3000:3000 $(MAIN_SERVICE_NAME)-dev
+	docker run --env-file='.env' -v $(shell pwd):/app -p $(MAIN_SERVICE_PORT):$(MAIN_SERVICE_PORT) $(MAIN_SERVICE_NAME)-dev
 
 .ONESHELL:
 docker-dev-stop:
 	docker stop $(shell docker ps --filter ancestor="$(MAIN_SERVICE_NAME)-dev" -q)
 	docker rm $(shell docker ps --filter ancestor="$(MAIN_SERVICE_NAME)-dev" -q)
 
+## Containerized deployment commands
 docker-run:	
-	docker build -t $(MAIN_SERVICE_NAME) . && docker run --env-file='.env' -p 3000:3000 $(MAIN_SERVICE_NAME)
+	docker build -t $(MAIN_SERVICE_NAME) . && docker run --env-file='.env' -p $(MAIN_SERVICE_PORT):$(MAIN_SERVICE_PORT) $(MAIN_SERVICE_NAME)
 
 docker-stop:
 	docker stop $(shell docker ps --filter ancestor="$(MAIN_SERVICE_NAME)" -q)
