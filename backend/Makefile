@@ -64,6 +64,19 @@ deploy:
 	npm install --legacy-peer-deps
 	npm run build
 
+.ONESHELL:
+docker-dev-build:
+	docker build -t $(MAIN_SERVICE_NAME)-dev -f Dockerfile.dev .
+
+.ONESHELL:
+docker-dev-run:
+	docker run --env-file='.env' -v $(shell pwd):/app -p 3000:3000 $(MAIN_SERVICE_NAME)-dev
+
+.ONESHELL:
+docker-dev-stop:
+	docker stop $(shell docker ps --filter ancestor="$(MAIN_SERVICE_NAME)-dev" -q)
+	docker rm $(shell docker ps --filter ancestor="$(MAIN_SERVICE_NAME)-dev" -q)
+
 docker-run:	
 	docker build -t $(MAIN_SERVICE_NAME) . && docker run --env-file='.env' -p 3000:3000 $(MAIN_SERVICE_NAME)
 
