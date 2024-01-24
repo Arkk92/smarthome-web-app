@@ -63,3 +63,10 @@ deploy:
 	nvm use $(NODE_VERSION)
 	npm install --legacy-peer-deps
 	npm run build
+
+docker-run:	
+	docker build -t $(MAIN_SERVICE_NAME) . && docker run --env-file='.env' -p 3000:3000 $(MAIN_SERVICE_NAME)
+
+docker-stop:
+	docker stop $(shell docker ps --filter ancestor="$(MAIN_SERVICE_NAME)" -q)
+	docker rm $(shell docker ps --filter ancestor="$(MAIN_SERVICE_NAME)" -q)
