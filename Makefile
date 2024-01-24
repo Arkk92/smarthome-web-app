@@ -1,11 +1,27 @@
 .DEFAULT_GOAL := up
 MAIN_SERVICE_NAME := smart-home-project
+NETWORK_NAME := smart-home-network
 
 build:
 	docker-compose build
 
+run:
+	docker-compose run $(MAIN_SERVICE_NAME)
+
 up:
 	docker-compose up
 
+up-d:
+	docker-compose up -d
+
+stop:
+	docker-compose stop
+
+down:
+	docker-compose down
+
 deploy:
-	echo "To be implemented"
+	$(MAKE) down
+	docker network create $(NETWORK_NAME) || true
+	$(MAKE) build
+	$(MAKE) up-d
