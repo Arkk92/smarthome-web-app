@@ -25,3 +25,6 @@ deploy:
 	docker network create $(NETWORK_NAME) || true
 	$(MAKE) build
 	$(MAKE) up-d
+
+dev:
+	docker-compose -f docker-compose.dev.yml up --build
