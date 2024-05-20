@@ -1,4 +1,3 @@
-import { ICreateMealUseCase } from "@/application/restaurant/useCases/Meal/CreateMeal";
 import { IController } from "../../../IController";
 import { IHttpErrors } from "@/presentation/helpers/IHttpErrors";
 import { HttpErrors } from "@/presentation/helpers/implementations/HttpErrors";
@@ -11,6 +10,7 @@ import { HttpResponse } from "@/presentation/helpers/implementations/HttpRespons
 import { MealTime } from "@/restaurant/domain/enums/meal/MealTime";
 import { Ingridient } from "@/restaurant/domain/entities/Ingridient";
 import { Seasons } from "@/restaurant/domain/enums/meal/Seasons";
+import { ICreateMealUseCase } from "@/restaurant/application/useCases/Meal/CreateMeal";
 
 /**
  * Controller for handling requests to create a meal.
