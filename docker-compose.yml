@@ -10,6 +10,8 @@ services:
       - '3000:3000'
     env_file:
       - ./app/backend/.env
+    environment:
+      MONGODB_URL: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo:${MONGO_PORT}/
     volumes:
       - ./app/backend:/app
   
