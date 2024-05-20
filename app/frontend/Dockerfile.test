@@ -1,0 +1,8 @@
+FROM node:latest
+EXPOSE 8080
+WORKDIR "/app"
+COPY ./ .
+COPY package*.json ./
+RUN npm install --include=dev
+
+ENTRYPOINT ["npm", "run", "test:unit"]

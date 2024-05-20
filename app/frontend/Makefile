@@ -52,6 +52,15 @@ dev:
 	npm run dev
 
 .ONESHELL:
+test:
+	. ${HOME}/.nvm/nvm.sh
+	nvm install $(NODE_VERSION)
+	nvm use $(NODE_VERSION)
+	echo $(fs.inotify.max_user_watches=524288) | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+	npm install --include=dev
+	npm run test:unit
+
+.ONESHELL:
 deploy:
 	rm -rf node_modules/
 	. ${HOME}/.nvm/nvm.sh
@@ -74,6 +83,13 @@ docker-dev-stop:
 docker-run:	
 	docker build -t $(MAIN_SERVICE_NAME) . && docker run --env-file='.env' -p $(MAIN_SERVICE_PORT):$(MAIN_SERVICE_PORT) $(MAIN_SERVICE_NAME)
 
+.ONESHELL:
 docker-stop:
 	docker stop $(shell docker ps --filter ancestor="$(MAIN_SERVICE_NAME)" -q)
 	docker rm $(shell docker ps --filter ancestor="$(MAIN_SERVICE_NAME)" -q)
+
+docker-test-build:
+	docker build -t $(MAIN_SERVICE_NAME)-test -f Dockerfile.test . --pull
+
+docker-test-run:
+	docker run --env-file='.env' -p $(MAIN_SERVICE_PORT):$(MAIN_SERVICE_PORT) $(MAIN_SERVICE_NAME)-test
