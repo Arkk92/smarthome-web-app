@@ -3,6 +3,7 @@ MAIN_SERVICE_NAME := smart-home-project
 NETWORK_NAME := smart-home-network
 
 build:
+	docker network create $(NETWORK_NAME) || true
 	docker-compose pull && docker-compose build
 
 run:
