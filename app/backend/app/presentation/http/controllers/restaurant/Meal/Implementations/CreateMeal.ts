@@ -7,10 +7,8 @@ import { IHttpRequest } from "@/presentation/helpers/IHttpRequest";
 import { IHttpResponse } from "@/presentation/helpers/IHttpResponse";
 import { ResponseDTO } from "@/restaurant/domain/dtos/Response";
 import { HttpResponse } from "@/presentation/helpers/implementations/HttpResponse";
-import { MealTime } from "@/restaurant/domain/enums/meal/MealTime";
-import { Ingridient } from "@/restaurant/domain/entities/Ingridient";
-import { Seasons } from "@/restaurant/domain/enums/meal/Seasons";
 import { ICreateMealUseCase } from "@/restaurant/application/useCases/Meal/CreateMeal";
+import { ICreateMealRequestDTO } from "@/restaurant/domain/dtos/Meal/CreateMeal";
 
 /**
  * Controller for handling requests to create a meal.
@@ -39,7 +37,6 @@ export class CreateMealController implements IController {
 
     if (httpRequest.body && Object.keys(httpRequest.body).length > 0) {
       const bodyParams = Object.keys(httpRequest.body);
-
       if (
         bodyParams.includes("name") &&
         bodyParams.includes("mealTime") &&
@@ -47,18 +44,11 @@ export class CreateMealController implements IController {
         bodyParams.includes("isVegetarian") &&
         bodyParams.includes("season") &&
         bodyParams.includes("babyAllowed") &&
-        bodyParams.includes("recipe")
+        bodyParams.includes("recipe") &&
+        bodyParams.includes("batchMealCount")
       ) {
         // Extract meal creation data from the request body
-        const createMealRequestDTO = httpRequest.body as {
-          name: String;
-          mealTime: MealTime;
-          ingridientList: Array<Ingridient>;
-          isVegetarian: Boolean;
-          season: Seasons;
-          babyAllowed: Boolean;
-          recipe: Array<String>;
-        };
+        const createMealRequestDTO = httpRequest.body as ICreateMealRequestDTO;
 
         // Execute the create meal use case
         response = await this.createMealCase.execute(createMealRequestDTO);

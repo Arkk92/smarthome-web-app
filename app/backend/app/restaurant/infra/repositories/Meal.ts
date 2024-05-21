@@ -93,26 +93,12 @@ export class MealRepository implements IMealsRepository {
    */
   async update(
     meal: IMealOutRequestDTO,
-    {
-      name,
-      mealTime,
-      ingridientList,
-      isVegetarian,
-      season,
-      babyAllowed,
-      recipe,
-    }: IUpdateMealRequestDTO
+    data: IUpdateMealRequestDTO
   ): Promise<IMealOutRequestDTO | unknown> {
     var objForUpdate: IUpdateMealRequestDTO = {};
-    objForUpdate.name = name ? name : meal.name;
-    objForUpdate.mealTime = mealTime ? mealTime : meal.mealTime;
-    objForUpdate.ingridientList = ingridientList
-      ? ingridientList
-      : meal.ingridientList;
-    objForUpdate.isVegetarian = isVegetarian ? isVegetarian : meal.isVegetarian;
-    objForUpdate.season = season ? season : meal.season;
-    objForUpdate.babyAllowed = babyAllowed ? babyAllowed : meal.babyAllowed;
-    objForUpdate.recipe = recipe ? recipe : meal.recipe;
+    Object.entries(data).forEach(([key, value]) => {
+      objForUpdate[key as keyof IUpdateMealRequestDTO] = value ? value : meal[key as keyof IMealOutRequestDTO];  
+    })
 
     const mealUpdated = await MealModel.findOneAndUpdate(
       { id: meal._id },

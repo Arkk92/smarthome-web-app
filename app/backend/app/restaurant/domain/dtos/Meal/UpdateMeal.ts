@@ -38,4 +38,8 @@ export interface IUpdateMealRequestDTO {
    * List of steps to make the meal.
    */
     recipe?: Array<String>;
+    /**
+   * Number of meal bacthes.
+   */
+    batchMealCount?: Number;
 }

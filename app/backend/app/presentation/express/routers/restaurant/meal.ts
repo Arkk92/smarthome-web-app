@@ -1,6 +1,7 @@
 import { createMealComposer } from "@/restaurant/infra/services/composers/meal/createMeal";
 import { expressAdapter } from "@/presentation/adapters/express";
 import { Request, Response, Router } from "express";
+import { getMealComposer } from "@/restaurant/infra/services/composers/meal/getMeal";
 
 /**
  * Router for handling meal-related routes.
@@ -24,7 +25,7 @@ const mealRoutes = Router();
  *       properties:
  *         _id:
  *           type: string
- *           description: The auto-generated id of the user
+ *           description: The auto-generated id of the meal
  *         name:
  *           type: string
  *           description: The meal's name
@@ -84,10 +85,13 @@ const mealRoutes = Router();
  *         recipe:
  *           type: array
  *           description: List of steps to make the meal
- *           items: 
+ *           items:
  *            type: string
  *            description: recipe steps
- *           
+ *         batchMealCount:
+ *           type: number
+ *           description: Number of meal bacthes
+ *
  */
 
 /**
@@ -116,5 +120,27 @@ mealRoutes.post("/", async (request: Request, response: Response) => {
   const adapter = await expressAdapter(request, createMealComposer());
   return response.status(adapter.statusCode).json(adapter.body);
 });
+
+/**
+ * @swagger
+ * /meal:
+ *   get:
+ *     summary: Retrieves all meals
+ *     tags: [Meals]
+ *     responses:
+ *       201:
+ *         description: The meal was successfully created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/MealGetSchema'
+ *       500:
+ *         description: Some server error
+ */
+mealRoutes.get("/", async (request: Request, response: Response) => {
+    const adapter = await expressAdapter(request, getMealComposer());
+    return response.status(adapter.statusCode).json(adapter.body);
+  }
+);
 
 export default mealRoutes;

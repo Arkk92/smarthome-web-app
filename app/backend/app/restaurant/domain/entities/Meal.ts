@@ -17,6 +17,7 @@ export interface MealInterface {
   season: Seasons;
   babyAllowed: Boolean;
   recipe: Array<String>;
+  batchMealCount: Number;
 }
 
 /**
@@ -24,7 +25,7 @@ export interface MealInterface {
  *
  * @class
  */
-export class Meal {
+export class Meal implements MealInterface{
   private _id?: String;
   private _name: String;
   private _isVegetarian: Boolean;
@@ -33,6 +34,8 @@ export class Meal {
   private _recipe: Array<String>;
   private _mealTime: MealTime;
   private _ingridientList: Array<Ingridient>;
+  private _batchMealCount: Number;
+  
 
   /**
    * Creates an instance of User.
@@ -41,6 +44,7 @@ export class Meal {
    * @param {UserInterface} props - The properties of the meal.
    */
   constructor(props: MealInterface) {
+    this._id = props.id
     this._name = props.name;
     this._mealTime = props.mealTime;
     this._ingridientList = props.ingridientList;
@@ -48,6 +52,7 @@ export class Meal {
     this._season = props.season;
     this._babyAllowed = props.babyAllowed;
     this._recipe = props.recipe;
+    this._batchMealCount = props.batchMealCount;
   }
 
   /**
@@ -65,6 +70,7 @@ export class Meal {
     season,
     babyAllowed,
     recipe,
+    batchMealCount
   }: ICreateMealRequestDTO) {
     return new Meal({
       name,
@@ -74,6 +80,7 @@ export class Meal {
       season,
       babyAllowed,
       recipe,
+      batchMealCount
     });
   }
 
@@ -132,5 +139,12 @@ export class Meal {
   }
   public set id(value: String | undefined) {
     this._id = value;
+  }
+
+  public get batchMealCount(): Number {
+    return this._batchMealCount;
+  }
+  public set batchMealCount(value: Number) {
+    this._batchMealCount = value;
   }
 }
