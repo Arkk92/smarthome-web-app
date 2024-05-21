@@ -31,4 +31,5 @@ dev:
 	docker-compose pull && docker-compose -f docker-compose.dev.yml up --build
 
 test:
+	docker network create $(NETWORK_NAME) || true
 	docker-compose pull && docker-compose -f docker-compose.test.yml up --build
