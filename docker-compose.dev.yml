@@ -44,6 +44,8 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASSWORD}
       ME_CONFIG_MONGODB_URL: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo:${MONGO_PORT}/
       ME_CONFIG_BASICAUTH: ${MONGO_BASIC_AUTH}
+    logging:
+      driver: none
 
 networks:
   default:

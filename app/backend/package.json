@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npx tsc",
     "start": "tsc && node ./dist/app/index.js",
-    "dev": "nodemon app/presentation/express/settings/server.ts",
+    "dev": "nodemon -L app/presentation/express/settings/server.ts",
     "test": "jest --passWithNoTests",
     "test-coverage": "jest --coverage",
     "pm2": "tsc && pm2-runtime start pm2.config.js"

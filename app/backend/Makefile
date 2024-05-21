@@ -77,7 +77,7 @@ docker-dev-build:
 
 .ONESHELL:
 docker-dev-run:
-	docker run --env-file='.env' -v $(shell pwd):/app -p $(MAIN_SERVICE_PORT):$(MAIN_SERVICE_PORT) $(MAIN_SERVICE_NAME)-dev
+	docker run --env-file='dev.env' -v $(shell pwd):/app -p $(MAIN_SERVICE_PORT):$(MAIN_SERVICE_PORT) $(MAIN_SERVICE_NAME)-dev
 
 .ONESHELL:
 docker-dev-stop:
