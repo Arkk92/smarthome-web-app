@@ -21,6 +21,12 @@ jobs:
 
     - name: Build Images
       run: docker-compose -f docker-compose.test.yml build
+
+    - name: Verify Vitest installation
+      run: docker-compose -f docker-compose.test.yml exec -T frontend npm list vitest
+
+    - name: Verify Jest installation
+      run: docker-compose -f docker-compose.test.yml exec -T frontend npm list jest
       
     - name: Run Tests
       run: docker-compose -f docker-compose.test.yml up
