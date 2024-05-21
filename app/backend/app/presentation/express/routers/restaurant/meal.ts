@@ -127,6 +127,12 @@ mealRoutes.post("/", async (request: Request, response: Response) => {
  *   get:
  *     summary: Retrieves all meals
  *     tags: [Meals]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: number
+ *         description: page number to be shown
  *     responses:
  *       201:
  *         description: The meal was successfully created
@@ -138,9 +144,8 @@ mealRoutes.post("/", async (request: Request, response: Response) => {
  *         description: Some server error
  */
 mealRoutes.get("/", async (request: Request, response: Response) => {
-    const adapter = await expressAdapter(request, getMealComposer());
-    return response.status(adapter.statusCode).json(adapter.body);
-  }
-);
+  const adapter = await expressAdapter(request, getMealComposer());
+  return response.status(adapter.statusCode).json(adapter.body);
+});
 
 export default mealRoutes;
