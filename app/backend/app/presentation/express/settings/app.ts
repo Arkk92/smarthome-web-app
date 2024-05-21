@@ -4,6 +4,8 @@ import express from "express";
 import mealRoutes from "../routers/restaurant/meal";
 import { setupSwagger } from "../docs/swagger";
 import dotenv from "dotenv";
+import { setupLogger } from "../docs/logger";
+
 
 dotenv.config();
 
@@ -22,10 +24,12 @@ const corsOptions: cors.CorsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+setupSwagger(app);
+setupLogger(app);
+
 /**
  * Mounting routes for documentation, user-related, and authentication endpoints.
  */
-setupSwagger(app);
 app.use("/meal", mealRoutes);
 
 export { app };

@@ -1,11 +1,18 @@
-import pino from "pino";
+import pino from 'pino';
+import { Express } from "express";
+import expressPinoLogger from 'express-pino-logger';
 
-export const logger = pino({
-    formatters: {
-      level: (label) => {
-        return {
-          level: label
-        }
-      }
-    }
-  })
+const logger = pino({
+  transport: {
+    target: 'pino-pretty',
+    options: {
+      colorize: true,
+    },
+  },
+});
+
+export const setupLogger = (app: Express ) => {
+  app.use(expressPinoLogger({ logger }));
+};
+
+export default logger;
