@@ -12,8 +12,6 @@ services:
       - ./app/backend/.env
     environment:
       MONGODB_URL: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo:${MONGO_PORT}/
-    volumes:
-      - ./app/backend:/app
   
   frontend:
     image: frontend
@@ -22,8 +20,6 @@ services:
       dockerfile: Dockerfile.test
     ports:
       - '8080:8080'
-    volumes:
-      - ./app/frontend:/app
 
   mongo:
     image: mongo
