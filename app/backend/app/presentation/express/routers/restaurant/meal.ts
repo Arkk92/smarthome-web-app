@@ -1,7 +1,7 @@
-import { createMealComposer } from "@/restaurant/infra/services/composers/meal/createMeal";
+import { createMealComposer } from "@/restaurant/infra/http/composers/meal/createMeal";
 import { expressAdapter } from "@/presentation/adapters/express";
 import { Request, Response, Router } from "express";
-import { getMealComposer } from "@/restaurant/infra/services/composers/meal/getMeal";
+import { getMealComposer } from "@/restaurant/infra/http/composers/meal/getMeal";
 
 /**
  * Router for handling meal-related routes.

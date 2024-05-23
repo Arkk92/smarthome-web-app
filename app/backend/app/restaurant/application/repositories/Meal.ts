@@ -20,7 +20,7 @@ export interface IMealsRepository {
   create(data: ICreateMealRequestDTO): Promise<IMealOutRequestDTO>;
 
   /**
-   * Finds a meal by their name address.
+   * Finds a meal by their name.
    *
    * @async
    * @param {string} name - The name address of the meal.
