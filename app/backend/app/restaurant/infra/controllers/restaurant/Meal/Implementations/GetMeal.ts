@@ -1,12 +1,12 @@
 import { IGetAllMealUseCase } from "@/restaurant/application/useCases/Meal/GetAllMeal"
 import { IController } from "../../../IController"
-import { HttpErrors } from "@/presentation/helpers/implementations/HttpErrors"
-import { HttpSuccess } from "@/presentation/helpers/implementations/HttpSuccess"
-import { IHttpErrors } from "@/presentation/helpers/IHttpErrors"
-import { IHttpSuccess } from "@/presentation/helpers/IHttpSuccess"
-import { IHttpResponse } from "@/presentation/helpers/IHttpResponse"
-import { HttpRequest } from "@/presentation/helpers/implementations/HttpRequest"
-import { HttpResponse } from "@/presentation/helpers/implementations/HttpResponse"
+import { HttpErrors } from "@/presentation/http/helpers/implementations/HttpErrors"
+import { HttpSuccess } from "@/presentation/http/helpers/implementations/HttpSuccess"
+import { IHttpErrors } from "@/presentation/http/helpers/IHttpErrors"
+import { IHttpSuccess } from "@/presentation/http/helpers/IHttpSuccess"
+import { IHttpResponse } from "@/presentation/http/helpers/IHttpResponse"
+import { HttpRequest } from "@/presentation/http/helpers/implementations/HttpRequest"
+import { HttpResponse } from "@/presentation/http/helpers/implementations/HttpResponse"
 
 
 /**

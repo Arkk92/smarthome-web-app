@@ -1,12 +1,12 @@
 import { IController } from "../../../IController";
-import { IHttpErrors } from "@/presentation/helpers/IHttpErrors";
-import { HttpErrors } from "@/presentation/helpers/implementations/HttpErrors";
-import { HttpSuccess } from "@/presentation/helpers/implementations/HttpSuccess";
-import { IHttpSuccess } from "@/presentation/helpers/IHttpSuccess";
-import { IHttpRequest } from "@/presentation/helpers/IHttpRequest";
-import { IHttpResponse } from "@/presentation/helpers/IHttpResponse";
+import { IHttpErrors } from "@/presentation/http/helpers/IHttpErrors";
+import { HttpErrors } from "@/presentation/http/helpers/implementations/HttpErrors";
+import { HttpSuccess } from "@/presentation/http/helpers/implementations/HttpSuccess";
+import { IHttpSuccess } from "@/presentation/http/helpers/IHttpSuccess";
+import { IHttpRequest } from "@/restaurant/infra/http/helpers/IHttpRequest";
+import { IHttpResponse } from "@/presentation/http/helpers/IHttpResponse";
 import { ResponseDTO } from "@/restaurant/domain/dtos/Response";
-import { HttpResponse } from "@/presentation/helpers/implementations/HttpResponse";
+import { HttpResponse } from "@/presentation/http/helpers/implementations/HttpResponse";
 import { ICreateMealUseCase } from "@/restaurant/application/useCases/Meal/CreateMeal";
 import { ICreateMealRequestDTO } from "@/restaurant/domain/dtos/Meal/CreateMeal";
 

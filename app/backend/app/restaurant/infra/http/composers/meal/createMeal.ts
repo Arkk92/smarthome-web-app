@@ -1,5 +1,5 @@
-import { IController } from "@/presentation/http/controllers/IController"
-import { CreateMealController } from "@/presentation/http/controllers/restaurant/Meal/Implementations/CreateMeal"
+import { IController } from "@/restaurant/infra/controllers/IController"
+import { CreateMealController } from "@/restaurant/infra/controllers/restaurant/Meal/Implementations/CreateMeal"
 import { IMealsRepository } from "@/restaurant/application/repositories/Meal"
 import { ICreateMealUseCase } from "@/restaurant/application/useCases/Meal/CreateMeal"
 import { CreateMealUseCase } from "@/restaurant/application/useCases/Meal/implementations/CreateMeal"
