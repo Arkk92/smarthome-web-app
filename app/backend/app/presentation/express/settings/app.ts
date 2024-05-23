@@ -5,6 +5,7 @@ import mealRoutes from "../routers/restaurant/meal";
 import { setupSwagger } from "../docs/swagger";
 import dotenv from "dotenv";
 import { setupLogger } from "../docs/logger";
+import ingridientRoutes from "../routers/restaurant/ingridient";
 
 
 dotenv.config();
@@ -31,5 +32,6 @@ setupLogger(app);
  * Mounting routes for documentation, user-related, and authentication endpoints.
  */
 app.use("/meal", mealRoutes);
+app.use("/ingridient", ingridientRoutes);
 
 export { app };

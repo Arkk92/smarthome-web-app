@@ -5,4 +5,8 @@ import { IngridientInterface } from "../../entities/Ingridient";
  *
  * @interface
  */
-export interface ICreateIngridientRequestDTO extends IngridientInterface {}
+export interface IUpdateIngridientRequestDTO extends Partial<IngridientInterface> {
+  name?: String;
+  quantity?: Number;
+  apiUri?: String;
+}
