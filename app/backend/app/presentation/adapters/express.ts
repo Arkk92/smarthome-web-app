@@ -1,8 +1,8 @@
 import { Request } from 'express'
-import { IController } from '../http/controllers/IController'
-import { IHttpResponse } from '../helpers/IHttpResponse'
-import { IHttpRequest } from '../helpers/IHttpRequest'
-import { HttpRequest } from '../helpers/implementations/HttpRequest'
+import { IController } from '../../restaurant/infra/controllers/IController'
+import { IHttpResponse } from '../http/helpers/IHttpResponse'
+import { IHttpRequest } from '../http/helpers/IHttpRequest'
+import { HttpRequest } from '../http/helpers/implementations/HttpRequest'
 
 
 /**
