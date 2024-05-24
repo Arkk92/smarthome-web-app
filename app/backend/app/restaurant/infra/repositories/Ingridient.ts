@@ -116,6 +116,6 @@ export class IngridientRepository implements IIngridientsRepository {
    * @returns {Promise<void>} A Promise that resolves once the ingridient is deleted.
    */
   async delete(id: string): Promise<void> {
-    await IngridientModel.findOneAndDelete({ id: id });
+    await IngridientModel.findOneAndDelete({ _id: id });
   }
 }

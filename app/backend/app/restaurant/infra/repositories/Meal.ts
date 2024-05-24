@@ -111,6 +111,6 @@ export class MealRepository implements IMealsRepository {
    * @returns {Promise<void>} A Promise that resolves once the meal is deleted.
    */
   async delete(id: string): Promise<void> {
-    await MealModel.findOneAndDelete({ id: id });
+    await MealModel.findOneAndDelete({ _id: id });
   }
 }

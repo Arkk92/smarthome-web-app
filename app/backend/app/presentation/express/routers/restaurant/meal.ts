@@ -3,6 +3,7 @@ import { expressAdapter } from "@/presentation/adapters/express";
 import { Request, Response, Router } from "express";
 import { updateMealComposer } from "@/restaurant/infra/http/composers/meal/updateMeal";
 import { getAllMealComposer } from "@/restaurant/infra/http/composers/meal/getAllMeal";
+import { deleteMealComposer } from "@/restaurant/infra/http/composers/meal/deleteMeal";
 
 /**
  * Router for handling meal-related routes.
@@ -193,7 +194,7 @@ mealRoutes.get("/", async (request: Request, response: Response) => {
 
 /**
  * @swagger
-  * /meal/{id}:
+ * /meal/{id}:
  *   patch:
  *     summary: Update meal
  *     tags: [Meals]
@@ -235,6 +236,29 @@ mealRoutes.patch("/:id", async (request: Request, response: Response) => {
   return response.status(adapter.statusCode).json(adapter.body);
 });
 
+/**
+ * @swagger
+ * /meal/{id}:
+ *   delete:
+ *     summary: Delete meal
+ *     tags: [Meals]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         description: Meal's id for delete,
+ *         required: true,
+ *         schema:
+ *           type: string
+ *     responses:
+ *       201:
+ *         description: The meal was successfully deleted
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/MealGetSchema'
+ *       500:
+ *         description: Some server error
+ */
 mealRoutes.delete("/:id", async (request: Request, response: Response) => {
   const adapter = await expressAdapter(request, deleteMealComposer());
   return response.status(adapter.statusCode).json(adapter.body);
