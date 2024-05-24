@@ -9,6 +9,7 @@ const logger = pino({
       colorize: true,
     },
   },
+  level: 'error'
 });
 
 export const setupLogger = (app: Express ) => {
