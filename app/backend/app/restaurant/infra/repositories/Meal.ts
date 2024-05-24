@@ -95,16 +95,11 @@ export class MealRepository implements IMealsRepository {
     meal: IMealOutRequestDTO,
     data: IUpdateMealRequestDTO
   ): Promise<IMealOutRequestDTO | unknown> {
-    var objForUpdate: IUpdateMealRequestDTO = {};
-    Object.entries(data).forEach(([key, value]) => {
-      objForUpdate[key as keyof IUpdateMealRequestDTO] = value ? value : meal[key as keyof IMealOutRequestDTO];  
-    })
-
     const mealUpdated = await MealModel.findOneAndUpdate(
-      { id: meal._id },
-      { $set: objForUpdate }
+      { _id:  meal.id },
+      { $set: data },
+      { new: true, runValidators: true }
     ).exec();
-
     return mealUpdated;
   }
 

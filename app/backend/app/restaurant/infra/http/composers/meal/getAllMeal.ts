@@ -4,7 +4,7 @@ import { IGetAllMealUseCase } from "@/restaurant/application/useCases/Meal/GetAl
 import { GetAllMealUseCase } from "@/restaurant/application/useCases/Meal/implementations/GetAllMeal"
 import { mongooseClient } from "@/restaurant/infra/database/connect"
 import { MealRepository } from "@/restaurant/infra/repositories/Meal"
-import { GetMealController } from "@/restaurant/infra/controllers/Meal/GetMeal"
+import { GetAllMealController } from "@/restaurant/infra/controllers/Meal/GetAllMeal"
 
 /**
  * Composer function for creating and configuring the components required for retrieving meal information.
@@ -12,9 +12,9 @@ import { GetMealController } from "@/restaurant/infra/controllers/Meal/GetMeal"
  * @function
  * @returns {IController} The configured meal retrieval controller.
  */
-export function getMealComposer(): IController {
+export function getAllMealComposer(): IController {
   const repository: IMealsRepository = new MealRepository(mongooseClient)
   const useCase: IGetAllMealUseCase = new GetAllMealUseCase(repository)
-  const controller: IController = new GetMealController(useCase)
+  const controller: IController = new GetAllMealController(useCase)
   return controller
 }

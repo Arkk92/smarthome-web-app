@@ -12,7 +12,7 @@ import { IController } from "../IController"
 /**
  * Controller for handling requests to get all meals.
  */
-export class GetMealController implements IController {
+export class GetAllMealController implements IController {
   /**
    * Creates an instance of GetMealController.
    * @param getAllMealUseCase The use case for getting all meals.

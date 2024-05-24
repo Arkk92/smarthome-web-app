@@ -1,15 +1,11 @@
-import { ICreateMealRequestDTO } from "./CreateMeal";
+import { MealInterface } from "../../entities/Meal";
 
 /**
  * Data Transfer Object (DTO) representing the output meal data.
  *
  * @interface
  */
-export interface IMealOutRequestDTO extends ICreateMealRequestDTO {
-  /**
-   * The id of the meal.
-   */
-  _id: String;
+export interface IMealOutRequestDTO extends MealInterface {
   /**
    * The optional creation date of the meal.
    */

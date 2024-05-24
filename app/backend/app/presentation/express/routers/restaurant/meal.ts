@@ -1,7 +1,8 @@
 import { createMealComposer } from "@/restaurant/infra/http/composers/meal/createMeal";
 import { expressAdapter } from "@/presentation/adapters/express";
 import { Request, Response, Router } from "express";
-import { getMealComposer } from "@/restaurant/infra/http/composers/meal/getMeal";
+import { updateMealComposer } from "@/restaurant/infra/http/composers/meal/updateMeal";
+import { getAllMealComposer } from "@/restaurant/infra/http/composers/meal/getAllMeal";
 
 /**
  * Router for handling meal-related routes.
@@ -33,8 +34,11 @@ const mealRoutes = Router();
  *           type: string
  *           description: The meal's time
  *         ingridientList:
- *           type: Array<Ingridient>
+ *           type: array
  *           description: The list of ingridients
+ *           items:
+ *              type: object
+ *              decription: Ingridients
  *         isVegetarian:
  *           type: boolean
  *           description: Whether is a vegetarian meal
@@ -45,8 +49,11 @@ const mealRoutes = Router();
  *           type: boolean
  *           description: Whether is allowed for babies
  *         recipe:
- *           type: Array<string>
+ *           type: array
  *           description: List of steps to make the meal
+ *           items:
+ *            type: string
+ *            description: recipe steps
  *
  *     MealPostSchema:
  *       type: object
@@ -58,6 +65,42 @@ const mealRoutes = Router();
  *         - season
  *         - babyAllowed
  *         - recipe
+ *       properties:
+ *         name:
+ *           type: string
+ *           description: The meal's name
+ *         mealTime:
+ *           type: string
+ *           enum: [Breakfast, Lunch, Dinner]
+ *           description: The meal's time
+ *         ingridientList:
+ *           type: array
+ *           description: The list of ingridients
+ *           items:
+ *              type: object
+ *              decription: Ingridients
+ *         isVegetarian:
+ *           type: boolean
+ *           description: Whether is a vegetarian meal
+ *         season:
+ *           type: string
+ *           enum: [Warm, Cold]
+ *           description: The season of meal
+ *         babyAllowed:
+ *           type: boolean
+ *           description: Whether is allowed for babies
+ *         recipe:
+ *           type: array
+ *           description: List of steps to make the meal
+ *           items:
+ *            type: string
+ *            description: recipe steps
+ *         batchMealCount:
+ *           type: number
+ *           description: Number of meal bacthes
+ *
+ *     MealPutSchema:
+ *       type: object
  *       properties:
  *         name:
  *           type: string
@@ -105,14 +148,14 @@ const mealRoutes = Router();
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/MealPostSchema'
+ *             $ref: '#/components/schemas/MealPutSchema'
  *     responses:
  *       201:
  *         description: The meal was successfully created
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/MealPostSchema'
+ *               $ref: '#/components/schemas/MealPutSchema'
  *       500:
  *         description: Some server error
  */
@@ -144,7 +187,56 @@ mealRoutes.post("/", async (request: Request, response: Response) => {
  *         description: Some server error
  */
 mealRoutes.get("/", async (request: Request, response: Response) => {
-  const adapter = await expressAdapter(request, getMealComposer());
+  const adapter = await expressAdapter(request, getAllMealComposer());
+  return response.status(adapter.statusCode).json(adapter.body);
+});
+
+/**
+ * @swagger
+  * /meal/{id}:
+ *   patch:
+ *     summary: Update meal
+ *     tags: [Meals]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         description: Meal's id for update,
+ *         required: true,
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: "#/components/schemas/MealPutSchema"
+ *     responses:
+ *       400:
+ *         description: Meal does not exits!,
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *               example:
+ *                 error: Meal does not exits!
+ *       200:
+ *         description: The meal was successfully updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/MealGetSchema"
+ *       500:
+ *         description: Some server error
+ */
+mealRoutes.patch("/:id", async (request: Request, response: Response) => {
+  const adapter = await expressAdapter(request, updateMealComposer());
+  return response.status(adapter.statusCode).json(adapter.body);
+});
+
+mealRoutes.delete("/:id", async (request: Request, response: Response) => {
+  const adapter = await expressAdapter(request, deleteMealComposer());
   return response.status(adapter.statusCode).json(adapter.body);
 });
 

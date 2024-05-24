@@ -1,4 +1,5 @@
 import { ICreateMealRequestDTO } from "../dtos/Meal/CreateMeal";
+import { IUpdateMealRequestDTO } from "../dtos/Meal/UpdateMeal";
 import { MealTime } from "../enums/meal/MealTime";
 import { Seasons } from "../enums/meal/Seasons";
 import { Ingridient } from "./Ingridient";
@@ -25,7 +26,7 @@ export interface MealInterface {
  *
  * @class
  */
-export class Meal implements MealInterface{
+export class Meal implements MealInterface {
   private _id?: String;
   private _name: String;
   private _isVegetarian: Boolean;
@@ -35,7 +36,6 @@ export class Meal implements MealInterface{
   private _mealTime: MealTime;
   private _ingridientList: Array<Ingridient>;
   private _batchMealCount: Number;
-  
 
   /**
    * Creates an instance of User.
@@ -44,7 +44,7 @@ export class Meal implements MealInterface{
    * @param {UserInterface} props - The properties of the meal.
    */
   constructor(props: MealInterface) {
-    this._id = props.id
+    this._id = props.id;
     this._name = props.name;
     this._mealTime = props.mealTime;
     this._ingridientList = props.ingridientList;
@@ -62,26 +62,17 @@ export class Meal implements MealInterface{
    * @param {ICreateUserRequestDTO} data - The data to create a meal.
    * @returns {User} The created meal instance.
    */
-  static create({
-    name,
-    mealTime,
-    ingridientList,
-    isVegetarian,
-    season,
-    babyAllowed,
-    recipe,
-    batchMealCount
-  }: ICreateMealRequestDTO) {
-    return new Meal({
-      name,
-      mealTime,
-      ingridientList,
-      isVegetarian,
-      season,
-      babyAllowed,
-      recipe,
-      batchMealCount
+  static create(data: ICreateMealRequestDTO): Meal {
+    return new Meal(data);
+  }
+
+  static update(meal: MealInterface, data: IUpdateMealRequestDTO) : MealInterface {
+    (Object.keys(data) as (keyof IUpdateMealRequestDTO)[]).forEach(key => {
+      if (data[key] !== undefined) {
+        (meal as any)[key] = data[key];
+      }
     });
+    return meal;
   }
 
   public set name(value: String) {

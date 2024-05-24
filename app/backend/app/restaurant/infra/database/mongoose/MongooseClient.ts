@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 class MongooseClient {
   connect() {
+    mongoose.set('debug', true);
     mongoose.connect(
       process.env.MONGODB_URL || "",
       {
