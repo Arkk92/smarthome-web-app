@@ -4,7 +4,8 @@ import { IGetAllIngridientUseCase } from "@/restaurant/application/useCases/Ingr
 import { GetAllIngridientUseCase } from "@/restaurant/application/useCases/Ingridient/implementations/GetAllIngridient";
 import { mongooseClient } from "@/restaurant/infra/database/connect";
 import { IngridientRepository } from "@/restaurant/infra/repositories/Ingridient";
-import { GetIngridientController } from "@/restaurant/infra/controllers/restaurant/Meal/Implementations/GetIngridient";
+import { GetIngridientController } from "@/restaurant/infra/controllers/Ingridient/GetIngridient";
+
 
 /**
  * Composer function for creating and configuring the components required for retrieving ingridient information.

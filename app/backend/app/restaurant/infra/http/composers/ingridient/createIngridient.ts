@@ -4,7 +4,8 @@ import { ICreateIngridientUseCase } from "@/restaurant/application/useCases/Ingr
 import { CreateIngridientUseCase } from "@/restaurant/application/useCases/Ingridient/implementations/CreateIngridient"
 import { mongooseClient } from "@/restaurant/infra/database/connect"
 import { IngridientRepository } from "@/restaurant/infra/repositories/Ingridient"
-import { CreateIngridientController } from "@/restaurant/infra/controllers/restaurant/Meal/Implementations/CreateIngridient"
+import { CreateIngridientController } from "@/restaurant/infra/controllers/Ingridient/CreateIngridient"
+
 
 /**
  * Composer function for creating and configuring the components required for ingridient creation.

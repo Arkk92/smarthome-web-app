@@ -1,14 +1,16 @@
-import { IController } from "../../../IController";
+
 import { IHttpErrors } from "@/presentation/http/helpers/IHttpErrors";
 import { HttpErrors } from "@/presentation/http/helpers/implementations/HttpErrors";
 import { HttpSuccess } from "@/presentation/http/helpers/implementations/HttpSuccess";
 import { IHttpSuccess } from "@/presentation/http/helpers/IHttpSuccess";
-import { IHttpRequest } from "@/restaurant/infra/http/helpers/IHttpRequest";
+
 import { IHttpResponse } from "@/presentation/http/helpers/IHttpResponse";
 import { ResponseDTO } from "@/restaurant/domain/dtos/Response";
 import { HttpResponse } from "@/presentation/http/helpers/implementations/HttpResponse";
 import { ICreateMealUseCase } from "@/restaurant/application/useCases/Meal/CreateMeal";
 import { ICreateMealRequestDTO } from "@/restaurant/domain/dtos/Meal/CreateMeal";
+import { IController } from "../IController";
+import { IHttpRequest } from "@/presentation/http/helpers/IHttpRequest";
 
 /**
  * Controller for handling requests to create a meal.

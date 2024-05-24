@@ -44,7 +44,8 @@ export class CreateIngridientUseCase implements ICreateIngridientUseCase {
       const ingridient = await this.ingridientRepository.create({
         name: ingridientEntity.name,
         quantity: ingridientEntity.quantity,
-        apiUri: ingridientEntity.apiUri
+        apiUri: ingridientEntity.apiUri,
+        unit: ingridientEntity.unit,
       });
 
       return { data: ingridient, success: true };

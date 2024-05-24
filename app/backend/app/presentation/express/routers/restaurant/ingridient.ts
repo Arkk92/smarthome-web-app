@@ -49,6 +49,9 @@ const ingridientRoutes = Router();
  *         apiUri:
  *           type: string
  *           description: API uri to shop where to buy the ingridient
+ *         unit:
+ *           type: string
+ *           description: The unit the ingridient uses (Kg, L, etc)
  *
  */
 

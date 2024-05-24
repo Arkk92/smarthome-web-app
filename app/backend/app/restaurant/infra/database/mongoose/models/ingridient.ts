@@ -13,7 +13,8 @@ interface IIngridient extends IngridientInterface, Document{
 const IngridientSchema = new Schema<IIngridient>({
   name: {type: String},
   quantity: {type: Number},
-  apiUri: {type: String}
+  apiUri: {type: String},
+  unit: {type: String},
 });
 
 const IngridientModel = model('IngridientSchema', IngridientSchema);

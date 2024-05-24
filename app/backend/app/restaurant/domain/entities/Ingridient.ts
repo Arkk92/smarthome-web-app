@@ -4,12 +4,21 @@ export interface IngridientInterface {
   name: String;
   quantity: Number;
   apiUri: String;
+  unit: String;
 }
 
-export class Ingridient {
+export class Ingridient implements IngridientInterface{
   private _name: String;
   private _quantity: Number;
   private _apiUri: String;
+  private _unit: String;
+  
+  public get unit(): String {
+    return this._unit;
+  }
+  public set unit(value: String) {
+    this._unit = value;
+  }
   
   public get name(): String {
     return this._name;
@@ -36,9 +45,10 @@ export class Ingridient {
     this._name = props.name;
     this._quantity = props.quantity;
     this._apiUri = props.apiUri;
+    this._unit = props.unit;
   }
 
-  static create({ name, quantity, apiUri }: ICreateIngridientRequestDTO) {
-    return new Ingridient({ name, quantity, apiUri });
+  static create({ name, quantity, apiUri, unit }: ICreateIngridientRequestDTO) {
+    return new Ingridient({ name, quantity, apiUri, unit });
   }
 }

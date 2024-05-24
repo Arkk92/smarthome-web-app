@@ -1,4 +1,3 @@
-import { IController } from "../../../IController";
 import { IHttpErrors } from "@/presentation/http/helpers/IHttpErrors";
 import { HttpErrors } from "@/presentation/http/helpers/implementations/HttpErrors";
 import { HttpSuccess } from "@/presentation/http/helpers/implementations/HttpSuccess";
@@ -9,6 +8,7 @@ import { HttpResponse } from "@/presentation/http/helpers/implementations/HttpRe
 import { ICreateIngridientUseCase } from "@/restaurant/application/useCases/Ingridient/CreateIngridient";
 import { ICreateIngridientRequestDTO } from "@/restaurant/domain/dtos/Ingridient/CreateIngridient";
 import { IHttpRequest } from "@/presentation/http/helpers/IHttpRequest";
+import { IController } from "../IController";
 
 /**
  * Controller for handling requests to create a ingridient.
@@ -40,13 +40,17 @@ export class CreateIngridientController implements IController {
       if (
         bodyParams.includes("name") &&
         bodyParams.includes("quantity") &&
-        bodyParams.includes("apiUri")
+        bodyParams.includes("apiUri") &&
+        bodyParams.includes("unit")
       ) {
         // Extract ingridient creation data from the request body
-        const createIngridientRequestDTO = httpRequest.body as ICreateIngridientRequestDTO;
+        const createIngridientRequestDTO =
+          httpRequest.body as ICreateIngridientRequestDTO;
 
         // Execute the create ingridient use case
-        response = await this.createIngridientCase.execute(createIngridientRequestDTO);
+        response = await this.createIngridientCase.execute(
+          createIngridientRequestDTO
+        );
       } else {
         // Invalid request body parameters, return a 422 Unprocessable Entity error
         error = this.httpErrors.error_422();

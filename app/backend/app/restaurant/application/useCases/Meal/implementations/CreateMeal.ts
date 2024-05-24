@@ -1,9 +1,10 @@
 import { ResponseDTO } from "@/restaurant/domain/dtos/Response";
 import { ICreateMealRequestDTO } from "@/restaurant/domain/dtos/Meal/CreateMeal";
-import { MealErrorType } from "@/restaurant/domain/enums/meal/ErrorType";
+
 import { Meal } from "@/restaurant/domain/entities/Meal";
 import { ICreateMealUseCase } from "../CreateMeal";
 import { IMealsRepository } from "@/restaurant/application/repositories/Meal";
+import { MealErrorType } from "@/restaurant/domain/enums/meal/ErrorType";
 
 /**
  * Use case for creating a new meal.
