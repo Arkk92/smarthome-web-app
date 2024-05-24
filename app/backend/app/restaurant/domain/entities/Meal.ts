@@ -66,15 +66,6 @@ export class Meal implements MealInterface {
     return new Meal(data);
   }
 
-  static update(meal: MealInterface, data: IUpdateMealRequestDTO) : MealInterface {
-    (Object.keys(data) as (keyof IUpdateMealRequestDTO)[]).forEach(key => {
-      if (data[key] !== undefined) {
-        (meal as any)[key] = data[key];
-      }
-    });
-    return meal;
-  }
-
   public set name(value: String) {
     this.name = value;
   }
