@@ -227,7 +227,6 @@ mealRoutes.get("/all", async (request: Request, response: Response) => {
  *         description: Some server error
  */
 mealRoutes.get("/id/:id", async (request: Request, response: Response) => {
-  console.log(request.path)
   const adapter = await expressAdapter(request, getMealByIdComposer());
   return response.status(adapter.statusCode).json(adapter.body);
 });
