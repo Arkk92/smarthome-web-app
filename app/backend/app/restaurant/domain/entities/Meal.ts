@@ -66,6 +66,21 @@ export class Meal implements MealInterface {
     return new Meal(data);
   }
 
+  static getEntityKeys(): Array<string> {
+    const instance:  MealInterface = {
+      id: "",
+      name: "",
+      mealTime: MealTime.Breakfast,
+      ingridientList: [],
+      isVegetarian: false,
+      season: Seasons.Cold,
+      babyAllowed: false,
+      recipe: ["", ""],
+      batchMealCount: 0
+    }
+    return Object.keys(instance).map(key => key.trim()) as Array<string>;
+  }
+
   public set name(value: String) {
     this.name = value;
   }

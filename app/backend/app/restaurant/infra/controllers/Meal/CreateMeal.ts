@@ -1,4 +1,3 @@
-
 import { IHttpErrors } from "@/presentation/http/helpers/IHttpErrors";
 import { HttpErrors } from "@/presentation/http/helpers/implementations/HttpErrors";
 import { HttpSuccess } from "@/presentation/http/helpers/implementations/HttpSuccess";
@@ -11,6 +10,7 @@ import { ICreateMealUseCase } from "@/restaurant/application/useCases/Meal/Creat
 import { ICreateMealRequestDTO } from "@/restaurant/domain/dtos/Meal/CreateMeal";
 import { IController } from "../IController";
 import { IHttpRequest } from "@/presentation/http/helpers/IHttpRequest";
+import { Meal } from "@/restaurant/domain/entities/Meal";
 
 /**
  * Controller for handling requests to create a meal.
@@ -39,16 +39,9 @@ export class CreateMealController implements IController {
 
     if (httpRequest.body && Object.keys(httpRequest.body).length > 0) {
       const bodyParams = Object.keys(httpRequest.body);
-      if (
-        bodyParams.includes("name") &&
-        bodyParams.includes("mealTime") &&
-        bodyParams.includes("ingridientList") &&
-        bodyParams.includes("isVegetarian") &&
-        bodyParams.includes("season") &&
-        bodyParams.includes("babyAllowed") &&
-        bodyParams.includes("recipe") &&
-        bodyParams.includes("batchMealCount")
-      ) {
+      const entityKeys = Meal.getEntityKeys().filter((key) => key !== "id");
+
+      if (entityKeys.every((item) => bodyParams.includes(item))) {
         // Extract meal creation data from the request body
         const createMealRequestDTO = httpRequest.body as ICreateMealRequestDTO;
 

@@ -10,6 +10,7 @@ import { IUpdateMealUseCase } from "@/restaurant/application/useCases/Meal/Updat
 import { IUpdateMealRequestDTO } from "@/restaurant/domain/dtos/Meal/UpdateMeal";
 import { IController } from "../IController";
 import { IHttpRequest } from "@/presentation/http/helpers/IHttpRequest";
+import { Meal } from "@/restaurant/domain/entities/Meal";
 
 /**
  * Controller for handling requests to update a meal.
@@ -43,18 +44,11 @@ export class UpdateMealController implements IController {
     ) {
       const pathStringParams = Object.keys(httpRequest.path);
       const bodyParams = Object.keys(httpRequest.body);
+      const entityKeys = Meal.getEntityKeys().filter((key) => key !== "id");
 
       if (
         pathStringParams.includes("id") &&
-        ( bodyParams.includes("name") ||
-          bodyParams.includes("mealTime") ||
-          bodyParams.includes("ingridientList") ||
-          bodyParams.includes("isVegetarian") ||
-          bodyParams.includes("season") ||
-          bodyParams.includes("babyAllowed") ||
-          bodyParams.includes("recipe") ||
-          bodyParams.includes("batchMealCount")
-        )
+        bodyParams.some((item) => entityKeys.includes(item))
       ) {
         const id = (httpRequest.path as { id: string }).id;
         const data = httpRequest.body as IUpdateMealRequestDTO;
