@@ -1,17 +1,17 @@
 import { IMealsRepository } from "@/restaurant/application/repositories/Meal";
 import { ResponseDTO } from "@/restaurant/domain/dtos/Response";
 import { MealErrorType } from "@/restaurant/domain/enums/meal/ErrorType";
-import { IGetAllMealUseCase } from "../GetAllMeal";
+import { IGetMealByNameUseCase } from "../GetMealByName";
 
 /**
- * Use case for retrieving all meals.
+ * Use case for retrieving a meal by name.
  *
  * @class
- * @implements {IGetAllMealUseCase}
+ * @implements {IGetMealByNameUseCase}
  */
-export class GetAllMealUseCase implements IGetAllMealUseCase {
+export class GetMealByNameUseCase implements IGetMealByNameUseCase {
   /**
-   * Creates an instance of GetAllMealUseCase.
+   * Creates an instance of GetMealByNameUseCase.
    *
    * @constructor
    * @param {IMealsRepository} mealRepository - The repository for meal data.
@@ -22,18 +22,17 @@ export class GetAllMealUseCase implements IGetAllMealUseCase {
    * Executes the get all meals use case.
    *
    * @async
-   * @param {number} page - The page number for pagination.
+   * @param {string} name - The meal name
    * @returns {Promise<ResponseDTO>} The response data containing meal information.
    */
-  async execute(page: number): Promise<ResponseDTO> {
+  async execute(name: string): Promise<ResponseDTO> {
     try {
-      const meals = await this.mealRepository.findAll(page);
-
-      if (meals.total === 0) {
+      const meal = await this.mealRepository.findByName(name);
+      if (!meal) {
         return { data: { error: MealErrorType.MealNotFound }, success: false };
       }
 
-      return { data: meals, success: true };
+      return { data: meal, success: true };
     } catch (error: any) {
       return { data: { error: error.message }, success: false };
     }

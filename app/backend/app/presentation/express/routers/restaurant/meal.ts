@@ -2,8 +2,8 @@ import { createMealComposer } from "@/restaurant/infra/http/composers/meal/creat
 import { expressAdapter } from "@/presentation/adapters/express";
 import { Request, Response, Router } from "express";
 import { updateMealComposer } from "@/restaurant/infra/http/composers/meal/updateMeal";
-import { getAllMealComposer } from "@/restaurant/infra/http/composers/meal/getAllMeal";
 import { deleteMealComposer } from "@/restaurant/infra/http/composers/meal/deleteMeal";
+import { getAllMealComposer, getMealByIdComposer, getMealByNameComposer } from "@/restaurant/infra/http/composers/meal/getMeal";
 
 /**
  * Router for handling meal-related routes.
@@ -167,7 +167,7 @@ mealRoutes.post("/", async (request: Request, response: Response) => {
 
 /**
  * @swagger
- * /meal:
+ * /meal/all:
  *   get:
  *     summary: Retrieves all meals
  *     tags: [Meals]
@@ -187,14 +187,93 @@ mealRoutes.post("/", async (request: Request, response: Response) => {
  *       500:
  *         description: Some server error
  */
-mealRoutes.get("/", async (request: Request, response: Response) => {
+mealRoutes.get("/all", async (request: Request, response: Response) => {
   const adapter = await expressAdapter(request, getAllMealComposer());
   return response.status(adapter.statusCode).json(adapter.body);
 });
 
 /**
  * @swagger
- * /meal/{id}:
+ * /meal/id/{id}:
+ *   get:
+ *     summary: Get meal by Id
+ *     tags: [Meals]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         description: Meal's id,
+ *         required: true,
+ *         schema:
+ *           type: string
+ *     responses:
+ *       400:
+ *         description: Meal does not exits!,
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *               example:
+ *                 error: Meal does not exits!
+ *       200:
+ *         description: The meal was found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/MealGetSchema"
+ *       500:
+ *         description: Some server error
+ */
+mealRoutes.get("/id/:id", async (request: Request, response: Response) => {
+  console.log(request.path)
+  const adapter = await expressAdapter(request, getMealByIdComposer());
+  return response.status(adapter.statusCode).json(adapter.body);
+});
+
+/**
+ * @swagger
+ * /meal/name/{name}:
+ *   get:
+ *     summary: Get meal by Name
+ *     tags: [Meals]
+ *     parameters:
+ *       - in: path
+ *         name: name
+ *         description: Meal's name,
+ *         required: true,
+ *         schema:
+ *           type: string
+ *     responses:
+ *       400:
+ *         description: Meal does not exits!,
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *               example:
+ *                 error: Meal does not exits!
+ *       200:
+ *         description: The meal was found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/MealGetSchema"
+ *       500:
+ *         description: Some server error
+ */
+mealRoutes.get("/name/:name", async (request: Request, response: Response) => {
+  const adapter = await expressAdapter(request, getMealByNameComposer());
+  return response.status(adapter.statusCode).json(adapter.body);
+});
+
+/**
+ * @swagger
+ * /meal/id/{id}:
  *   patch:
  *     summary: Update meal
  *     tags: [Meals]
@@ -231,14 +310,14 @@ mealRoutes.get("/", async (request: Request, response: Response) => {
  *       500:
  *         description: Some server error
  */
-mealRoutes.patch("/:id", async (request: Request, response: Response) => {
+mealRoutes.patch("/id/:id", async (request: Request, response: Response) => {
   const adapter = await expressAdapter(request, updateMealComposer());
   return response.status(adapter.statusCode).json(adapter.body);
 });
 
 /**
  * @swagger
- * /meal/{id}:
+ * /meal/id/{id}:
  *   delete:
  *     summary: Delete meal
  *     tags: [Meals]
@@ -259,7 +338,7 @@ mealRoutes.patch("/:id", async (request: Request, response: Response) => {
  *       500:
  *         description: Some server error
  */
-mealRoutes.delete("/:id", async (request: Request, response: Response) => {
+mealRoutes.delete("/id/:id", async (request: Request, response: Response) => {
   const adapter = await expressAdapter(request, deleteMealComposer());
   return response.status(adapter.statusCode).json(adapter.body);
 });
