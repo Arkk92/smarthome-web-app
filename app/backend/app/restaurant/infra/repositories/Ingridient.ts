@@ -95,16 +95,11 @@ export class IngridientRepository implements IIngridientsRepository {
     ingridient: IIngridientOutRequestDTO,
     data: IUpdateIngridientRequestDTO
   ): Promise<IIngridientOutRequestDTO | unknown> {
-    var objForUpdate: IUpdateIngridientRequestDTO = {};
-    Object.entries(data).forEach(([key, value]) => {
-      objForUpdate[key as keyof IUpdateIngridientRequestDTO] = value ? value : ingridient[key as keyof IIngridientOutRequestDTO];  
-    })
-
     const ingridientUpdated = await IngridientModel.findOneAndUpdate(
-      { id: ingridient._id },
-      { $set: objForUpdate }
+      { _id:  ingridient.id },
+      { $set: data },
+      { new: true, runValidators: true }
     ).exec();
-
     return ingridientUpdated;
   }
 

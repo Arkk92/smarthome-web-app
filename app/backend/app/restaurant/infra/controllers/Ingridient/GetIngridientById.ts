@@ -1,4 +1,3 @@
-import { IGetAllIngridientUseCase } from "@/restaurant/application/useCases/Ingridient/GetAllIngridient"
 import { HttpErrors } from "@/presentation/http/helpers/implementations/HttpErrors"
 import { HttpSuccess } from "@/presentation/http/helpers/implementations/HttpSuccess"
 import { IHttpErrors } from "@/presentation/http/helpers/IHttpErrors"
@@ -7,26 +6,28 @@ import { IHttpResponse } from "@/presentation/http/helpers/IHttpResponse"
 import { HttpRequest } from "@/presentation/http/helpers/implementations/HttpRequest"
 import { HttpResponse } from "@/presentation/http/helpers/implementations/HttpResponse"
 import { IController } from "../IController"
+import { IGetIngridientByIdUseCase } from "@/restaurant/application/useCases/Ingridient/GetMealById"
+
 
 
 /**
- * Controller for handling requests to get all ingridients.
+ * Controller for handling requests to get ingridients.
  */
-export class GetIngridientController implements IController {
+export class GetIngridientByIdController implements IController {
   /**
    * Creates an instance of GetIngridientController.
-   * @param getAllIngridientUseCase The use case for getting all ingridients.
+   * @param getIngridientUseCase The use case for getting ingridients.
    * @param httpErrors HTTP errors utility.
    * @param httpSuccess HTTP success utility.
    */
   constructor(
-    private getAllIngridientUseCase: IGetAllIngridientUseCase,
+    private getIngridientUseCase: IGetIngridientByIdUseCase,
     private httpErrors: IHttpErrors = new HttpErrors(),
     private httpSuccess: IHttpSuccess = new HttpSuccess(),
   ) {}
 
   /**
-   * Handles an HTTP request to get all ingridients.
+   * Handles an HTTP request to get ingridients.
    * @param httpRequest The HTTP request to handle.
    * @returns A promise that resolves to an HTTP response.
    */
@@ -34,28 +35,28 @@ export class GetIngridientController implements IController {
     let error
     let response
 
-    // Validate query parameters
-    if (httpRequest.query && Object.keys(httpRequest.query).length > 0) {
-      const queryStringParams = Object.keys(httpRequest.query)
+    // Validate path and body parameters
+    if ( httpRequest.path) {
+      const pathStringParams = Object.keys(httpRequest.path);
 
-      if (queryStringParams.includes('page')) {
-        const page = (httpRequest.query as { page: string }).page
-
-        // Execute the get all ingridients use case
-        response = await this.getAllIngridientUseCase.execute(Number(page))
-      } else {
+      if ( pathStringParams.includes("id") ){
+        const id = (httpRequest.path as { id: string }).id;
+        // Execute the get ingridients use case
+        response = await this.getIngridientUseCase.execute(id)
+      }
+      else {
         // Invalid parameters, return a 422 Unprocessable Entity error
         error = this.httpErrors.error_422()
         return new HttpResponse(error.statusCode, error.body)
       }
 
       if (!response.success) {
-        // Get all ingridients failed, return a 404 Not Found error
+        // Get ingridients failed, return a 404 Not Found error
         error = this.httpErrors.error_404()
         return new HttpResponse(error.statusCode, response.data)
       }
 
-      // Get all ingridients succeeded, return a 200 OK response
+      // Get ingridients succeeded, return a 200 OK response
       const success = this.httpSuccess.success_200(response.data)
       return new HttpResponse(success.statusCode, success.body)
     }

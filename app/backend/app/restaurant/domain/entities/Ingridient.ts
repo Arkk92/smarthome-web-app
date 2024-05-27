@@ -1,6 +1,7 @@
 import { ICreateIngridientRequestDTO } from "../dtos/Ingridient/CreateIngridient";
 
 export interface IngridientInterface {
+  id?: String;
   name: String;
   quantity: Number;
   apiUri: String;
@@ -8,11 +9,19 @@ export interface IngridientInterface {
 }
 
 export class Ingridient implements IngridientInterface{
+  private _id?: String | undefined;
   private _name: String;
   private _quantity: Number;
   private _apiUri: String;
   private _unit: String;
   
+  public get id(): String | undefined {
+    return this._id;
+  }
+  public set id(value: String | undefined) {
+    this._id = value;
+  }
+
   public get unit(): String {
     return this._unit;
   }
@@ -42,13 +51,24 @@ export class Ingridient implements IngridientInterface{
   }
 
   constructor(props: IngridientInterface) {
+    this._id = props.id;
     this._name = props.name;
     this._quantity = props.quantity;
     this._apiUri = props.apiUri;
     this._unit = props.unit;
   }
 
-  static create({ name, quantity, apiUri, unit }: ICreateIngridientRequestDTO) {
-    return new Ingridient({ name, quantity, apiUri, unit });
+  static create(data: ICreateIngridientRequestDTO) {
+    return new Ingridient(data);
+  }
+
+  static getEntityKeys(): Array<string> {
+    const instance:  IngridientInterface = {
+      name: "",
+      quantity: 1,
+      apiUri: "",
+      unit: ""
+    }
+    return Object.keys(instance).map(key => key.trim()) as Array<string>;
   }
 }

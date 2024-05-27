@@ -5,70 +5,72 @@ import { IHttpSuccess } from "@/presentation/http/helpers/IHttpSuccess";
 import { IHttpResponse } from "@/presentation/http/helpers/IHttpResponse";
 import { ResponseDTO } from "@/restaurant/domain/dtos/Response";
 import { HttpResponse } from "@/presentation/http/helpers/implementations/HttpResponse";
-import { ICreateIngridientUseCase } from "@/restaurant/application/useCases/Ingridient/CreateIngridient";
-import { ICreateIngridientRequestDTO } from "@/restaurant/domain/dtos/Ingridient/CreateIngridient";
-import { IHttpRequest } from "@/presentation/http/helpers/IHttpRequest";
+import { IUpdateIngridientUseCase } from "@/restaurant/application/useCases/Ingridient/UpdateIngridient";
+import { IUpdateIngridientRequestDTO } from "@/restaurant/domain/dtos/Ingridient/UpdateIngridient";
 import { IController } from "../IController";
+import { IHttpRequest } from "@/presentation/http/helpers/IHttpRequest";
 import { Ingridient } from "@/restaurant/domain/entities/Ingridient";
 
 /**
- * Controller for handling requests to create a ingridient.
+ * Controller for handling requests to update a ingridient.
  */
-export class CreateIngridientController implements IController {
+export class UpdateIngridientController implements IController {
   /**
-   * Creates an instance of CreateIngridientController.
-   * @param createIngridientCase The use case for creating a ingridient.
+   * Updates an instance of UpdateIngridientController.
+   * @param updateIngridientUseCase The use case for creating a ingridient.
    * @param httpErrors HTTP errors utility.
    * @param httpSuccess HTTP success utility.
    */
   constructor(
-    private createIngridientCase: ICreateIngridientUseCase,
+    private updateIngridientUseCase: IUpdateIngridientUseCase,
     private httpErrors: IHttpErrors = new HttpErrors(),
     private httpSuccess: IHttpSuccess = new HttpSuccess()
   ) {}
 
   /**
-   * Handles an HTTP request to create a ingridient.
+   * Handles an HTTP request to update a ingridient.
    * @param httpRequest The HTTP request to handle.
    * @returns A promise that resolves to an HTTP response.
    */
   async handle(httpRequest: IHttpRequest): Promise<IHttpResponse> {
     let error;
     let response: ResponseDTO;
-
-    if (httpRequest.body && Object.keys(httpRequest.body).length > 0) {
+    // Validate path and body parameters
+    if (
+      httpRequest.path &&
+      httpRequest.body &&
+      Object.keys(httpRequest.body).length > 0
+    ) {
+      const pathStringParams = Object.keys(httpRequest.path);
       const bodyParams = Object.keys(httpRequest.body);
-      const entityKeys = Ingridient.getEntityKeys().filter(
-        (key) => key !== "id"
-      );
+      const entityKeys = Ingridient.getEntityKeys().filter((key) => key !== "id");
 
-      if (entityKeys.every((item) => bodyParams.includes(item))) {
-        // Extract ingridient creation data from the request body
-        const createIngridientRequestDTO =
-          httpRequest.body as ICreateIngridientRequestDTO;
-
-        // Execute the create ingridient use case
-        response = await this.createIngridientCase.execute(
-          createIngridientRequestDTO
-        );
+      if (
+        pathStringParams.includes("id") &&
+        bodyParams.some((item) => entityKeys.includes(item))
+      ) {
+        const id = (httpRequest.path as { id: string }).id;
+        const data = httpRequest.body as IUpdateIngridientRequestDTO;
+        // Execute the update ingridient use case
+        response = await this.updateIngridientUseCase.execute(id, data);
       } else {
-        // Invalid request body parameters, return a 422 Unprocessable Entity error
+        // Invalid parameters, return a 422 Unprocessable Entity error
         error = this.httpErrors.error_422();
         return new HttpResponse(error.statusCode, error.body);
       }
 
       if (!response.success) {
-        // Create ingridient failed, return a 400 Bad Request error
+        // Update ingridient failed, return a 400 Bad Request error
         error = this.httpErrors.error_400();
         return new HttpResponse(error.statusCode, response.data);
       }
 
-      // Create ingridient succeeded, return a 201 Created response
-      const success = this.httpSuccess.success_201(response.data);
+      // Update ingridient succeeded, return a 200 OK response
+      const success = this.httpSuccess.success_200(response.data);
       return new HttpResponse(success.statusCode, success.body);
     }
 
-    // Invalid request body, return a 500 Internal Server Error
+    // Invalid request, return a 500 Internal Server Error
     error = this.httpErrors.error_500();
     return new HttpResponse(error.statusCode, error.body);
   }
