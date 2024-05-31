@@ -6,6 +6,7 @@ import { setupSwagger } from "../docs/swagger";
 import dotenv from "dotenv";
 import { setupLogger } from "../docs/logger";
 import ingridientRoutes from "../routers/restaurant/ingridient";
+import weekScheduleRoutes from "../routers/restaurant/weekSchedule";
 
 
 dotenv.config();
@@ -33,5 +34,6 @@ setupLogger(app);
  */
 app.use("/meal", mealRoutes);
 app.use("/ingridient", ingridientRoutes);
+app.use("/weekSchedule", weekScheduleRoutes);
 
 export { app };
