@@ -1,7 +1,7 @@
 import { IMealsRepository } from "@/restaurant/application/repositories/Meal";
 import { ResponseDTO } from "@/restaurant/domain/dtos/Response";
-import { MealErrorType } from "@/restaurant/domain/enums/meal/ErrorType";
 import { IGetAllMealUseCase } from "../GetAllMeal";
+import { MealErrorType } from "@/restaurant/domain/enums/weekSchedule/ErrorType";
 
 /**
  * Use case for retrieving all meals.
@@ -29,7 +29,7 @@ export class GetAllMealUseCase implements IGetAllMealUseCase {
     try {
       const meals = await this.mealRepository.findAll(page);
 
-      if (meals.total === 0) {
+      if (!meals.total || meals.total === 0) {
         return { data: { error: MealErrorType.MealNotFound }, success: false };
       }
 
