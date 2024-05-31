@@ -30,12 +30,12 @@ mealRoutes.get("/name/:name", async (request: Request, response: Response) => {
   return response.status(adapter.statusCode).json(adapter.body);
 });
 
-mealRoutes.patch("/id/:id", async (request: Request, response: Response) => {
+mealRoutes.patch("/update/id/:id", async (request: Request, response: Response) => {
   const adapter = await expressAdapter(request, updateMealComposer());
   return response.status(adapter.statusCode).json(adapter.body);
 });
 
-mealRoutes.delete("/id/:id", async (request: Request, response: Response) => {
+mealRoutes.delete("/delete/id/:id", async (request: Request, response: Response) => {
   const adapter = await expressAdapter(request, deleteMealComposer());
   return response.status(adapter.statusCode).json(adapter.body);
 });

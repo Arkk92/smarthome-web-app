@@ -11,7 +11,7 @@ import { Request, Response, Router } from "express";
 const weekScheduleRoutes = Router();
 
 
-weekScheduleRoutes.post("/", async (request: Request, response: Response) => {
+weekScheduleRoutes.post("/season/:season/babyAllowed/:babyAllowed", async (request: Request, response: Response) => {
   const adapter = await expressAdapter(request, createWeekScheduleComposer());
   return response.status(adapter.statusCode).json(adapter.body);
 });
@@ -31,12 +31,12 @@ weekScheduleRoutes.get("/date/:date", async (request: Request, response: Respons
   return response.status(adapter.statusCode).json(adapter.body);
 });
 
-weekScheduleRoutes.patch("/id/:id", async (request: Request, response: Response) => {
+weekScheduleRoutes.patch("/update/id/:id", async (request: Request, response: Response) => {
   const adapter = await expressAdapter(request, updateWeekScheduleComposer());
   return response.status(adapter.statusCode).json(adapter.body);
 });
 
-weekScheduleRoutes.delete("/id/:id", async (request: Request, response: Response) => {
+weekScheduleRoutes.delete("/delete/id/:id", async (request: Request, response: Response) => {
   const adapter = await expressAdapter(request, deleteWeekScheduleComposer());
   return response.status(adapter.statusCode).json(adapter.body);
 });

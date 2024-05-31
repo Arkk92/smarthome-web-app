@@ -27,11 +27,11 @@ ingridientRoutes.get("/name/:name", async (request: Request, response: Response)
   const adapter = await expressAdapter(request, getIngridientByNameComposer());
   return response.status(adapter.statusCode).json(adapter.body);
 });
-ingridientRoutes.patch("/id/:id", async (request: Request, response: Response) => {
+ingridientRoutes.patch("/update/id/:id", async (request: Request, response: Response) => {
   const adapter = await expressAdapter(request, updateIngridientComposer());
   return response.status(adapter.statusCode).json(adapter.body);
 });
-ingridientRoutes.delete("/id/:id", async (request: Request, response: Response) => {
+ingridientRoutes.delete("/delete/id/:id", async (request: Request, response: Response) => {
   const adapter = await expressAdapter(request, deleteIngridientComposer());
   return response.status(adapter.statusCode).json(adapter.body);
 });
