@@ -5,7 +5,7 @@ import { WeekErrorType } from "../enums/week/ErrorType";
  *
  * @interface
  */
-type WeekProps = {
+export interface WeekInterface {
   start: Date;
   end: Date;
 };
@@ -15,7 +15,7 @@ type WeekProps = {
  *
  * @class
  */
-export class Week {
+export class Week implements WeekInterface{
   private _start: Date;
   private _end: Date;
 
@@ -43,10 +43,10 @@ export class Week {
    * Creates an instance of the week class.
    *
    * @constructor
-   * @param {WeekProps} props - The properties for creating a week instance.
+   * @param {WeekInterface} props - The properties for creating a week instance.
    * @throws {Error} Throws an error if the week period is invalid.
    */
-  constructor(props: WeekProps) {
+  constructor(props: WeekInterface) {
     if (!isOneWeekApart(props.start, props.end)) {
       throw new Error(WeekErrorType.InvalidWeek);
     }
@@ -73,5 +73,3 @@ function isOneWeekApart(date1: Date, date2: Date): boolean {
 
   return diffInDays === daysInWeek;
 }
-
-export default Week;

@@ -1,6 +1,6 @@
 import { WeekScheduleInterface } from "@/restaurant/domain/entities/WeekSchedule";
-import Day from "@/restaurant/domain/valueObj/Day";
-import Week from "@/restaurant/domain/valueObj/Week";
+import { DayInterface } from "@/restaurant/domain/valueObj/Day";
+import { WeekInterface } from "@/restaurant/domain/valueObj/Week";
 import { Schema, model, Document } from "mongoose";
 
 /**
@@ -12,9 +12,14 @@ interface IWeekSchedule extends WeekScheduleInterface, Document {
   id: String;
 }
 
+const WeekSchema = new Schema<WeekInterface>({
+  start: { type: Date },
+  end: { type: Date }
+});
+
 const WeekScheduleSchema = new Schema<IWeekSchedule>({
-  period: { type: Week },
-  weekDays: { type: Array<Day>() },
+  period: { type: WeekSchema },
+  weekDays: { type: Array<DayInterface>() },
 });
 
 const WeekScheduleModel = model("WeekScheduleSchema", WeekScheduleSchema);
