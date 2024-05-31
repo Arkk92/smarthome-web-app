@@ -1,23 +1,23 @@
-/meal/delete/id/{id}:
-  delete:
-    summary: Delete meal
+/meal:
+  post:
+    summary: Create a new meal
     tags: [Meals]
-    parameters:
-      - in: path
-        name: id
-        description: Meal's id for delete,
-        required: true,
-        schema:
-          type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/MealPost"
     responses:
       201:
-        description: The meal was successfully deleted
+        description: The meal was successfully created
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/MealGet"
+              $ref: "#/components/schemas/MealPost"
       500:
         description: Some server error
+
 /meal/all:
   get:
     summary: Retrieves all meals
@@ -99,25 +99,7 @@
               $ref: "#/components/schemas/MealGet"
       500:
         description: Some server error
-/meal:
-  post:
-    summary: Create a new meal
-    tags: [Meals]
-    requestBody:
-      required: true
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/MealPost"
-    responses:
-      201:
-        description: The meal was successfully created
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/MealPost"
-      500:
-        description: Some server error
+
 /meal/update/id/{id}:
   patch:
     summary: Update meal
@@ -148,6 +130,26 @@
                 error: Meal does not exits!
       200:
         description: The meal was successfully updated
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MealGet"
+      500:
+        description: Some server error
+/meal/delete/id/{id}:
+  delete:
+    summary: Delete meal
+    tags: [Meals]
+    parameters:
+      - in: path
+        name: id
+        description: Meal's id for delete,
+        required: true,
+        schema:
+          type: string
+    responses:
+      201:
+        description: The meal was successfully deleted
         content:
           application/json:
             schema:
