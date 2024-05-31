@@ -1,0 +1,173 @@
+openapi: '3.0.2'
+info:
+  title: API Smart Home Web App
+  version: '1.0'
+servers:
+  - url: https://localhost:3000/v1
+paths: {}
+components:
+  schemas:
+    MealGet:
+      type: object
+      required:
+        - name
+        - mealTime
+        - ingridientList
+        - isVegetarian
+        - season
+        - babyAllowed
+        - recipe
+      properties:
+        _id:
+          type: string
+          description: The auto-generated id of the meal
+        name:
+          type: string
+          description: The meal's name
+        mealTime:
+          type: string
+          description: The meal's time
+        ingridientList:
+          type: array
+          description: The list of ingridients
+          items:
+            type: object
+            decription: Ingridients
+        isVegetarian:
+          type: boolean
+          description: Whether is a vegetarian meal
+        season:
+          type: string
+          description: The season of meal
+        babyAllowed:
+          type: boolean
+          description: Whether is allowed for babies
+        recipe:
+          type: array
+          description: List of steps to make the meal
+          items:
+            type: string
+            description: recipe steps
+    MealPatch:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The meal's name
+        mealTime:
+          type: string
+          enum:
+            - Breakfast
+            - Lunch
+            - Dinner
+          description: The meal's time
+        ingridientList:
+          type: array
+          description: The list of ingridients
+          items:
+            type: object
+            decription: Ingridients
+        isVegetarian:
+          type: boolean
+          description: Whether is a vegetarian meal
+        season:
+          type: string
+          enum:
+            - Any
+            - Warm
+            - Cold
+          description: The season of meal
+        babyAllowed:
+          type: boolean
+          description: Whether is allowed for babies
+        recipe:
+          type: array
+          description: List of steps to make the meal
+          items:
+            type: string
+            description: recipe steps
+        batchMealCount:
+          type: number
+          description: Number of meal bacthes
+
+    MealPost:
+      type: object
+      required:
+        - name
+        - mealTime
+        - ingridientList
+        - isVegetarian
+        - season
+        - babyAllowed
+        - recipe
+      properties:
+        name:
+          type: string
+          description: The meal's name
+        mealTime:
+          type: string
+          enum:
+            - Breakfast
+            - Lunch
+            - Dinner
+          description: The meal's time
+        ingridientList:
+          type: array
+          description: The list of ingridients
+          items:
+            type: object
+            decription: Ingridients
+        isVegetarian:
+          type: boolean
+          description: Whether is a vegetarian meal
+        season:
+          type: string
+          enum:
+            - Any
+            - Warm
+            - Cold
+          description: The season of meal
+        babyAllowed:
+          type: boolean
+          description: Whether is allowed for babies
+        recipe:
+          type: array
+          description: List of steps to make the meal
+          items:
+            type: string
+            description: recipe steps
+        batchMealCount:
+          type: number
+          description: Number of meal bacthes
+
+    Day:
+      type: object
+      properties:
+        name:
+          type: string
+          enum:
+            - Monday
+            - Tuesday
+            - Wednesday
+            - Thursday
+            - Friday
+            - Saturday
+            - Sunday
+          description: name of the day
+        breakfast:
+          $ref: "#/components/schemas/MealGet"
+        lunch:
+          $ref: "#/components/schemas/MealGet"
+        dinner:
+          $ref: "#/components/schemas/MealGet"    
+
+    Period:
+      type: object
+      description: The week period
+      properties:
+        start:
+          type: string
+          format: date
+        end:
+          type: string
+          format: date

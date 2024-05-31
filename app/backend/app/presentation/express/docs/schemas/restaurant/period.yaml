@@ -1,0 +1,10 @@
+Period:
+  type: object
+  description: The week period
+  properties:
+    start:
+      type: string
+      format: date
+    end:
+      type: string
+      format: date

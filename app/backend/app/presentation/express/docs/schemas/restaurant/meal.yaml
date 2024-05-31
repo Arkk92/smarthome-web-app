@@ -1,0 +1,132 @@
+MealGet:
+  type: object
+  required:
+    - name
+    - mealTime
+    - ingridientList
+    - isVegetarian
+    - season
+    - babyAllowed
+    - recipe
+  properties:
+    _id:
+      type: string
+      description: The auto-generated id of the meal
+    name:
+      type: string
+      description: The meal's name
+    mealTime:
+      type: string
+      description: The meal's time
+    ingridientList:
+      type: array
+      description: The list of ingridients
+      items:
+        
+        $ref: "#/components/schemas/IngridientGetSchema"
+    isVegetarian:
+      type: boolean
+      description: Whether is a vegetarian meal
+    season:
+      type: string
+      description: The season of meal
+    babyAllowed:
+      type: boolean
+      description: Whether is allowed for babies
+    recipe:
+      type: array
+      description: List of steps to make the meal
+      items:
+        type: string
+        description: recipe steps
+MealPatch:
+  type: object
+  properties:
+  name:
+    type: string
+    description: The meal's name
+  mealTime:
+    type: string
+    enum:
+      - Breakfast
+      - Lunch
+      - Dinner
+    description: The meal's time
+  ingridientList:
+    type: array
+    description: The list of ingridients
+    items:
+      type: object
+      decription: Ingridients
+      $ref: "#/components/schemas/IngridientGetSchema"
+  isVegetarian:
+    type: boolean
+    description: Whether is a vegetarian meal
+  season:
+    type: string
+    enum:
+      - Any
+      - Warm
+      - Cold
+    description: The season of meal
+  babyAllowed:
+    type: boolean
+    description: Whether is allowed for babies
+  recipe:
+    type: array
+    description: List of steps to make the meal
+    items:
+      type: string
+      description: recipe steps
+  batchMealCount:
+    type: number
+    description: Number of meal bacthes
+
+MealPost:
+  type: object
+  required:
+    - name
+    - mealTime
+    - ingridientList
+    - isVegetarian
+    - season
+    - babyAllowed
+    - recipe
+  properties:
+    name:
+      type: string
+      description: The meal's name
+    mealTime:
+      type: string
+      enum:
+        - Breakfast
+        - Lunch
+        - Dinner
+      description: The meal's time
+    ingridientList:
+      type: array
+      description: The list of ingridients
+      items:
+        $ref: "#/components/schemas/IngridientPostSchema"
+    isVegetarian:
+      type: boolean
+      description: Whether is a vegetarian meal
+    season:
+      type: string
+      enum:
+        - Any
+        - Warm
+        - Cold
+      description: The season of meal
+    babyAllowed:
+      type: boolean
+      description: Whether is allowed for babies
+    recipe:
+      type: array
+      description: List of steps to make the meal
+      items:
+        type: string
+        description: recipe steps
+    batchMealCount:
+      type: number
+      description: Number of meal bacthes

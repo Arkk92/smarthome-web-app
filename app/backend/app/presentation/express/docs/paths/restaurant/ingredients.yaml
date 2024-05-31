@@ -1,0 +1,170 @@
+/ingridient:
+  post:
+    summary: Create a new ingridient
+    tags: [Ingridients]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/IngridientPostSchema'
+    responses:
+      201:
+        description: The ingridient was successfully created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngridientGetSchema'
+      500:
+        description: Some server error
+
+/ingridient/all:
+  get:
+    summary: Retrieves all ingridients
+    tags: [Ingridients]
+    parameters:
+      - in: query
+        name: page
+        schema:
+          type: number
+        description: page number to be shown
+    responses:
+      201:
+        description: The ingridient was successfully created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngridientGetSchema'
+      500:
+        description: Some server error
+
+
+
+
+/ingridient/id/{id}:
+  get:
+    summary: Get ingridient by Id
+    tags: [Ingridients]
+    parameters:
+      - in: path
+        name: id
+        description: Ingridient's id,
+        required: true,
+        schema:
+          type: string
+    responses:
+      400:
+        description: Ingridient does not exits!,
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string
+              example:
+                error: Ingridient does not exits!
+      200:
+        description: The ingridient was found
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IngridientGetSchema"
+      500:
+        description: Some server error
+
+
+
+
+/ingridient/name/{name}:
+  get:
+    summary: Get ingridient by Name
+    tags: [Ingridients]
+    parameters:
+      - in: path
+        name: name
+        description: Ingridient's name,
+        required: true,
+        schema:
+          type: string
+    responses:
+      400:
+        description: Ingridient does not exits!,
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string
+              example:
+                error: Ingridient does not exits!
+      200:
+        description: The ingridient was found
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IngridientGetSchema"
+      500:
+        description: Some server error
+
+/ingridient/update/id/{id}:
+  patch:
+    summary: Update ingridient
+    tags: [Ingridients]
+    parameters:
+      - in: path
+        name: id
+        description: Ingridient's id for update,
+        required: true,
+        schema:
+          type: string
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/IngridientPutSchema"
+    responses:
+      400:
+        description: Ingridient does not exits!,
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string
+              example:
+                error: Ingridient does not exits!
+      200:
+        description: The ingridient was successfully updated
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IngridientGetSchema"
+      500:
+        description: Some server error
+
+
+
+
+/ingridient/delete/id/{id}:
+  delete:
+    summary: Delete ingridient
+    tags: [Ingridients]
+    parameters:
+      - in: path
+        name: id
+        description: Ingridient's id for delete,
+        required: true,
+        schema:
+          type: string
+    responses:
+      201:
+        description: The ingridient was successfully deleted
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngridientGetSchema'
+      500:
+        description: Some server error

@@ -1,0 +1,58 @@
+IngridientGetSchema:
+  type: object
+  required:
+    - name
+    - quantity
+    - apiUri
+  properties:
+    _id:
+      type: string
+      description: The auto-generated id of the ingridient
+    name:
+      type: string
+      description: The ingridient's name
+    quantity:
+      type: number
+      description: Quantity of the bought ingridient
+    apiUri:
+      type: string
+      description: API uri to shop where to buy the ingridient
+    unit:
+      type: string
+      description: The unit the ingridient uses (Kg, L, etc)
+
+IngridientPostSchema:
+  type: object
+  required:
+    - name
+    - quantity
+    - apiUri
+  properties:
+    name:
+      type: string
+      description: The ingridient's name
+    quantity:
+      type: number
+      description: Quantity of the bought ingridient
+    apiUri:
+      type: string
+      description: API uri to shop where to buy the ingridient
+    unit:
+      type: string
+      description: The unit the ingridient uses (Kg, L, etc)
+
+IngridientPutSchema:
+  type: object
+  properties:
+    name:
+      type: string
+      description: The ingridient's name
+    quantity:
+      type: number
+      description: Quantity of the bought ingridient
+    apiUri:
+      type: string
+      description: API uri to shop where to buy the ingridient
+    unit:
+      type: string
+      description: The unit the ingridient uses (Kg, L, etc)

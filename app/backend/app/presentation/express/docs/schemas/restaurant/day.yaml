@@ -1,0 +1,20 @@
+Day:
+  type: object
+  properties:
+    name:
+      type: string
+      enum:
+        - Monday
+        - Tuesday
+        - Wednesday
+        - Thursday
+        - Friday
+        - Saturday
+        - Sunday
+      description: name of the day
+    breakfast:
+      $ref: "#/components/schemas/MealGet"
+    lunch:
+      $ref: "#/components/schemas/MealGet"
+    dinner:
+      $ref: "#/components/schemas/MealGet"

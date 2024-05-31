@@ -1,0 +1,156 @@
+/meal/delete/id/{id}:
+  delete:
+    summary: Delete meal
+    tags: [Meals]
+    parameters:
+      - in: path
+        name: id
+        description: Meal's id for delete,
+        required: true,
+        schema:
+          type: string
+    responses:
+      201:
+        description: The meal was successfully deleted
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MealGet"
+      500:
+        description: Some server error
+/meal/all:
+  get:
+    summary: Retrieves all meals
+    tags: [Meals]
+    parameters:
+      - in: query
+        name: page
+        schema:
+          type: number
+        description: page number to be shown
+    responses:
+      201:
+        description: The meal was successfully created
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MealGet"
+      500:
+        description: Some server error
+/meal/id/{id}:
+  get:
+    summary: Get meal by Id
+    tags: [Meals]
+    parameters:
+      - in: path
+        name: id
+        description: Meal's id,
+        required: true,
+        schema:
+          type: string
+    responses:
+      400:
+        description: Meal does not exits!,
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string
+              example:
+                error: Meal does not exits!
+      200:
+        description: The meal was found
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MealGet"
+      500:
+        description: Some server error
+/meal/name/{name}:
+  get:
+    summary: Get meal by Name
+    tags: [Meals]
+    parameters:
+      - in: path
+        name: name
+        description: Meal's name,
+        required: true,
+        schema:
+          type: string
+    responses:
+      400:
+        description: Meal does not exits!,
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string
+              example:
+                error: Meal does not exits!
+      200:
+        description: The meal was found
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MealGet"
+      500:
+        description: Some server error
+/meal:
+  post:
+    summary: Create a new meal
+    tags: [Meals]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/MealPost"
+    responses:
+      201:
+        description: The meal was successfully created
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MealPost"
+      500:
+        description: Some server error
+/meal/update/id/{id}:
+  patch:
+    summary: Update meal
+    tags: [Meals]
+    parameters:
+      - in: path
+        name: id
+        description: Meal's id for update,
+        required: true,
+        schema:
+          type: string
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/MealPatch"
+    responses:
+      400:
+        description: Meal does not exits!,
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string
+              example:
+                error: Meal does not exits!
+      200:
+        description: The meal was successfully updated
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MealGet"
+      500:
+        description: Some server error

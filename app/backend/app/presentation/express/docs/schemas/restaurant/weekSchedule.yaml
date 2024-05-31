@@ -1,0 +1,29 @@
+WeekScheduleGet:
+  type: object
+  required:
+    - id
+    - period
+    - weekDays
+  properties:
+    _id:
+      type: string
+      description: The auto-generated id of the weekSchedule
+    period:
+      type: object
+      description: The week period
+      $ref: "#/components/schemas/Period"
+    weekDays:
+      type: array
+      description: The list of days
+      items:
+        type: object
+        decription: Day meals
+        $ref: "#/components/schemas/Day"
+
+WeekSchedulePost:
+  type: object
+  required:
+    - period
+  properties:
+    period:
+      $ref: "#/components/schemas/Period"
