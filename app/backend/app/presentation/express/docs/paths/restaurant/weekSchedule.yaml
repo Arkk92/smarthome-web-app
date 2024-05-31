@@ -1,23 +1,37 @@
-/weekSchedule/delete/id/{id}:
-  delete:
-    summary: Delete weekSchedule
+/weekSchedule/season/{season}/babyAllowed/{babyAllowed}:
+  post:
+    summary: Create a new weekSchedule
     tags: [WeekSchedules]
     parameters:
       - in: path
-        name: id
-        description: WeekSchedule's id for delete,
-        required: true,
+        name: season
+        description: The season of weekSchedule
+        required: true
         schema:
           type: string
+          enum: [Any, Warm, Cold]
+      - in: path
+        name: babyAllowed
+        description: Whether the meals of the week are allowed for babies
+        required: true
+        schema:
+          type: boolean
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/WeekSchedulePost"
     responses:
       201:
-        description: The weekSchedule was successfully deleted
+        description: The weekSchedule was successfully created
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/WeekScheduleGet"
       500:
         description: Some server error
+
 /weekSchedule/all:
   get:
     summary: Retrieves all weekSchedules
@@ -37,6 +51,7 @@
               $ref: "#/components/schemas/WeekScheduleGet"
       500:
         description: Some server error
+
 /weekSchedule/date/{date}:
   get:
     summary: Get weekSchedule by Name
@@ -135,33 +150,21 @@
               $ref: "#/components/schemas/WeekScheduleGet"
       500:
         description: Some server error
-/weekSchedule/season/{season}/babyAllowed/{babyAllowed}:
-  post:
-    summary: Create a new weekSchedule
+
+/weekSchedule/delete/id/{id}:
+  delete:
+    summary: Delete weekSchedule
     tags: [WeekSchedules]
     parameters:
       - in: path
-        name: season
-        description: The season of weekSchedule
-        required: false
+        name: id
+        description: WeekSchedule's id for delete,
+        required: true,
         schema:
           type: string
-          enum: [Any, Warm, Cold]
-      - in: path
-        name: babyAllowed
-        description: Whether the meals of the week are allowed for babies
-        required: true
-        schema:
-          type: boolean
-    requestBody:
-      required: true
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/WeekSchedulePost"
     responses:
       201:
-        description: The weekSchedule was successfully created
+        description: The weekSchedule was successfully deleted
         content:
           application/json:
             schema:
