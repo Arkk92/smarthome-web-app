@@ -1,5 +1,6 @@
 import { ICreateMealRequestDTO } from "@/restaurant/domain/dtos/Meal/CreateMeal";
 import { IMealInRequestDTO } from "@/restaurant/domain/dtos/Meal/MealIn";
+import { IMealInWithConstrainsDTO } from "@/restaurant/domain/dtos/Meal/MealInWithConstrains";
 import { IMealOutRequestDTO } from "@/restaurant/domain/dtos/Meal/MealOut";
 import { IUpdateMealRequestDTO } from "@/restaurant/domain/dtos/Meal/UpdateMeal";
 import { PaginationDTO } from "@/restaurant/domain/dtos/Pagination";
@@ -36,6 +37,15 @@ export interface IMealsRepository {
    * @returns {Promise<IMealInRequestDTO | unknown>} The found meal data, or undefined if not found.
    */
   findById(id: string): Promise<IMealInRequestDTO | unknown>;
+
+  /**
+   * Finds a meal by season and baby allowance.
+   *
+   * @async
+   * @param {IMealInWithConstrainsDTO} constraints - constrains the meal shall have.
+   * @returns {Promise<Array<IMealInRequestDTO> | unknown>} The found meal list or null.
+   */
+  findWithConstrains(constraints: IMealInWithConstrainsDTO): Promise<Array<IMealInRequestDTO> | unknown>
 
   /**
    * Retrieves a paginated list of meals.

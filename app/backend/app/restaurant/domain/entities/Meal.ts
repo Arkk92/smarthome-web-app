@@ -38,10 +38,10 @@ export class Meal implements MealInterface {
   private _batchMealCount: Number;
 
   /**
-   * Creates an instance of User.
+   * Creates an instance of Meal.
    *
    * @constructor
-   * @param {UserInterface} props - The properties of the meal.
+   * @param {MealInterface} props - The properties of the meal.
    */
   constructor(props: MealInterface) {
     this._id = props.id;
@@ -59,8 +59,8 @@ export class Meal implements MealInterface {
    * Creates a new meal instance based on the provided data.
    *
    * @static
-   * @param {ICreateUserRequestDTO} data - The data to create a meal.
-   * @returns {User} The created meal instance.
+   * @param {ICreateMealRequestDTO} data - The data to create a meal.
+   * @returns {Meal} The created meal instance.
    */
   static create(data: ICreateMealRequestDTO): Meal {
     return new Meal(data);

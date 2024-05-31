@@ -6,6 +6,8 @@ import { PaginationDTO } from "@/restaurant/domain/dtos/Pagination";
 import MongooseClient from "../database/mongoose/MongooseClient";
 import MealModel from "../database/mongoose/models/meal";
 import { IMealsRepository } from "@/restaurant/application/repositories/Meal";
+import { Seasons } from "@/restaurant/domain/enums/meal/Seasons";
+import { IMealInWithConstrainsDTO } from "@/restaurant/domain/dtos/Meal/MealInWithConstrains";
 
 /**
  * Mongoo implementation of the meal repository.
@@ -56,6 +58,18 @@ export class MealRepository implements IMealsRepository {
    */
   async findById(id: string): Promise<IMealInRequestDTO | unknown> {
     const meal = await MealModel.findById(id).exec();
+    return meal;
+  }
+
+  /**
+   * Finds a meal by season and baby allowance.
+   *
+   * @async
+   * @param {IMealInWithConstrainsDTO} constraints - constrains the meal shall have.
+   * @returns {Promise<Array<IMealInRequestDTO> | unknown>} The found meal list or null.
+   */
+  async findWithConstrains(constraints: IMealInWithConstrainsDTO): Promise<Array<IMealInRequestDTO> | unknown>{
+    const meal = await MealModel.find({season: constraints.season, babyAllowed: constraints.babyAllowed}).exec();
     return meal;
   }
 

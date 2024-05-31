@@ -1,21 +1,21 @@
 /**
- * Enum representing error types related to meal operations.
+ * Enum representing error types related to week schedule operations.
  *
  * @enum
  */
-export enum MealErrorType {
+export enum WeekScheduleErrorType {
     /**
-     * Error type indicating that the meal already exists.
+     * Error type indicating that the week schedule already exists.
      */
-    MealAlreadyExists = 'Meal already exists!',
+    WeekScheduleAlreadyExists = 'WeekSchedule already exists!',
   
     /**
-     * Error type indicating that the meal does not exist.
+     * Error type indicating that the week schedule does not exist.
      */
-    MealDoesNotExist = 'Meal does not exist!',
+    WeekScheduleDoesNotExist = 'WeekSchedule does not exist!',
   
     /**
-     * Error type indicating that no meals were found.
+     * Error type indicating that no week schedules were found.
      */
-    MealNotFound = 'Meals not found',
+    WeekScheduleNotFound = 'WeekSchedules not found',
   }
