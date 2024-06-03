@@ -1,21 +1,46 @@
+import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 
 class MongooseClient {
-  connect() {
-    mongoose.set('debug', true);
-    mongoose.connect(
-      process.env.MONGODB_URL || "",
-      {
-        dbName: process.env.DATABASE,
-      }).then(
-        () => {
-          if (mongoose.connection.readyState === 1) {
-            console.error("Database connected successfuly");
-          } else {
-            console.log("Could not connect to database");
-          }
-        }
-      );
+  private _mongoServer: MongoMemoryServer | null = null; // Testing pourposes
+  private _env: string | null;
+
+  constructor(env: string | null = process.env.ENVIRONMENT!){
+    this._env = env;
+  }
+  async connect() {
+    mongoose.set("debug", true);
+    let uri: string = "";
+    if(!this._env || this._env !== "PRODUCTION"){
+      this._mongoServer = await MongoMemoryServer.create();
+      uri = this._mongoServer.getUri();
+    } else {
+      uri = process.env.MONGODB_URL!;
+    }
+
+    await mongoose.connect(uri, {
+      dbName: process.env.DATABASE,
+    });
+    if (mongoose.connection.readyState === 1) {
+      console.error("Database connected successfuly");
+    } else {
+      console.log("Could not connect to database");
+    }
+  }
+
+  async disconnect(){
+    await mongoose.disconnect();
+    if(this._mongoServer){
+      await this._mongoServer.stop();
+    }
+  }
+
+  async dropDatabase(){
+    if(this._mongoServer){
+      await mongoose.connection.db.dropDatabase();
+    }else{
+      console.error("Dropping a database is only allowed in testing env")
+    }
   }
 }
 

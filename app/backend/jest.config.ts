@@ -3,17 +3,19 @@ import { defaults } from "jest-config";
 
 const config: Config = {
   preset: "ts-jest",
-  testEnvironment: "jest-environment-jsdom",
+  testEnvironment: "node",
   transform: {
     "^.+\\.tsx?$": "ts-jest",
     // process `*.tsx` files with `ts-jest`
   },
   moduleNameMapper: {
     "\\.(gif|ttf|eot|svg|png)$": "<rootDir>/test/__ mocks __/fileMock.js",
-    "@/(.*)": "<rootDir>/app/$1"
+    "@/(.*)": "<rootDir>/app/$1",
   },
   moduleFileExtensions: [...defaults.moduleFileExtensions, "mts"],
-  modulePathIgnorePatterns: ["<rootDir>/__tests__/__mocks__/"]
+  collectCoverage: true,
+  coverageReporters: ["text", "html"],
+  coverageDirectory: "<rootDir>/coverage/"
 };
 
 export default config;
