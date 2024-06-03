@@ -1,6 +1,7 @@
 import { ICreateWeekScheduleRequestDTO } from "../dtos/WeekSchedule/CreateWeekSchedule";
-import Day, { DayInterface } from "../valueObj/Day";
-import Week from "../valueObj/Week";
+import { DayInterface } from "../valueObj/Day";
+import { Week } from "../valueObj/Week";
+
 
 /**
  * Interface representing the structure of a weekSchedule.

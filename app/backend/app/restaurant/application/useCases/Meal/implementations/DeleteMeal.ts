@@ -1,7 +1,7 @@
 import { IMealsRepository } from "@/restaurant/application/repositories/Meal"
 import { IDeleteMealUseCase } from "../DeleteMeal"
-import { MealErrorType } from "@/restaurant/domain/enums/meal/ErrorType"
 import { MealSuccessType } from "@/restaurant/domain/enums/meal/SuccessType"
+import { MealErrorType } from "@/restaurant/domain/enums/weekSchedule/ErrorType"
 
 /**
  * Use case for deleting a meal.

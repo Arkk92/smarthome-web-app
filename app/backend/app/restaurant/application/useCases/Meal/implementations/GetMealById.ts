@@ -1,7 +1,8 @@
 import { IMealsRepository } from '@/restaurant/application/repositories/Meal'
 import { IGetMealByIdUseCase } from '../GetMealById'
 import { ResponseDTO } from '@/restaurant/domain/dtos/Response'
-import { MealErrorType } from '@/restaurant/domain/enums/meal/ErrorType'
+import { MealErrorType } from '@/restaurant/domain/enums/weekSchedule/ErrorType'
+
 
 /**
  * Use case for retrieving a meal by id.

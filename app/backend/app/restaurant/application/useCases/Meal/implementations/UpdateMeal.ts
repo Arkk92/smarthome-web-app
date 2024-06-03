@@ -1,11 +1,9 @@
 import { IUpdateMealRequestDTO } from "@/restaurant/domain/dtos/Meal/UpdateMeal";
 import { ResponseDTO } from "../../../../domain/dtos/Response";
-import { MealErrorType } from "../../../../domain/enums/meal/ErrorType";
 import { IMealsRepository } from "../../../repositories/Meal";
 import { IUpdateMealUseCase } from "../UpdateMeal";
-import { IMealOutRequestDTO } from "@/restaurant/domain/dtos/Meal/MealOut";
 import { IMealInRequestDTO } from "@/restaurant/domain/dtos/Meal/MealIn";
-import { Meal, MealInterface } from "@/restaurant/domain/entities/Meal";
+import { MealErrorType } from "@/restaurant/domain/enums/weekSchedule/ErrorType";
 
 /**
  * Use case for retrieving all meals.

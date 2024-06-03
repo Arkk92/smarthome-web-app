@@ -1,7 +1,7 @@
 import { IWeekSchedulesRepository } from '@/restaurant/application/repositories/WeekSchedule'
 import { IGetWeekScheduleByIdUseCase } from '../GetWeekScheduleById'
 import { ResponseDTO } from '@/restaurant/domain/dtos/Response'
-import { WeekScheduleErrorType } from '@/restaurant/domain/enums/weekSchedule/ErrorType'
+import { WeekScheduleErrorType } from '@/restaurant/domain/enums/meal/ErrorType'
 
 /**
  * Use case for retrieving a weekSchedule by id.
