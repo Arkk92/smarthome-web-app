@@ -27,3 +27,18 @@ WeekSchedulePost:
   properties:
     period:
       $ref: "#/components/schemas/Period"
+
+WeekSchedulePatch:
+  type: object
+  properties:
+    period:
+      type: object
+      description: The week period
+      $ref: "#/components/schemas/Period"
+    weekDays:
+      type: array
+      description: The list of days
+      items:
+        type: object
+        decription: Day meals
+        $ref: "#/components/schemas/Day"
