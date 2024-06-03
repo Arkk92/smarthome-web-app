@@ -69,7 +69,7 @@ export class MealRepository implements IMealsRepository {
    * @returns {Promise<Array<IMealInRequestDTO> | unknown>} The found meal list or null.
    */
   async findWithConstrains(constraints: IMealInWithConstrainsDTO): Promise<Array<IMealInRequestDTO> | unknown>{
-    const meal = await MealModel.find({season: constraints.season, babyAllowed: constraints.babyAllowed}).exec();
+    const meal = await MealModel.find({season: [constraints.season, Seasons.Any], babyAllowed: constraints.babyAllowed}).exec();
     return meal;
   }
 
@@ -81,7 +81,7 @@ export class MealRepository implements IMealsRepository {
    * @returns {Promise<PaginationDTO>} The paginated list of meals.
    */
   async findAll(pageNumber: number): Promise<PaginationDTO> {
-    const perPage = 4;
+    const perPage = 10;
     const meals = await MealModel.find({})
       .limit(Math.ceil((pageNumber - 1) * perPage))
       .sort({ name: "asc" })
