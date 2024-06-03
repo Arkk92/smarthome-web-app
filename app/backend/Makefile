@@ -60,6 +60,13 @@ test:
 	npm run test
 
 .ONESHELL:
+test-coverage:
+	. ${HOME}/.nvm/nvm.sh
+	nvm install $(NODE_VERSION)
+	nvm use $(NODE_VERSION)
+	npm run test-coverage
+
+.ONESHELL:
 deploy:
 	rm -rf node_modules/
 	. ${HOME}/.nvm/nvm.sh
