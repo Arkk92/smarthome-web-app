@@ -1,8 +1,3 @@
-import { TextEncoder, TextDecoder } from 'util';
-
-global.TextEncoder = TextEncoder as any;
-global.TextDecoder = TextDecoder as any;
-
 import request from "supertest";
 import { app } from "@/presentation/express/settings/app";
 import { mongooseClient } from '@/restaurant/infra/database/connect';
