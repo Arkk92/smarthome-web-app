@@ -32,8 +32,7 @@ export class MealRepository implements IMealsRepository {
    * @returns {Promise<IMealOutRequestDTO>} The created meal.
    */
   async create(data: ICreateMealRequestDTO): Promise<IMealOutRequestDTO> {
-    const meal = new MealModel(data);
-    await meal.save();
+    const meal = MealModel.create(data);
     return meal;
   }
 
@@ -69,7 +68,8 @@ export class MealRepository implements IMealsRepository {
    * @returns {Promise<Array<IMealInRequestDTO> | unknown>} The found meal list or null.
    */
   async findWithConstrains(constraints: IMealInWithConstrainsDTO): Promise<Array<IMealInRequestDTO> | unknown>{
-    const meal = await MealModel.find({season: [constraints.season, Seasons.Any], babyAllowed: constraints.babyAllowed}).exec();
+    const seasonsToFind = (!constraints.season || constraints.season === Seasons.Any) ? [Seasons.Any] : [constraints.season, Seasons.Any];
+    const meal = await MealModel.find({season: seasonsToFind, babyAllowed: constraints.babyAllowed}).exec();
     return meal;
   }
 

@@ -30,9 +30,8 @@ export class WeekScheduleRepository implements IWeekSchedulesRepository {
    * @returns {Promise<IWeekScheduleOutRequestDTO>} The created weekSchedule.
    */
   async create(data: ICreateWeekScheduleRequestDTO): Promise<IWeekScheduleOutRequestDTO> {
-    const weekSchedule = new WeekScheduleModel(data);
-    await weekSchedule.save();
-    return weekSchedule;
+    const weekSchedule = await WeekScheduleModel.create({'period': data.period, 'weekDays': data.weekDays});
+    return weekSchedule.toObject();
   }
 
   /**
