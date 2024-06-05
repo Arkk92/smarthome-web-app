@@ -3,6 +3,7 @@ import { MealTime } from "@/restaurant/domain/enums/meal/MealTime";
 import { Seasons } from "@/restaurant/domain/enums/meal/Seasons";
 import {
   canAddMealToDay,
+  checkMeals,
   fillWeekWithMeals,
   getMealsForMealTime,
   getPreviousStartOfWeek,
@@ -194,5 +195,63 @@ describe("getPreviousStartOfWeek", () => {
       const parsedExpected = new Date(expected).toISOString().split("T")[0]
       expect(parsedResult).toEqual(parsedExpected);
     });
+  });
+});
+describe('checkMeals', () => {
+  test('returns false if less than 2 different breakfast meals', () => {
+    const meals: MealInterface[] = [
+      { name: 'Breakfast 1', mealTime: MealTime.Breakfast, ingridientList: [], isVegetarian: true, season: Seasons.Any, babyAllowed: true, recipe: [], batchMealCount: 0 }
+    ];
+    expect(checkMeals(meals)).toBe(false);
+  });
+
+  test('returns false if less than 7 different lunch meals', () => {
+    const meals: MealInterface[] = [
+      { name: 'Lunch 1', mealTime: MealTime.Lunch, ingridientList: [], isVegetarian: true, season: Seasons.Any, babyAllowed: true, recipe: [], batchMealCount: 0 },
+      { name: 'Lunch 2', mealTime: MealTime.Lunch, ingridientList: [], isVegetarian: true, season: Seasons.Any, babyAllowed: true, recipe: [], batchMealCount: 0 }
+    ];
+    expect(checkMeals(meals)).toBe(false);
+  });
+
+  test('returns false if less than 7 different dinner meals', () => {
+    const meals: MealInterface[] = [
+      { name: 'Dinner 1', mealTime: MealTime.Dinner, ingridientList: [], isVegetarian: true, season: Seasons.Any, babyAllowed: true, recipe: [], batchMealCount: 0 },
+      { name: 'Dinner 2', mealTime: MealTime.Dinner, ingridientList: [], isVegetarian: true, season: Seasons.Any, babyAllowed: true, recipe: [], batchMealCount: 0 }
+    ];
+    expect(checkMeals(meals)).toBe(false);
+  });
+
+  test('returns true if all conditions are met', () => {
+    const meals: MealInterface[] = [
+      { name: 'Breakfast 1', mealTime: MealTime.Breakfast, ingridientList: [], isVegetarian: true, season: Seasons.Any, babyAllowed: true, recipe: [], batchMealCount: 0 },
+      { name: 'Breakfast 2', mealTime: MealTime.Breakfast, ingridientList: [], isVegetarian: true, season: Seasons.Any, babyAllowed: true, recipe: [], batchMealCount: 0 },
+      { name: 'Lunch 1', mealTime: MealTime.Lunch, ingridientList: [], isVegetarian: true, season: Seasons.Any, babyAllowed: true, recipe: [], batchMealCount: 0 },
+      { name: 'Lunch 2', mealTime: MealTime.Lunch, ingridientList: [], isVegetarian: true, season: Seasons.Any, babyAllowed: true, recipe: [], batchMealCount: 0 },
+      { name: 'Lunch 3', mealTime: MealTime.Lunch, ingridientList: [], isVegetarian: true, season: Seasons.Any, babyAllowed: true, recipe: [], batchMealCount: 0 },
+      { name: 'Lunch 4', mealTime: MealTime.Lunch, ingridientList: [], isVegetarian: true, season: Seasons.Any, babyAllowed: true, recipe: [], batchMealCount: 0 },
+      { name: 'Lunch 5', mealTime: MealTime.Lunch, ingridientList: [], isVegetarian: true, season: Seasons.Any, babyAllowed: true, recipe: [], batchMealCount: 0 },
+      { name: 'Lunch 6', mealTime: MealTime.Lunch, ingridientList: [], isVegetarian: true, season: Seasons.Any, babyAllowed: true, recipe: [], batchMealCount: 0 },
+      { name: 'Lunch 7', mealTime: MealTime.Lunch, ingridientList: [], isVegetarian: true, season: Seasons.Any, babyAllowed: true, recipe: [], batchMealCount: 0 },
+      { name: 'Dinner 1', mealTime: MealTime.Dinner, ingridientList: [], isVegetarian: true, season: Seasons.Any, babyAllowed: true, recipe: [], batchMealCount: 0 },
+      { name: 'Dinner 2', mealTime: MealTime.Dinner, ingridientList: [], isVegetarian: true, season: Seasons.Any, babyAllowed: true, recipe: [], batchMealCount: 0 },
+      { name: 'Dinner 3', mealTime: MealTime.Dinner, ingridientList: [], isVegetarian: true, season: Seasons.Any, babyAllowed: true, recipe: [], batchMealCount: 0 },
+      { name: 'Dinner 4', mealTime: MealTime.Dinner, ingridientList: [], isVegetarian: true, season: Seasons.Any, babyAllowed: true, recipe: [], batchMealCount: 0 },
+      { name: 'Dinner 5', mealTime: MealTime.Dinner, ingridientList: [], isVegetarian: true, season: Seasons.Any, babyAllowed: true, recipe: [], batchMealCount: 0 },
+      { name: 'Dinner 6', mealTime: MealTime.Dinner, ingridientList: [], isVegetarian: true, season: Seasons.Any, babyAllowed: true, recipe: [], batchMealCount: 0 },
+      { name: 'Dinner 7', mealTime: MealTime.Dinner, ingridientList: [], isVegetarian: true, season: Seasons.Any, babyAllowed: true, recipe: [], batchMealCount: 0 }
+    ];
+    expect(checkMeals(meals)).toBe(true);
+  });
+
+  test('returns true if batchMealCount is considered for lunches and dinners', () => {
+    const meals: MealInterface[] = [
+      { name: 'Breakfast 1', mealTime: MealTime.Breakfast, ingridientList: [], isVegetarian: true, season: Seasons.Any, babyAllowed: true, recipe: [], batchMealCount: 0 },
+      { name: 'Breakfast 2', mealTime: MealTime.Breakfast, ingridientList: [], isVegetarian: true, season: Seasons.Any, babyAllowed: true, recipe: [], batchMealCount: 0 },
+      { name: 'Lunch 1', mealTime: MealTime.Lunch, ingridientList: [], isVegetarian: true, season: Seasons.Any, babyAllowed: true, recipe: [], batchMealCount: 3 },
+      { name: 'Lunch 2', mealTime: MealTime.Lunch, ingridientList: [], isVegetarian: true, season: Seasons.Any, babyAllowed: true, recipe: [], batchMealCount: 4 },
+      { name: 'Dinner 1', mealTime: MealTime.Dinner, ingridientList: [], isVegetarian: true, season: Seasons.Any, babyAllowed: true, recipe: [], batchMealCount: 4 },
+      { name: 'Dinner 2', mealTime: MealTime.Dinner, ingridientList: [], isVegetarian: true, season: Seasons.Any, babyAllowed: true, recipe: [], batchMealCount: 3 }
+    ];
+    expect(checkMeals(meals)).toBe(true);
   });
 });

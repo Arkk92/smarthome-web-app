@@ -146,3 +146,34 @@ export function getPreviousStartOfWeek(date: Date): Date {
 
   return previousMonday;
 }
+
+/**
+ * Checks if the meal plan meets the following criteria:
+ * - At least 2 different breakfast meals.
+ * - At least 7 different lunch and dinner meals, considering batchMealCount.
+ *
+ * @param meals - Array of meals to be checked.
+ * @returns {boolean} - True if all conditions are met, false otherwise.
+ */
+export function checkMeals(meals: MealInterface[]): boolean {
+  let breakfastCount: number = 0;
+  let lunchCount: number = 0;
+  let dinnerCount: number = 0;
+
+  for (let meal of meals) {
+    const batchMealCount = meal.batchMealCount as number;
+    switch (meal.mealTime) {
+      case MealTime.Breakfast:
+        breakfastCount++;
+        break;
+      case MealTime.Lunch:
+        lunchCount += batchMealCount > 0 ? batchMealCount : 1;
+        break;
+      case MealTime.Dinner:
+        dinnerCount += batchMealCount > 0 ? batchMealCount : 1;
+        break;
+    }
+  }
+
+  return breakfastCount >= 2 && lunchCount >= 7 && dinnerCount >= 7;
+}
