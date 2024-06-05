@@ -1,6 +1,7 @@
 import { WeekScheduleInterface } from "../../entities/WeekSchedule";
 import { DayInterface } from "../../valueObj/Day";
-import Week from "../../valueObj/Week";
+import { Week } from "../../valueObj/Week";
+
 
 /**
  * Data Transfer Object (DTO) representing the request to create a new week schedule.

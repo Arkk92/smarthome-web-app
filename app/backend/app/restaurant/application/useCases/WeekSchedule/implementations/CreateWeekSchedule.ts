@@ -6,6 +6,7 @@ import { WeekSchedule } from "@/restaurant/domain/entities/WeekSchedule";
 import { WeekScheduleErrorType } from "@/restaurant/domain/enums/meal/ErrorType";
 import { IWeekScheduleInRequestDTO } from "@/restaurant/domain/dtos/WeekSchedule/WeekScheduleIn";
 import {
+  checkMeals,
   fillWeekWithMeals,
   getPreviousStartOfWeek,
 } from "./helpers/CreateWeekScheduleFunctions";
@@ -88,6 +89,9 @@ export class CreateWeekScheduleUseCase implements ICreateWeekScheduleUseCase {
         previousWeekStart
       )) as IWeekScheduleInRequestDTO | null;
 
+      if(!checkMeals(allMeals)){
+        return { data: { error: WeekScheduleErrorType.WeekScheduleNotEnoughMeals }, success: false };
+      }
       try {
         const weekDays: DayInterface[] = fillWeekWithMeals(
           allMeals,
