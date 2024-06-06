@@ -172,7 +172,7 @@ describe("Get Week Schedule by Date Use Case", () => {
     const getMeal = new GetAllMealUseCase(mealRepository);
     response = await getMeal.execute(0);
     expect(response.success).toBe(true);
-    expect(response.data.body).toHaveLength(weekMeals.length);
+    expect(response.data).toHaveLength(weekMeals.length);
   });
 
   it("should retrieve a weekSchedule by it's date ", async () => {
@@ -215,6 +215,6 @@ describe("Get Week Schedule by Date Use Case", () => {
     );
     const getResponse = await getWeekSchedule.execute(page);
     expect(getResponse.success).toBe(true);
-    expect(getResponse.data.body).toHaveLength(1);
+    expect(getResponse.data).toHaveLength(1);
   });
 });
