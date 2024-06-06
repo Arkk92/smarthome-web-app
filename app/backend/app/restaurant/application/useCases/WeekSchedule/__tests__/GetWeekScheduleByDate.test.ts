@@ -111,7 +111,7 @@ describe("Get Week Schedule by Date Use Case", () => {
     const getMeal = new GetAllMealUseCase(mealRepository);
     response = await getMeal.execute(0);
     expect(response.success).toBe(true);
-    expect(response.data.body).toHaveLength(weekMeals.length)
+    expect(response.data).toHaveLength(weekMeals.length)
 
     
   });
@@ -122,8 +122,8 @@ describe("Get Week Schedule by Date Use Case", () => {
     // Creates a week schedule
     const requestCreate: ICreateWeekScheduleRequestDTO = {
       period: {
-        start: new Date("03-06-2024"),
-        end: new Date("10-06-2024"),
+        start: new Date("06-03-2024"),
+        end: new Date("06-10-2024"),
       } as Week,
       weekDays: [],
     };

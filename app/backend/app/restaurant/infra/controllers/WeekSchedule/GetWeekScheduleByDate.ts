@@ -39,9 +39,11 @@ export class GetWeekScheduleByDateController implements IController {
       const pathStringParams = Object.keys(httpRequest.path);
 
       if ( pathStringParams.includes("date") ){
-        const date = (httpRequest.path as { date: string }).date;
-        // Execute the get weekSchedules use case
-        response = await this.getWeekScheduleUseCase.execute(new Date(date))
+        // Create date instances from string
+        const date = new Date((httpRequest.path as { date: string }).date);
+        date.setHours(12,0,0,0)
+        // Execute the get weekSchedules use case    
+        response = await this.getWeekScheduleUseCase.execute(date)
       }
       else {
         // Invalid parameters, return a 422 Unprocessable Entity error
