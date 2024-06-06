@@ -33,7 +33,7 @@ export class GetAllMealUseCase implements IGetAllMealUseCase {
         return { data: { error: MealErrorType.MealNotFound }, success: false };
       }
 
-      return { data: meals, success: true };
+      return { data: meals.body, success: true };
     } catch (error: any) {
       return { data: { error: error.message }, success: false };
     }

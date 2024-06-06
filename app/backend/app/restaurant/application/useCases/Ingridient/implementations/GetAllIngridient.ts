@@ -36,7 +36,7 @@ export class GetAllIngridientUseCase implements IGetAllIngridientUseCase {
         };
       }
 
-      return { data: ingridients, success: true };
+      return { data: ingridients.body, success: true };
     } catch (error: any) {
       return { data: { error: error.message }, success: false };
     }

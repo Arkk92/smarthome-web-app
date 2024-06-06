@@ -33,7 +33,7 @@ export class GetAllWeekScheduleUseCase implements IGetAllWeekScheduleUseCase {
         return { data: { error: WeekScheduleErrorType.WeekScheduleNotFound }, success: false };
       }
 
-      return { data: weekSchedules, success: true };
+      return { data: weekSchedules.body, success: true };
     } catch (error: any) {
       return { data: { error: error.message }, success: false };
     }

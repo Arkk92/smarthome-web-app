@@ -3,9 +3,6 @@ import { CreateMealUseCase } from "../implementations/CreateMeal";
 import { IMealsRepository } from "@/restaurant/application/repositories/Meal";
 import { MealRepository } from "@/restaurant/infra/repositories/Meal";
 import { ICreateMealRequestDTO } from "@/restaurant/domain/dtos/Meal/CreateMeal";
-import { Ingridient } from "@/restaurant/domain/entities/Ingridient";
-import { MealTime } from "@/restaurant/domain/enums/meal/MealTime";
-import { Seasons } from "@/restaurant/domain/enums/meal/Seasons";
 import { ResponseDTO } from "@/restaurant/domain/dtos/Response";
 import { GetAllMealUseCase } from "../implementations/GetAllMeal";
 
@@ -47,7 +44,7 @@ describe("Get All Meal Use Case", () => {
     const res = await getMeal.execute(0);
 
     expect(res.success).toBe(true);
-    expect(res.data.body).toContainEqual(
+    expect(res.data).toContainEqual(
       expect.objectContaining({
         name: "Test Meal 1",
         mealTime: "Breakfast",
@@ -57,7 +54,7 @@ describe("Get All Meal Use Case", () => {
         batchMealCount: 10,
       })
     );
-    expect(res.data.body).toContainEqual(
+    expect(res.data).toContainEqual(
       expect.objectContaining({
         name: "Test Meal 2",
         mealTime: "Lunch",
