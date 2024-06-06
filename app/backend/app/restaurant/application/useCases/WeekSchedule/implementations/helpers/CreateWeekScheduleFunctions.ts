@@ -15,14 +15,14 @@ import { Day, DayInterface } from "@/restaurant/domain/valueObj/Day";
 export function getMealsForMealTime(
   meals: MealInterface[],
   mealTime: MealTime,
-  season: string,
+  season: Seasons,
   babyAllowed: boolean
 ): MealInterface[] {
   return meals.filter(
     (meal) =>
       meal.mealTime === mealTime &&
-      (meal.season === season || meal.season === "Any") &&
-      (!babyAllowed || meal.babyAllowed)
+      (meal.season === season || meal.season === Seasons.Any) &&
+      isBabyAllowed(meal, babyAllowed)
   );
 }
 
@@ -100,7 +100,7 @@ export function fillWeekWithMeals(
       dinner: {} as MealInterface,
     });
 
-    mealTimes.forEach((mealTime) => {
+    for (var mealTime of mealTimes) {
       const availableMeals = getMealsForMealTime(
         meals,
         mealTime,
@@ -119,7 +119,7 @@ export function fillWeekWithMeals(
           `No valid meals available for ${mealTime} on ${days[i]}`
         );
       }
-    });
+    }
 
     week.push(day);
   }
@@ -160,20 +160,57 @@ export function checkMeals(meals: MealInterface[]): boolean {
   let lunchCount: number = 0;
   let dinnerCount: number = 0;
 
+  // DEBUGGING
+  const breakfastList = [];
+  const lunchList = [];
+  const dinnerList = [];
+
   for (let meal of meals) {
     const batchMealCount = meal.batchMealCount as number;
     switch (meal.mealTime) {
       case MealTime.Breakfast:
         breakfastCount++;
+        breakfastList.push(meal.name);
         break;
       case MealTime.Lunch:
         lunchCount += batchMealCount > 0 ? batchMealCount : 1;
+        lunchList.push(meal.name);
         break;
       case MealTime.Dinner:
         dinnerCount += batchMealCount > 0 ? batchMealCount : 1;
+        dinnerList.push(meal.name);
         break;
     }
   }
-
+  // if(breakfastCount < 2){
+  //   throw Error("breakfast not enough "+ breakfastCount.toString() + "/2")
+  // }
+  // if(lunchCount < 7){
+  //   throw Error("lunch not enough "+ lunchCount.toString() + "/7")
+  // }
+  // if(dinnerCount < 7){
+  //   throw Error("dinner not enough "+ dinnerCount.toString() + "/7")
+  // }
   return breakfastCount >= 2 && lunchCount >= 7 && dinnerCount >= 7;
+}
+
+/**
+ * Checks if a meal's babyAllowed status matches the provided babyAllowed value.
+ *
+ * @param meal - A MealInterface object representing a single meal.
+ * @param babyAllowed - Boolean value or null. If true, checks if the meal is allowed for babies.
+ *                      If false, checks if the meal is not allowed for babies.
+ *                      If null, always returns true.
+ * @returns A boolean indicating if the meal matches the babyAllowed status.
+ */
+function isBabyAllowed(
+  meal: MealInterface,
+  babyAllowed: boolean | null
+): boolean {
+  // If babyAllowed is null, we don't filter by babyAllowed status, hence always return true
+  if (babyAllowed === null) {
+    return true;
+  }
+  // Otherwise, return whether the meal's babyAllowed status matches the provided babyAllowed value
+  return meal.babyAllowed === babyAllowed;
 }
