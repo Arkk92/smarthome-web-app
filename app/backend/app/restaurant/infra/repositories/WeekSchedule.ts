@@ -6,6 +6,7 @@ import { IWeekScheduleInRequestDTO } from "@/restaurant/domain/dtos/WeekSchedule
 import { PaginationDTO } from "@/restaurant/domain/dtos/Pagination";
 import { IUpdateWeekScheduleRequestDTO } from "@/restaurant/domain/dtos/WeekSchedule/UpdateWeekSchedule";
 import { IWeekSchedulesRepository } from "@/restaurant/application/repositories/WeekSchedule";
+import { WeekInterface } from "@/restaurant/domain/valueObj/Week";
 
 /**
  * Mongoo implementation of the weekSchedule repository.
@@ -29,8 +30,16 @@ export class WeekScheduleRepository implements IWeekSchedulesRepository {
    * @param {ICreateWeekScheduleRequestDTO} data - The weekSchedule data.
    * @returns {Promise<IWeekScheduleOutRequestDTO>} The created weekSchedule.
    */
-  async create(data: ICreateWeekScheduleRequestDTO): Promise<IWeekScheduleOutRequestDTO> {
-    const weekSchedule = await WeekScheduleModel.create({'period': data.period, 'weekDays': data.weekDays});
+  async create(
+    data: ICreateWeekScheduleRequestDTO
+  ): Promise<IWeekScheduleOutRequestDTO> {
+    const weekSchedule = await WeekScheduleModel.create({
+      period: {
+        start: data.period.start,
+        end: data.period.end
+      },
+      weekDays: data.weekDays,
+    });
     return weekSchedule.toObject();
   }
 
@@ -42,7 +51,9 @@ export class WeekScheduleRepository implements IWeekSchedulesRepository {
    * @returns {Promise<IWeekScheduleInRequestDTO | unknown>} The found weekSchedule or undefined.
    */
   async findByDate(date: Date): Promise<IWeekScheduleInRequestDTO | unknown> {
-    const weekSchedule = await WeekScheduleModel.findOne({ 'period.start': date }).exec();
+    const weekSchedule = await WeekScheduleModel.findOne({
+      "period.start": date,
+    }).exec();
     return weekSchedule;
   }
 
@@ -95,7 +106,7 @@ export class WeekScheduleRepository implements IWeekSchedulesRepository {
     data: IUpdateWeekScheduleRequestDTO
   ): Promise<IWeekScheduleOutRequestDTO | unknown> {
     const weekScheduleUpdated = await WeekScheduleModel.findOneAndUpdate(
-      { _id:  weekSchedule.id },
+      { _id: weekSchedule.id },
       { $set: data },
       { new: true, runValidators: true }
     ).exec();

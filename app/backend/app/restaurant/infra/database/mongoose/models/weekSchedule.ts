@@ -18,8 +18,8 @@ const WeekSchema = new Schema<WeekInterface>({
 });
 
 const WeekScheduleSchema = new Schema<IWeekSchedule>({
-  period: { type: WeekSchema },
-  weekDays: { type: Array<DayInterface>() },
+  period: { type: WeekSchema, required: true },
+  weekDays: { type: Array<DayInterface>(), required: true },
 });
 
 const WeekScheduleModel = model("WeekScheduleSchema", WeekScheduleSchema);
