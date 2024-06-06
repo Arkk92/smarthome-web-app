@@ -69,7 +69,9 @@ export class CreateWeekScheduleUseCase implements ICreateWeekScheduleUseCase {
       }
       // If no season has been provided set it as Any
       mealConstrains.season =
-        mealConstrains.season !== undefined ? mealConstrains.season : Seasons.Any;
+        mealConstrains.season !== undefined
+          ? mealConstrains.season
+          : Seasons.Any;
 
       // Create a new week schedule
       const allMeals = (await this.mealRepository.findWithConstrains(
@@ -89,9 +91,17 @@ export class CreateWeekScheduleUseCase implements ICreateWeekScheduleUseCase {
         previousWeekStart
       )) as IWeekScheduleInRequestDTO | null;
 
-      if(!checkMeals(allMeals)){
-        return { data: { error: WeekScheduleErrorType.WeekScheduleNotEnoughMeals }, success: false };
+      try {
+        if (!checkMeals(allMeals)) {
+          return {
+            data: { error: WeekScheduleErrorType.WeekScheduleNotEnoughMeals },
+            success: false,
+          };
+        }
+      } catch (error: any) {
+        return { data: { error: error.message }, success: false };
       }
+
       try {
         const weekDays: DayInterface[] = fillWeekWithMeals(
           allMeals,

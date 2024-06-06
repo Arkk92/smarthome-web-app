@@ -10,6 +10,7 @@ import { ICreateWeekScheduleRequestDTO } from "@/restaurant/domain/dtos/WeekSche
 import { IController } from "../IController";
 import { IHttpRequest } from "@/presentation/http/helpers/IHttpRequest";
 import { IMealInWithConstrainsDTO } from "@/restaurant/domain/dtos/Meal/MealInWithConstrains";
+import { Week } from "@/restaurant/domain/valueObj/Week";
 
 /**
  * Controller for handling requests to create a weekSchedule.
@@ -49,12 +50,20 @@ export class CreateWeekScheduleController implements IController {
         bodyParams.includes("period")
       ) {
         // Extract weekSchedule constrains from the request path
-        const mealWithConstrainsDTO =
-          httpRequest.path as IMealInWithConstrainsDTO;
+        const babyAllowed = JSON.parse((httpRequest.path as {babyAllowed: string}).babyAllowed)
+        const mealWithConstrainsDTO: IMealInWithConstrainsDTO = {
+          babyAllowed: Boolean(babyAllowed)
+        }
         // Extract weekSchedule creation data from the request body
         const createWeekScheduleRequestDTO =
           httpRequest.body as ICreateWeekScheduleRequestDTO;
-
+        
+        // Create date instances from string
+        const period = (httpRequest.body as {period: {start: string, end:  string}}).period
+        createWeekScheduleRequestDTO.period = new Week({
+          start: new Date(period.start),
+          end: new Date(period.end),
+        });
         // Execute the create weekSchedule use case
         response = await this.createWeekScheduleCase.execute(
           mealWithConstrainsDTO,

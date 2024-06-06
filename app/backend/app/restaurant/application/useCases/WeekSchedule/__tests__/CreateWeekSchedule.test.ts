@@ -110,7 +110,7 @@ describe("Create Week Schedule Use Case", () => {
     const getMeal = new GetAllMealUseCase(mealRepository);
     response = await getMeal.execute(0);
     expect(response.success).toBe(true);
-    expect(response.data.body).toHaveLength(weekMeals.length)
+    expect(response.data).toHaveLength(weekMeals.length)
   });
 
   it("should create a new weekSchedule ", async () => {
