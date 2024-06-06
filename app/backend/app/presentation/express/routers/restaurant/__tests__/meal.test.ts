@@ -74,7 +74,7 @@ describe("Meal Endpoints", () => {
     const res = await request(app).get("/meal/all").query({ page: 0 });
 
     expect(res.statusCode).toEqual(200);
-    expect(res.body.body).toContainEqual(
+    expect(res.body).toContainEqual(
       expect.objectContaining({
         name: "Test Meal 1",
         mealTime: "Breakfast",
@@ -84,7 +84,7 @@ describe("Meal Endpoints", () => {
         batchMealCount: 10,
       })
     );
-    expect(res.body.body).toContainEqual(
+    expect(res.body).toContainEqual(
       expect.objectContaining({
         name: "Test Meal 2",
         mealTime: "Lunch",
