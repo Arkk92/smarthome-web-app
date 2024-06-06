@@ -47,6 +47,8 @@ export class Week implements WeekInterface{
    * @throws {Error} Throws an error if the week period is invalid.
    */
   constructor(props: WeekInterface) {
+    props.start.setHours(12,0,0,0)
+    props.end.setHours(12,0,0,0)
     if (!isOneWeekApart(props.start, props.end)) {
       throw new Error(WeekErrorType.InvalidWeek);
     }
