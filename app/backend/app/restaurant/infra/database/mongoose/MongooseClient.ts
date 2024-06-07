@@ -9,9 +9,11 @@ class MongooseClient {
     this._env = env;
   }
   async connect() {
-    mongoose.set("debug", true);
     let uri: string = "";
     if(!this._env || this._env !== "PRODUCTION"){
+
+        // mongoose.set("debug", true);
+
       this._mongoServer = await MongoMemoryServer.create();
       uri = this._mongoServer.getUri();
     } else {
@@ -22,21 +24,23 @@ class MongooseClient {
       dbName: process.env.DATABASE,
     });
     if (mongoose.connection.readyState === 1) {
-      console.error("Database connected successfuly");
+      console.error(`Database connected successfuly: ${uri}`);
     } else {
-      console.log("Could not connect to database");
+      console.error(`Could not connect to database: : ${uri}`);
     }
   }
 
   async disconnect(){
     await mongoose.disconnect();
-    if(this._mongoServer){
-      await this._mongoServer.stop();
+    if(!this._env || this._env !== "PRODUCTION"){
+      if(this._mongoServer){
+        await this._mongoServer.stop();
+      }
     }
   }
 
   async dropDatabase(){
-    if(this._mongoServer){
+    if(!this._env || this._env !== "PRODUCTION"){
       await mongoose.connection.db.dropDatabase();
     }else{
       console.error("Dropping a database is only allowed in testing env")

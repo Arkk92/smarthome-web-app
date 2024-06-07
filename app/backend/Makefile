@@ -91,6 +91,19 @@ docker-dev-stop:
 	docker stop $(shell docker ps --filter ancestor="$(MAIN_SERVICE_NAME)-dev" -q)
 	docker rm $(shell docker ps --filter ancestor="$(MAIN_SERVICE_NAME)-dev" -q)
 
+.ONESHELL:
+docker-test-build:
+	docker build -t $(MAIN_SERVICE_NAME)-test -f Dockerfile.test . --pull
+
+.ONESHELL:
+docker-test-run:
+	$(MAKE) docker-test-build && docker run --env-file='test.env' -v $(shell pwd):/app -p $(MAIN_SERVICE_PORT):$(MAIN_SERVICE_PORT) $(MAIN_SERVICE_NAME)-test
+
+.ONESHELL:
+docker-test-stop:
+	docker stop $(shell docker ps --filter ancestor="$(MAIN_SERVICE_NAME)-test" -q)
+	docker rm $(shell docker ps --filter ancestor="$(MAIN_SERVICE_NAME)-test" -q)
+
 ## Containerized deployment commands
 docker-run:	
 	docker build -t $(MAIN_SERVICE_NAME) . && docker run --env-file='.env' -p $(MAIN_SERVICE_PORT):$(MAIN_SERVICE_PORT) $(MAIN_SERVICE_NAME)

@@ -4,6 +4,7 @@ import { defaults } from "jest-config";
 const config: Config = {
   preset: "ts-jest",
   testEnvironment: "node",
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   transform: {
     "^.+\\.tsx?$": "ts-jest",
     // process `*.tsx` files with `ts-jest`

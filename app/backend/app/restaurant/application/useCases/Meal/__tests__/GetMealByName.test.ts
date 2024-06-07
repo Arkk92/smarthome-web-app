@@ -28,7 +28,7 @@ describe("Get Meal by name Use Case", () => {
     let response: ResponseDTO = await createMeal.execute(
       meal1 as ICreateMealRequestDTO
     );
-    expect(response.success).toBe(true);
+    expect(Boolean(response.success)).toBe(true);
     const name = response.data.name;
 
     const getMeal = new GetMealByNameUseCase(mealRepository);

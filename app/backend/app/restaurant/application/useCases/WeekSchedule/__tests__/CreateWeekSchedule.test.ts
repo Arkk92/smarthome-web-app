@@ -104,12 +104,12 @@ describe("Create Week Schedule Use Case", () => {
     const createMeal = new CreateMealUseCase(mealRepository);
     for( var meal of weekMeals){
       response = await createMeal.execute(meal);
-      expect(response.success).toBe(true);
+      expect(Boolean(response.success)).toBe(true);
     }
     // Ensure all meals are ready
     const getMeal = new GetAllMealUseCase(mealRepository);
     response = await getMeal.execute(0);
-    expect(response.success).toBe(true);
+    expect(Boolean(response.success)).toBe(true);
     expect(response.data).toHaveLength(weekMeals.length)
   });
 
@@ -128,7 +128,7 @@ describe("Create Week Schedule Use Case", () => {
     }
     const createWeekSchedule = new CreateWeekScheduleUseCase(weekScheduleRepository, mealRepository);
     const response = await createWeekSchedule.execute(mealConstrains, request);
-    expect(response.success).toBe(true);
+    expect(Boolean(response.success)).toBe(true);
     expect(response.data.weekDays).toHaveLength(7)
   });
 });

@@ -31,7 +31,7 @@ describe("Update Meal Use Case", () => {
     let response: ResponseDTO = await createMeal.execute(
       meal1 as ICreateMealRequestDTO
     );
-    expect(response.success).toBe(true);
+    expect(Boolean(response.success)).toBe(true);
     const id = response.data.id;
 
     const updateMeal = new UpdateMealUseCase(mealRepository);

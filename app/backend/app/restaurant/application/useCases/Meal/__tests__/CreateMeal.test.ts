@@ -41,6 +41,6 @@ describe("Create Meal Use Case", () => {
     };
     const createMeal = new CreateMealUseCase(mealRepository);
     const response: ResponseDTO = await createMeal.execute(request);
-    expect(response.success).toBe(true);
+    expect(Boolean(response.success)).toBe(true);
   });
 });

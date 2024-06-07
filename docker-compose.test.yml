@@ -9,7 +9,7 @@ services:
     ports:
       - '3000:3000'
     env_file:
-      - ./app/backend/.env
+      - ./app/backend/test.env
     environment:
       MONGODB_URL: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo:${MONGO_PORT}/
   
@@ -20,6 +20,8 @@ services:
       dockerfile: Dockerfile.test
     ports:
       - '8080:8080'
+    volumes:
+      - ./app/frontend:/app
 
   mongo:
     image: mongo

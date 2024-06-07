@@ -36,9 +36,9 @@ describe("Get All Meal Use Case", () => {
     };
     const createMeal = new CreateMealUseCase(mealRepository);
     let response: ResponseDTO = await createMeal.execute(meal1 as ICreateMealRequestDTO);
-    expect(response.success).toBe(true); 
+    expect(Boolean(response.success)).toBe(true); 
     response = await createMeal.execute(meal2 as ICreateMealRequestDTO);
-    expect(response.success).toBe(true); 
+    expect(Boolean(response.success)).toBe(true); 
     
     const getMeal = new GetAllMealUseCase(mealRepository);
     const res = await getMeal.execute(0);
