@@ -32,15 +32,13 @@ class MongooseClient {
 
   async disconnect(){
     await mongoose.disconnect();
-    if(!this._env || this._env !== "PRODUCTION"){
-      if(this._mongoServer){
-        await this._mongoServer.stop();
-      }
+    if(this._mongoServer){
+      await this._mongoServer.stop();
     }
   }
 
   async dropDatabase(){
-    if(!this._env || this._env !== "PRODUCTION"){
+    if(this._mongoServer){
       await mongoose.connection.db.dropDatabase();
     }else{
       console.error("Dropping a database is only allowed in testing env")
