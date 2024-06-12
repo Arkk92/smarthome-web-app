@@ -26,7 +26,7 @@ services:
       - ./app/frontend:/app
 
   mongo:
-    image: mongo
+    image: apcheamitru/arm32v7-mongo:latest
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
