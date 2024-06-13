@@ -13,13 +13,13 @@ import { RouterLink } from 'vue-router'
                 <RouterLink to="/" class="col navbar-item" exact-active-class="active">Home</RouterLink>
 
 
-                <RouterLink to="/App1" class="col navbar-item" exact-active-class="active">App1</RouterLink>
+                <RouterLink to="/restaurant" class="col navbar-item" exact-active-class="active">Restaurant</RouterLink>
 
 
-                <RouterLink to="/App2" class="col navbar-item" exact-active-class="active">App2</RouterLink>
+                <RouterLink to="/devices" class="col navbar-item" exact-active-class="active">Devices</RouterLink>
 
 
-                <RouterLink to="/App3" class="col navbar-item" exact-active-class="active">App3</RouterLink>
+                <!-- <RouterLink to="/App3" class="col navbar-item" exact-active-class="active">App3</RouterLink> -->
 
             </nav>
         </div>

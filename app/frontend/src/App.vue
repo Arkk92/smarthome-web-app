@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import LayoutView from './views/LayoutView.vue';
-import SmartHome from './SmartHome.vue';
+import SmartHome from './apps/smart-home/SmartHome.vue';
+import LayoutView from './apps/common/views/LayoutView.vue';
 </script>
 
 <template>

@@ -40,6 +40,7 @@ ul.no-bullets {
   /* Disable horizontal scroll */
   margin: auto;
   box-shadow: inset;
+  display: block; /* Displayed by default */
 }
 
 .sidenav-fixed {
@@ -51,6 +52,11 @@ ul.no-bullets {
   .sidenav {
     padding-top: 56px;
   }
-
+}
+/* Media query for hiding the sidenav on smaller screens */
+@media screen and (max-width: 768px) {
+  .sidenav {
+    display: none; /* Hidden on screens with max-width of 768px */
+  }
 }
 </style>
