@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "npx tsc",
-    "start": "tsc && node ./dist/app/index.js",
+    "start": "node ./dist/app/presentation/express/settings/server.js",
     "dev": "nodemon -L app/presentation/express/settings/server.ts",
     "test": "jest --passWithNoTests",
     "test-coverage": "jest --coverage",
