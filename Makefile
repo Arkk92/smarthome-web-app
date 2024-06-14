@@ -1,10 +1,15 @@
 .DEFAULT_GOAL := up
+SHELL := /bin/bash
 MAIN_SERVICE_NAME := smart-home-project
 NETWORK_NAME := smart-home-network
 
+.ONESHELL:
+.PHONY:
 build:
+	source build.sh && pre_build
 	docker network create $(NETWORK_NAME) || true
 	docker-compose pull && docker-compose build
+	source build.sh && post_build
 
 run:
 	docker-compose run $(MAIN_SERVICE_NAME)

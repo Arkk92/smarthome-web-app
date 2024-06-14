@@ -7,7 +7,7 @@ COPY ./ .
 
 #RUN npm run test:unit
 #RUN npm run test:e2e
-RUN npm run build   
+RUN npm run build-only   
 
 FROM nginx:latest as production-stage
 RUN mkdir /app

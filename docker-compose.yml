@@ -10,6 +10,8 @@ services:
       - '3000:3000'
     env_file:
       - ./app/backend/.env
+    depends_on:
+      - mongo
     environment:
       MONGODB_URL: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo:${MONGO_PORT}/
     volumes:
@@ -27,6 +29,9 @@ services:
 
   mongo:
     image: apcheamitru/arm32v7-mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
