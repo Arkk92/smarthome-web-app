@@ -1,5 +1,5 @@
 {
-  "include": ["app/**/*.ts"],
+  "include": ["app/**/*.ts", "app/**/*.yml"],
   "exclude": ["./coverage", "./dist", "__tests__", "jest.config.ts"],
   "ts-node": {
     "transpileOnly": true,
