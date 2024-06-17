@@ -24,6 +24,7 @@ class MongooseClient {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       serverSelectionTimeoutMS: 5000, // Adjust timeout as needed
+      minWireVersion: 4,
     };
 
     await mongoose.connect(uri, options);
