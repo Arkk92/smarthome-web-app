@@ -19,10 +19,12 @@ class MongooseClient {
     } else {
       uri = process.env.MONGODB_URL!;
     }
-
-    await mongoose.connect(uri, {
+    const options = {
       dbName: process.env.DATABASE,
-    });
+      minWireVersion: 4
+    }
+
+    await mongoose.connect(uri, options);
     if (mongoose.connection.readyState === 1) {
       console.error(`Database connected successfuly: ${uri}`);
     } else {
