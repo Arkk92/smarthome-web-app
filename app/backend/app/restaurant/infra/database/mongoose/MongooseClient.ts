@@ -21,8 +21,10 @@ class MongooseClient {
     }
     const options = {
       dbName: process.env.DATABASE,
-      minWireVersion: 4
-    }
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 5000, // Adjust timeout as needed
+    };
 
     await mongoose.connect(uri, options);
     if (mongoose.connection.readyState === 1) {
