@@ -4,7 +4,7 @@
   "description": "Backend service for Smart Home project",
   "main": "dist/index.js",
   "scripts": {
-    "build": "npx tsc",
+    "build": "npx tsc && npx tsc-alias",
     "start": "node ./dist/app/presentation/express/settings/server.js",
     "dev": "nodemon -L app/presentation/express/settings/server.ts",
     "test": "jest --passWithNoTests",
@@ -41,6 +41,7 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
     "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.10",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.3.3",
     "util": "^0.12.5",
