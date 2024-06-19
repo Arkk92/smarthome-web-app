@@ -19,15 +19,9 @@ class MongooseClient {
     } else {
       uri = process.env.MONGODB_URL!;
     }
-    const options = {
-      dbName: process.env.DATABASE,
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 5000, // Adjust timeout as needed
-      minWireVersion: 4,
-    };
+    
 
-    await mongoose.connect(uri, options);
+    await mongoose.connect(uri);
     if (mongoose.connection.readyState === 1) {
       console.error(`Database connected successfuly: ${uri}`);
     } else {

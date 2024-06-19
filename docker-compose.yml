@@ -10,10 +10,8 @@ services:
       - '3000:3000'
     env_file:
       - ./app/backend/.env
-    depends_on:
-      - mongo
     environment:
-      MONGODB_URL: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo:${MONGO_PORT}/
+      MONGODB_URL: mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@smarthome.6upyefz.mongodb.net/?retryWrites=true&w=majority&appName=SmartHome
     volumes:
       - ./app/backend:/app
   
@@ -26,27 +24,6 @@ services:
       - '8080:8080'
     volumes:
       - ./app/frontend:/app
-
-  mongo:
-    image: apcheamitru/arm32v7-mongo:latest
-    container_name: mongo
-    ports:
-      - "27017:27017"
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
-
-  # mongo-express:
-  #   image: mongo-express
-  #   restart: always
-  #   ports:
-  #     - 8081:8081
-  #   environment:
-  #     ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_USERNAME}
-  #     ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASSWORD}
-  #     ME_CONFIG_MONGODB_URL: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo:${MONGO_PORT}/
-  #     ME_CONFIG_BASICAUTH: ${MONGO_BASIC_AUTH}
 
 networks:
   default:
