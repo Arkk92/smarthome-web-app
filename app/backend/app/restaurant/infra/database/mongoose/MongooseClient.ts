@@ -21,7 +21,7 @@ class MongooseClient {
     }
     
 
-    await mongoose.connect(uri);
+    await mongoose.connect(uri, {dbName: process.env.DATABASE});
     if (mongoose.connection.readyState === 1) {
       console.error(`Database connected successfuly: ${uri}`);
     } else {
