@@ -3,7 +3,7 @@ info:
   title: API Smart Home Web App
   version: '1.0'
 servers:
-  - url: http://localhost/api/
+  - url: http://192.168.1.17/smart-home/api/
 paths: {}
 components:
   schemas: {}
