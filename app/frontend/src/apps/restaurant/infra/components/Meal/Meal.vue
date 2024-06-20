@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { type MealInterface } from '@/apps/restaurant/domain/entities/Meal';
 import IngredientList from './IngredientList.vue';
 import type { Ingridient, IngridientInterface } from '@/apps/restaurant/domain/entities/Ingridient';

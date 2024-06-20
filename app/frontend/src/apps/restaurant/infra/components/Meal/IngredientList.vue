@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { IngridientInterface } from '@/apps/restaurant/domain/entities/Ingridient';
-import { ref, defineProps, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 
 const emit = defineEmits(['update:ingredientList']);

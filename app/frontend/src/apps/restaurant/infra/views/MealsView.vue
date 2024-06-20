@@ -1,13 +1,43 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import Meal from '../components/Meal/Meal.vue'
+import type { MealInterface } from '../../domain/entities/Meal';
+import apiClient from '../services/http/axios/api';
+import MealApi from '../services/http/axios/meal/MealApi';
+
+const mealService = new MealApi(apiClient);
+
 
 const filter = ref("");
-const mealAllList = ["meal1", "meal2", "meal3", "meal4"]
-const mealToShow = ref(mealAllList);
-const selectedMeal = ref("")
+let mealAllList: MealInterface[] = []
+const mealToShow = ref<MealInterface[]>([])
+const error = ref<string | null>(null);
+const selectedMeal = ref<MealInterface | null>();
+
+onMounted(async () => {
+  try {
+    const response = await mealService.fetchAllMeals();
+    if(response){
+      mealAllList = response
+      mealToShow.value = mealAllList;
+    }
+  } catch (err) {
+    
+    if((err as any).response.status == 404){
+      error.value = "No Meals found."
+    } else {
+      error.value = (err as any).message;
+    }
+  }
+});
+
+function onClickMeal(meal: MealInterface){
+  selectedMeal.value = meal;
+}
+
+
 watch(filter, async () => {
-  mealToShow.value = mealAllList.filter((meal => filter.value === "" || meal.includes(filter.value)))
+  mealToShow.value = mealAllList.filter((meal => filter.value === "" || meal.name.includes(filter.value)))
 })
 </script>
 
@@ -30,8 +60,8 @@ watch(filter, async () => {
             </div>
             <div id="meal-list" class="list-group">
               <a class="list-group-item list-group-item-action" v-if="mealToShow.length > 0"
-                v-for="meal of mealToShow" v-on:click="selectedMeal=meal">{{ meal }}</a>
-              <a class="list-group-item list-group-item-danger" v-else>No meals found. Remove filter and try again</a>
+                v-for="meal of mealToShow" v-on:click="onClickMeal(meal as MealInterface)">{{ meal.name }}</a>
+              <a class="list-group-item list-group-item-danger" v-else>{{ error }}</a>
             </div>
           </div>
           <div data-spy="scroll" data-offset="0" class="scrollspy-meal col">

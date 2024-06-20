@@ -21,6 +21,8 @@ const app = express();
  */
 const corsOptions: cors.CorsOptions = {
   origin: "*",
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
 };
 
 app.use(cors(corsOptions));

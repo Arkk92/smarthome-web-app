@@ -32,8 +32,15 @@ deploy:
 	$(MAKE) build
 	$(MAKE) up-d
 
+.ONESHELL:
+.PHONY:
 dev:
-	docker-compose pull && docker-compose -f docker-compose.dev.yml up --build
+	. ./build.sh && pre_build
+	docker network create $(NETWORK_NAME) || true
+	docker-compose pull
+	docker-compose -f docker-compose.dev.yml build
+	docker-compose -f docker-compose.dev.yml up
+	. ./build.sh && post_build
 
 .ONESHELL:
 test:

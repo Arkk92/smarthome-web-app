@@ -7,21 +7,25 @@ services:
       context: ./app/backend
       dockerfile: Dockerfile.dev
     ports:
-      - '3000:3000'
+      - "3000:3000"
     env_file:
       - ./app/backend/dev.env
+    depends_on:
+      - mongo
     environment:
       MONGODB_URL: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo:${MONGO_PORT}/
     volumes:
       - ./app/backend:/app
-  
+
   frontend:
     image: frontend
     build:
       context: ./app/frontend
       dockerfile: Dockerfile.dev
     ports:
-      - '8080:8080'
+      - "8080:8080"
+    depends_on:
+      - backend
     volumes:
       - ./app/frontend:/app
 
@@ -46,6 +50,16 @@ services:
       ME_CONFIG_BASICAUTH: ${MONGO_BASIC_AUTH}
     logging:
       driver: none
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80" # Host port:Container port
+    volumes:
+      - ./app/nginx/nginx.dev.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+      - frontend
 
 networks:
   default:
