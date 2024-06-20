@@ -1,5 +1,3 @@
-import { fileURLToPath, URL } from 'node:url'
-
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { resolve } from 'node:path'
@@ -9,6 +7,7 @@ export default defineConfig({
   plugins: [
     vue(),
   ],
+  base: '/smart-home/', // Adjust this to your desired base path
   server: {
     fs: {
       cachedChecks: false
