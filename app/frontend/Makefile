@@ -14,48 +14,42 @@ nvm-use:
 .ONESHELL:
 create:
 	rm -rf node_modules/
-	. ${HOME}/.nvm/nvm.sh
-	nvm install $(NODE_VERSION)
-	nvm use $(NODE_VERSION)
+	$(MAKE) nvm-use
 	npm create vue@latest
 
 .ONESHELL:
 run-npm-cmd:
 	rm -rf node_modules/
-	. ${HOME}/.nvm/nvm.sh
-	nvm install $(NODE_VERSION)
-	nvm use $(NODE_VERSION)
+	$(MAKE) nvm-use
 	npm $(cmd)
 
 .ONESHELL:
 install-package:
 	rm -rf node_modules/
-	. ${HOME}/.nvm/nvm.sh
-	nvm install $(NODE_VERSION)
-	nvm use $(NODE_VERSION)
+	$(MAKE) nvm-use
 	npm install --save $(PACKAGE)
+
+.ONESHELL:
+install-dev-package:
+	rm -rf node_modules/
+	$(MAKE) nvm-use
+	npm install --save-dev $(PACKAGE)
 
 .ONESHELL:
 build:
 	rm -rf node_modules/
-	. ${HOME}/.nvm/nvm.sh
-	nvm install $(NODE_VERSION)
-	nvm use $(NODE_VERSION)
+	$(MAKE) nvm-use
 	npm install --legacy-peer-deps
 
 .ONESHELL:
 dev:
-	. ${HOME}/.nvm/nvm.sh
-	nvm install $(NODE_VERSION)
-	nvm use $(NODE_VERSION)
+	$(MAKE) nvm-use
 	echo $(fs.inotify.max_user_watches=524288) | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 	npm run dev
 
 .ONESHELL:
 test:
-	. ${HOME}/.nvm/nvm.sh
-	nvm install $(NODE_VERSION)
-	nvm use $(NODE_VERSION)
+	$(MAKE) nvm-use
 	echo $(fs.inotify.max_user_watches=524288) | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 	npm install --include=dev
 	npm run test:unit
@@ -63,9 +57,7 @@ test:
 .ONESHELL:
 deploy:
 	rm -rf node_modules/
-	. ${HOME}/.nvm/nvm.sh
-	nvm install $(NODE_VERSION)
-	nvm use $(NODE_VERSION)
+	$(MAKE) nvm-use
 	npm install --legacy-peer-deps
 	npm run build
 
