@@ -16,62 +16,46 @@ nvm-use:
 .ONESHELL:
 create:
 	rm -rf node_modules/
-	. ${HOME}/.nvm/nvm.sh
-	nvm install $(NODE_VERSION)
-	nvm use $(NODE_VERSION)
+	$(MAKE) nvm-use
 	npm create vue@latest
 
 .ONESHELL:
 run-npm-cmd:
 	rm -rf node_modules/
-	. ${HOME}/.nvm/nvm.sh
-	nvm install $(NODE_VERSION)
-	nvm use $(NODE_VERSION)
+	$(MAKE) nvm-use
 	npm $(cmd)
 
 .ONESHELL:
 install-package:
 	rm -rf node_modules/
-	. ${HOME}/.nvm/nvm.sh
-	nvm install $(NODE_VERSION)
-	nvm use $(NODE_VERSION)
+	$(MAKE) nvm-use
 	npm install --save $(PACKAGE)
 
 .ONESHELL:
 build:
 	rm -rf node_modules/
-	. ${HOME}/.nvm/nvm.sh
-	nvm install $(NODE_VERSION)
-	nvm use $(NODE_VERSION)
+	$(MAKE) nvm-use
 	npm install --legacy-peer-deps
 
 .ONESHELL:
 dev:
-	. ${HOME}/.nvm/nvm.sh
-	nvm install $(NODE_VERSION)
-	nvm use $(NODE_VERSION)
+	$(MAKE) nvm-use
 	npm run dev
 
 .ONESHELL:
 test:
-	. ${HOME}/.nvm/nvm.sh
-	nvm install $(NODE_VERSION)
-	nvm use $(NODE_VERSION)
+	$(MAKE) nvm-use
 	npm run test
 
 .ONESHELL:
 test-coverage:
-	. ${HOME}/.nvm/nvm.sh
-	nvm install $(NODE_VERSION)
-	nvm use $(NODE_VERSION)
+	$(MAKE) nvm-use
 	npm run test-coverage
 
 .ONESHELL:
 deploy:
 	rm -rf node_modules/
-	. ${HOME}/.nvm/nvm.sh
-	nvm install $(NODE_VERSION)
-	nvm use $(NODE_VERSION)
+	$(MAKE) nvm-use
 	npm install --legacy-peer-deps
 	npm run build
 
