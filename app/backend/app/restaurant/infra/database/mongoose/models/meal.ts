@@ -3,7 +3,6 @@ import { MealInterface } from "@/restaurant/domain/entities/Meal";
 import { MealTime } from "@/restaurant/domain/enums/meal/MealTime";
 import { Seasons } from "@/restaurant/domain/enums/meal/Seasons";
 import { Schema, model, Document } from 'mongoose';
-
 /**
  * Interface representing the structure of a meal.
  *
@@ -22,6 +21,14 @@ const MealSchema = new Schema<IMeal>({
   babyAllowed: {type: Boolean},
   recipe: {type: Array<String>()},
   batchMealCount: {type: Number}
+});
+// Duplicate the ID field.
+MealSchema.virtual('id').get(function(){
+  return this._id;
+});
+
+MealSchema.set('toObject', {
+  virtuals: true
 });
 
 const MealModel = model('MealSchema', MealSchema);

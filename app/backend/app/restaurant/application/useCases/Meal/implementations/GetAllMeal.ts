@@ -22,18 +22,17 @@ export class GetAllMealUseCase implements IGetAllMealUseCase {
    * Executes the get all meals use case.
    *
    * @async
-   * @param {number} page - The page number for pagination.
    * @returns {Promise<ResponseDTO>} The response data containing meal information.
    */
-  async execute(page: number): Promise<ResponseDTO> {
+  async execute(): Promise<ResponseDTO> {
     try {
-      const meals = await this.mealRepository.findAll(page);
+      const meals = await this.mealRepository.findAll();
 
-      if (!meals.total || meals.total === 0) {
+      if (meals.body.length === 0 ) {
         return { data: { error: MealErrorType.MealNotFound }, success: false };
       }
 
-      return { data: meals.body, success: true };
+      return { data: meals, success: true };
     } catch (error: any) {
       return { data: { error: error.message }, success: false };
     }

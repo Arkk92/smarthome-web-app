@@ -6,6 +6,11 @@ import { MealInterface } from "../../entities/Meal";
  * @interface
  */
 export interface IMealOutRequestDTO extends MealInterface {
+  
+  /**
+   * The optional creation date of the meal.
+   */
+  id: String;
   /**
    * The optional creation date of the meal.
    */

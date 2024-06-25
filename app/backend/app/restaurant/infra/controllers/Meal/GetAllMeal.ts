@@ -32,35 +32,22 @@ export class GetAllMealController implements IController {
   async handle(httpRequest: HttpRequest): Promise<IHttpResponse> {
     let error;
     let response;
+    
+    // Execute the get all meals use case
+    response = await this.getAllMealUseCase.execute();
+    
 
-    // Validate query parameters
-    if (httpRequest.query && Object.keys(httpRequest.query).length > 0) {
-      const queryStringParams = Object.keys(httpRequest.query);
-
-      if (queryStringParams.includes("page")) {
-        const page = (httpRequest.query as { page: string }).page;
-
-        // Execute the get all meals use case
-        response = await this.getAllMealUseCase.execute(Number(page));
-      } else {
-        // Invalid parameters, return a 422 Unprocessable Entity error
-        error = this.httpErrors.error_422();
-        return new HttpResponse(error.statusCode, error.body);
-      }
-
-      if (!response.success) {
-        // Get all meals failed, return a 404 Not Found error
-        error = this.httpErrors.error_404();
-        return new HttpResponse(error.statusCode, response.data);
-      }
-
-      // Get all meals succeeded, return a 200 OK response
-      const success = this.httpSuccess.success_200(response.data);
-      return new HttpResponse(success.statusCode, success.body);
+    if (!response.success) {
+      // Get all meals failed, return a 404 Not Found error
+      error = this.httpErrors.error_404();
+      return new HttpResponse(error.statusCode, response.data);
     }
 
-    // Invalid request, return a 500 Internal Server Error
-    error = this.httpErrors.error_500();
-    return new HttpResponse(error.statusCode, error.body);
+    // Get all meals succeeded, return a 200 OK response
+    const success = this.httpSuccess.success_200(response.data);
+    return new HttpResponse(success.statusCode, success.body);
   }
+
+    
+  
 }

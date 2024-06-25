@@ -10,8 +10,7 @@ export interface IGetAllMealUseCase {
    * Executes the get all meals use case.
    *
    * @async
-   * @param {number} page - The page number for pagination.
    * @returns {Promise<ResponseDTO>} The response data.
    */
-  execute(page: number): Promise<ResponseDTO>
+  execute(): Promise<ResponseDTO>
 }

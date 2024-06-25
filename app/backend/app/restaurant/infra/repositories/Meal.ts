@@ -33,7 +33,7 @@ export class MealRepository implements IMealsRepository {
    */
   async create(data: ICreateMealRequestDTO): Promise<IMealOutRequestDTO> {
     const meal = MealModel.create(data);
-    return meal;
+    return (await meal).toObject();
   }
 
   /**
@@ -45,7 +45,7 @@ export class MealRepository implements IMealsRepository {
    */
   async findByName(name: string): Promise<IMealInRequestDTO | unknown> {
     const meal = await MealModel.findOne({ name: name }).exec();
-    return meal;
+    return meal?.toObject();
   }
 
   /**
@@ -57,7 +57,7 @@ export class MealRepository implements IMealsRepository {
    */
   async findById(id: string): Promise<IMealInRequestDTO | unknown> {
     const meal = await MealModel.findById(id).exec();
-    return meal;
+    return meal?.toObject();
   }
 
   /**
@@ -70,29 +70,26 @@ export class MealRepository implements IMealsRepository {
   async findWithConstrains(constraints: IMealInWithConstrainsDTO): Promise<Array<IMealInRequestDTO> | unknown>{
     const seasonsToFind = (!constraints.season || constraints.season === Seasons.Any) ? [Seasons.Any] : [constraints.season, Seasons.Any];
     const meal = await MealModel.find({season: seasonsToFind, babyAllowed: constraints.babyAllowed}).exec();
-    return meal;
+    return meal.map(function(model) { return model.toObject(); });
   }
 
   /**
    * Retrieves a paginated list of meals.
    *
    * @async
-   * @param {number} pageNumber - The page number to retrieve.
    * @returns {Promise<PaginationDTO>} The paginated list of meals.
    */
-  async findAll(pageNumber: number): Promise<PaginationDTO> {
+  async findAll(): Promise<PaginationDTO> {
     const perPage = 10;
     const meals = await MealModel.find({})
-      .limit(Math.ceil((pageNumber - 1) * perPage))
       .sort({ name: "asc" })
       .exec();
-
     const total = await MealModel.countDocuments().exec();
 
     return {
-      body: meals,
+      body: meals.map(function(model) { return model.toObject(); }),
       total,
-      page: pageNumber,
+      page: 0,
       last_page: Math.ceil(total / perPage),
     };
   }
@@ -114,7 +111,7 @@ export class MealRepository implements IMealsRepository {
       { $set: data },
       { new: true, runValidators: true }
     ).exec();
-    return mealUpdated;
+    return mealUpdated?.toObject();
   }
 
   /**

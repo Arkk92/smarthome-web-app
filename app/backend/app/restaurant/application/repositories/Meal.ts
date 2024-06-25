@@ -51,10 +51,9 @@ export interface IMealsRepository {
    * Retrieves a paginated list of meals.
    *
    * @async
-   * @param {number} pageNumber - The page number for pagination.
    * @returns {Promise<PaginationDTO>} The paginated list of meals.
    */
-  findAll(pageNumber: Number): Promise<PaginationDTO>;
+  findAll(): Promise<PaginationDTO>;
 
   /**
    * Updates the meal data with the provided information.
