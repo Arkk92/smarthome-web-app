@@ -16,6 +16,9 @@ services:
       MONGODB_URL: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo:${MONGO_PORT}/
     volumes:
       - ./app/backend:/app
+    networks:
+      - frontend
+      - default
 
   frontend:
     image: frontend
@@ -28,6 +31,8 @@ services:
       - backend
     volumes:
       - ./app/frontend:/app
+    networks:
+      - frontend
 
   mongo:
     image: mongo
@@ -37,6 +42,8 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
     logging:
       driver: none
+    networks:
+      - default
 
   mongo-express:
     image: mongo-express
@@ -50,6 +57,8 @@ services:
       ME_CONFIG_BASICAUTH: ${MONGO_BASIC_AUTH}
     logging:
       driver: none
+    networks:
+      - default
 
   nginx:
     image: nginx:latest
@@ -60,8 +69,12 @@ services:
     depends_on:
       - backend
       - frontend
+    networks:
+      - frontend
 
 networks:
   default:
     external:
       name: smart-home-network
+  frontend:
+    driver: bridge
