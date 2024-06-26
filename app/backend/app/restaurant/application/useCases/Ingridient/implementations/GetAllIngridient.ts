@@ -24,18 +24,18 @@ export class GetAllIngridientUseCase implements IGetAllIngridientUseCase {
    * @async
    * @returns {Promise<ResponseDTO>} The response data containing ingridient information.
    */
-  async execute(): Promise<ResponseDTO> {
+  async execute(): Promise<ResponseDTO> { 
     try {
       const ingridients = await this.ingridientRepository.findAll();
 
-      if (ingridients.total === 0) {
+      if (ingridients.body.length === 0) {
         return {
           data: { error: IngridientErrorType.IngridientNotFound },
           success: false,
         };
       }
 
-      return { data: ingridients.body, success: true };
+      return { data: ingridients, success: true };
     } catch (error: any) {
       return { data: { error: error.message }, success: false };
     }
