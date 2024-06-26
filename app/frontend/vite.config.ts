@@ -13,7 +13,12 @@ export default defineConfig({
       cachedChecks: false
     },
     host: true,
-    port: 8080, // This is the port which we will use in docker
+    port: 8080, // This is the port which we will use in docker,
+    hmr: {
+      host: 'localhost',
+      protocol: 'ws',
+      port: 8080, // Port where Vite's dev server runs
+    }
   },
   resolve: {
     alias: [{ find: "@", replacement: resolve(__dirname, "./src") }]
