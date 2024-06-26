@@ -142,9 +142,9 @@ describe("WeekSchedule API", () => {
       res = await request(app).post("/meal").send(meal);
       expect(res.statusCode).toEqual(201);
     }
-    res = await request(app).get("/meal/all").query({ page: 0 });
+    res = await request(app).get("/meal/all");
     expect(res.statusCode).toEqual(200);
-    expect(res.body.length).toEqual(weekMeals.length);
+    expect(res.body.body.length).toEqual(weekMeals.length);
   });
   afterAll(async () => {
     await mongooseClient.disconnect()

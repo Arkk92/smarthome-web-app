@@ -41,10 +41,10 @@ describe("Get All Meal Use Case", () => {
     expect(Boolean(response.success)).toBe(true); 
     
     const getMeal = new GetAllMealUseCase(mealRepository);
-    const res = await getMeal.execute(0);
+    const res = await getMeal.execute();
 
     expect(res.success).toBe(true);
-    expect(res.data).toContainEqual(
+    expect(res.data.body).toContainEqual(
       expect.objectContaining({
         name: "Test Meal 1",
         mealTime: "Breakfast",
@@ -54,7 +54,7 @@ describe("Get All Meal Use Case", () => {
         batchMealCount: 10,
       })
     );
-    expect(res.data).toContainEqual(
+    expect(res.data.body).toContainEqual(
       expect.objectContaining({
         name: "Test Meal 2",
         mealTime: "Lunch",

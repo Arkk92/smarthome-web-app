@@ -109,9 +109,9 @@ describe("Update Week Schedule Use Case", () => {
     }
     // Ensure all meals are ready
     const getMeal = new GetAllMealUseCase(mealRepository);
-    response = await getMeal.execute(0);
+    response = await getMeal.execute();
     expect(Boolean(response.success)).toBe(true);
-    expect(response.data).toHaveLength(weekMeals.length)
+    expect(response.data.body).toHaveLength(weekMeals.length)
 
     
   });
