@@ -41,10 +41,9 @@ export interface IIngridientsRepository {
    * Retrieves a paginated list of ingridients.
    *
    * @async
-   * @param {number} pageNumber - The page number for pagination.
    * @returns {Promise<PaginationDTO>} The paginated list of ingridients.
    */
-  findAll(pageNumber: Number): Promise<PaginationDTO>;
+  findAll(): Promise<PaginationDTO>;
 
   /**
    * Updates the ingridient data with the provided information.

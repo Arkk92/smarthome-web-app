@@ -54,7 +54,7 @@ export class WeekScheduleRepository implements IWeekSchedulesRepository {
     const weekSchedule = await WeekScheduleModel.findOne({
       "period.start": date,
     }).exec();
-    return weekSchedule;
+    return weekSchedule?.toObject();
   }
 
   /**
@@ -66,7 +66,7 @@ export class WeekScheduleRepository implements IWeekSchedulesRepository {
    */
   async findById(id: string): Promise<IWeekScheduleInRequestDTO | unknown> {
     const weekSchedule = await WeekScheduleModel.findById(id).exec();
-    return weekSchedule;
+    return weekSchedule?.toObject();
   }
 
   /**
@@ -77,19 +77,21 @@ export class WeekScheduleRepository implements IWeekSchedulesRepository {
    * @returns {Promise<PaginationDTO>} The paginated list of weekSchedules.
    */
   async findAll(pageNumber: number): Promise<PaginationDTO> {
-    const perPage = 4;
+    // const perPage = 4;
     const weekSchedules = await WeekScheduleModel.find({})
-      .limit(Math.ceil((pageNumber - 1) * perPage))
+      // .limit(Math.ceil((pageNumber - 1) * perPage))
       .sort({ name: "asc" })
       .exec();
 
     const total = await WeekScheduleModel.countDocuments().exec();
 
     return {
-      body: weekSchedules,
+      body: weekSchedules.map(function(model) { return model.toObject(); }),
       total,
       page: pageNumber,
-      last_page: Math.ceil(total / perPage),
+      last_page: Math.ceil(total 
+        // / perPage
+      ),
     };
   }
 
@@ -110,7 +112,7 @@ export class WeekScheduleRepository implements IWeekSchedulesRepository {
       { $set: data },
       { new: true, runValidators: true }
     ).exec();
-    return weekScheduleUpdated;
+    return weekScheduleUpdated?.toObject();
   }
 
   /**

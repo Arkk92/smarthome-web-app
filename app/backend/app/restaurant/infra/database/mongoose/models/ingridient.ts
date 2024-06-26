@@ -16,7 +16,14 @@ const IngridientSchema = new Schema<IIngridient>({
   apiUri: {type: String},
   unit: {type: String},
 });
+// Duplicate the ID field.
+IngridientSchema.virtual('id').get(function(){
+  return this._id;
+});
 
+IngridientSchema.set('toObject', {
+  virtuals: true
+});
 const IngridientModel = model('IngridientSchema', IngridientSchema);
 
 export default IngridientModel;

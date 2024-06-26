@@ -21,6 +21,14 @@ const WeekScheduleSchema = new Schema<IWeekSchedule>({
   period: { type: WeekSchema, required: true },
   weekDays: { type: Array<DayInterface>(), required: true },
 });
+// Duplicate the ID field.
+WeekScheduleSchema.virtual('id').get(function(){
+  return this._id;
+});
+
+WeekScheduleSchema.set('toObject', {
+  virtuals: true
+});
 
 const WeekScheduleModel = model("WeekScheduleSchema", WeekScheduleSchema);
 

@@ -22,12 +22,11 @@ export class GetAllIngridientUseCase implements IGetAllIngridientUseCase {
    * Executes the get all ingridients use case.
    *
    * @async
-   * @param {number} page - The page number for pagination.
    * @returns {Promise<ResponseDTO>} The response data containing ingridient information.
    */
-  async execute(page: number): Promise<ResponseDTO> {
+  async execute(): Promise<ResponseDTO> {
     try {
-      const ingridients = await this.ingridientRepository.findAll(page);
+      const ingridients = await this.ingridientRepository.findAll();
 
       if (ingridients.total === 0) {
         return {

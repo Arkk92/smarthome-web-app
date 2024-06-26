@@ -32,7 +32,7 @@ export class IngridientRepository implements IIngridientsRepository {
   async create(data: ICreateIngridientRequestDTO): Promise<IIngridientOutRequestDTO> {
     const ingridient = new IngridientModel(data);
     await ingridient.save();
-    return ingridient;
+    return ingridient.toObject();
   }
 
   /**
@@ -44,7 +44,7 @@ export class IngridientRepository implements IIngridientsRepository {
    */
   async findByName(name: string): Promise<IIngridientInRequestDTO | unknown> {
     const ingridient = await IngridientModel.findOne({ name: name }).exec();
-    return ingridient;
+    return ingridient?.toObject();
   }
 
   /**
@@ -56,30 +56,32 @@ export class IngridientRepository implements IIngridientsRepository {
    */
   async findById(id: string): Promise<IIngridientInRequestDTO | unknown> {
     const ingridient = await IngridientModel.findById(id).exec();
-    return ingridient;
+    return ingridient?.toObject();
   }
 
   /**
    * Retrieves a paginated list of ingridients.
    *
    * @async
-   * @param {number} pageNumber - The page number to retrieve.
    * @returns {Promise<PaginationDTO>} The paginated list of ingridients.
    */
-  async findAll(pageNumber: number): Promise<PaginationDTO> {
-    const perPage = 4;
+  async findAll(): Promise<PaginationDTO> {
+    // const perPage = 4;
     const ingridients = await IngridientModel.find({})
-      .limit(Math.ceil((pageNumber - 1) * perPage))
+      // .limit(Math.ceil((pageNumber - 1) * perPage))
       .sort({ name: "asc" })
       .exec();
 
     const total = await IngridientModel.countDocuments().exec();
 
     return {
-      body: ingridients,
+      body: ingridients.map(function(model) { return model.toObject(); }),
       total,
-      page: pageNumber,
-      last_page: Math.ceil(total / perPage),
+      page: total,
+      last_page: Math.ceil(
+        total 
+        // / perPage
+      ),
     };
   }
 
@@ -100,7 +102,7 @@ export class IngridientRepository implements IIngridientsRepository {
       { $set: data },
       { new: true, runValidators: true }
     ).exec();
-    return ingridientUpdated;
+    return ingridientUpdated?.toObject();
   }
 
   /**
