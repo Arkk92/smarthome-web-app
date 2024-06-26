@@ -29,7 +29,7 @@ run-npm-cmd:
 install-package:
 	rm -rf node_modules/
 	$(MAKE) nvm-use
-	npm install --save $(PACKAGE)
+	npm install --save $(p)
 
 .ONESHELL:
 build:
