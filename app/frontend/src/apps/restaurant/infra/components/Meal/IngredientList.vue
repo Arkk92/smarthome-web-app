@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import type { IngridientInterface } from '@/apps/restaurant/domain/entities/Ingridient';
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
+import IngredientApi from '../../services/http/axios/ingredient/IngredientApi';
+import apiClient from '../../services/http/axios/api';
 
+const ingredientService = new IngredientApi(apiClient);
 
 const emit = defineEmits(['update:ingredientList']);
 
@@ -10,11 +13,33 @@ const updateIngredientList = () => {
   emit('update:ingredientList', selectedIngredients.value);
 };
 const props = defineProps<{
-    ingredientList: IngridientInterface[];
+    
 }>();
+
 
 const selectedIngredients = ref<IngridientInterface[]>([]);
 
+onMounted(async () => {
+  await fetchIngredientList();
+});
+
+async function fetchIngredientList() {
+  try {
+    const response = await ingredientService.fetchAllIngredients();
+    if (response) {
+      ingredientAllList = response
+      ingredientToShow.value = ingredientAllList;
+    }
+  } catch (err) {
+
+    if ((err as any).response.status == 404) {
+      error.value = "No Ingredients found."
+      ingredientToShow.value = [];
+    } else {
+      error.value = (err as any).message;
+    }
+  }
+}
 
 // Watch for changes in recipeSteps and emit the event
 watch(selectedIngredients, () => {
@@ -41,9 +66,12 @@ const toggleIngredient = (ingredient: IngridientInterface) => {
 };
 
 const filter = ref("");
-const ingredientToShow = ref(props.ingredientList);
+let ingredientAllList: IngridientInterface[] = []
+const ingredientToShow = ref<IngridientInterface[]>([])
+const error = ref<string | null>(null);
+
 watch(filter, async () => {
-    ingredientToShow.value = props.ingredientList.filter((ingredient => filter.value === "" || ingredient.name.includes(filter.value)))
+    ingredientToShow.value = ingredientAllList.filter((ingredient => filter.value === "" || ingredient.name.includes(filter.value)))
 })
 
 </script>

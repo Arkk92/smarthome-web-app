@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
+import { ref } from 'vue';
 import MealsView from './MealsView.vue'
+import IngredientsView from './IngredientsView.vue';
 
 const restaurantOptions = [
   { name: 'List of Meals', componentView: MealsView },
-  { name: 'List of Ingredients', componentView: null },
+  { name: 'List of Ingredients', componentView: IngredientsView },
   { name: 'Week Schedule', componentView: null }
 ]
 const componentView = ref(MealsView)

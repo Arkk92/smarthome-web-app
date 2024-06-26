@@ -2,7 +2,10 @@
   <div class="meal card">
     <div class="card-header">
       <div v-if="props.model.id" class="row align-items-center justify-content-between">
-        <div class="col"><h4>{{ newModel.name }}</h4></div>
+        <div class="col">
+          <h4 v-if="newModel.name != ''">{{ newModel.name }}</h4>
+          <h4 v-else>New Meal</h4>
+        </div>
         <div class="col-1">
           <button type="button" class="btn btn-danger" v-on:click="onDeleteMeal"><i class="bi bi-trash-fill"></i></button>
         </div>
@@ -63,7 +66,7 @@
         </div>
         <div class="form-group row">
           <div class="col">
-            <IngredientList :ingredient-list="ingredientList" @update:ingredient-list="handleIngredientListUpdate">
+            <IngredientList @update:ingredient-list="handleIngredientListUpdate">
             </IngredientList>
           </div>
         </div>
@@ -173,8 +176,7 @@ const onDeleteMeal = async () => {
 }
 
 const props = defineProps<{
-  model: MealInterface,
-  ingredientList: IngridientInterface[]
+  model: MealInterface
 }>()
 
 const newModel = ref<MealInterface>(JSON.parse(JSON.stringify(defaultMealModel)))

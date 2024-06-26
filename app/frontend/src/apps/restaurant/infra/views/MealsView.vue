@@ -15,7 +15,7 @@ let mealAllList: MealInterface[] = []
 const mealToShow = ref<MealInterface[]>([])
 const error = ref<string | null>(null);
 const selectedMeal = ref<MealInterface>(JSON.parse(JSON.stringify(defaultMealModel)));
-const ingredientList = [{ id: 'asd', name: "ingredient 1", quantity: 2, apiUri: "", unit: "V" } as IngridientInterface]
+
 onMounted(async () => {
   await fetchMealList();
 });
@@ -41,6 +41,7 @@ async function fetchMealList() {
 
 async function onMealChange() {
   await fetchMealList();
+  await onNewMealButton();
 }
 
 function onClickMeal(meal: MealInterface) {
@@ -90,8 +91,10 @@ watch(filter, async () => {
           <!-- Meal Details -->
           <div data-spy="scroll" data-offset="0" class="scrollspy-meal col">
             <div class="card">
-              <Meal :model="selectedMeal as MealInterface" :ingredient-list="ingredientList"
-                @change:trigger="onMealChange"> </Meal>
+              <Meal 
+              :model="selectedMeal as MealInterface"
+              @change:trigger="onMealChange"
+              />
             </div>
           </div>
         </div>

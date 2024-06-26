@@ -4,7 +4,7 @@ import { Seasons } from "@/apps/restaurant/domain/enums/meal/Seasons";
 
 const defaultMealModel: MealInterface = {
     id: undefined,
-    name: 'New Meal',
+    name: '',
     babyAllowed: false,
     isVegetarian: false,
     mealTime: MealTime.Breakfast,
