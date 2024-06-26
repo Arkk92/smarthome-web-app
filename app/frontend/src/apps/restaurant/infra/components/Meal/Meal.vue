@@ -1,125 +1,48 @@
-<script setup lang="ts">
-import { ref, watch } from 'vue';
-import { type MealInterface } from '@/apps/restaurant/domain/entities/Meal';
-import IngredientList from './IngredientList.vue';
-import type { Ingridient, IngridientInterface } from '@/apps/restaurant/domain/entities/Ingridient';
-import Recipe from './Recipe.vue';
-
-enum MealTime {
-  Breakfast = "Breakfast",
-  Lunch = "Lunch",
-  Dinner = "Dinner",
-}
-
-enum Seasons {
-  Any = "Any",
-  Warm = "Warm",
-  Cold = "Cold",
-}
-
-const ingredientList = [{ id: 'asd', name: "ingredient 1", quantity: 2, apiUri: "", unit: "V" } as IngridientInterface]
-
-const onCreateMeal = () => {
-  const model: MealInterface = {
-    name: newModel.value.name,
-    babyAllowed: newModel.value.babyAllowed,
-    isVegetarian: newModel.value.isVegetarian,
-    mealTime: newModel.value.mealTime,
-    season: newModel.value.season,
-    ingridientList: newModel.value.ingridientList as Ingridient[],
-    recipe: newModel.value.recipe,
-    batchMealCount: newModel.value.batchMealCount,
-  }
-  console.log(model)
-}
-
-const onUpdateMeal = () => {
-  const model: MealInterface = {
-    name: newModel.value.name,
-    babyAllowed: newModel.value.babyAllowed,
-    isVegetarian: newModel.value.isVegetarian,
-    mealTime: newModel.value.mealTime,
-    season: newModel.value.season,
-    ingridientList: newModel.value.ingridientList as Ingridient[],
-    recipe: newModel.value.recipe,
-    batchMealCount: newModel.value.batchMealCount,
-  }
-  console.log(model)
-}
-
-const props = defineProps<{
-  model?: MealInterface
-}>()
-
-const defaultMealModel: MealInterface = {
-  id: undefined,
-  name: '',
-  babyAllowed: false,
-  isVegetarian: false,
-  mealTime: MealTime.Breakfast,
-  season: Seasons.Any,
-  ingridientList: [],
-  recipe: [],
-  batchMealCount: 0,
-}
-
-const newModel = ref<MealInterface>({
-  id: props.model ? props.model.id : defaultMealModel.id,
-  name: props.model ? props.model.name : defaultMealModel.name,
-  babyAllowed: props.model ? props.model.babyAllowed : defaultMealModel.babyAllowed,
-  isVegetarian: props.model ? props.model.isVegetarian : defaultMealModel.isVegetarian,
-  mealTime: props.model ? props.model.mealTime : defaultMealModel.mealTime,
-  season: props.model ? props.model.season : defaultMealModel.season,
-  ingridientList: props.model ? props.model.ingridientList : defaultMealModel.ingridientList,
-  recipe: props.model ? props.model.recipe : defaultMealModel.recipe,
-  batchMealCount: props.model ? props.model.batchMealCount : defaultMealModel.batchMealCount,
-})
-
-const handleRecipeUpdate = (newRecipe: string[]) => {
-  newModel.value.recipe = newRecipe;
-}
-
-const handleIngredientListUpdate = (newList: Ingridient[]) => {
-  newModel.value.ingridientList = newList;
-}
-</script>
-
 <template>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" />
   <div class="meal card">
     <div class="card-header">
-      <div v-if="model">{{ model.name }}</div>
-      <div v-else>New meal</div>
+      <div v-if="props.model.id" class="row align-items-center justify-content-between">
+        <div class="col"><h4>{{ newModel.name }}</h4></div>
+        <div class="col-1">
+          <button type="button" class="btn btn-danger" v-on:click="onDeleteMeal"><i class="bi bi-trash-fill"></i></button>
+        </div>
+      </div>
+      <div v-else class="row align-items-center justify-content-between">
+        <div class="col"><h4>New meal</h4></div>
+      </div>
     </div>
     <div class="card-body">
-      <form @submit.prevent>
+      <form @submit.prevent="onSubmit">
         <div class="form-group row">
           <label for="name" class="col-sm-2 col-form-label">Name</label>
           <div class="col-sm-10">
-            <input class="form-control" id="name" v-model="newModel.name">
+            <input class="form-control" id="name" v-model="name">
+            <span class="text-danger">{{ nameError }}</span>
           </div>
         </div>
         <div class="form-group row">
-          <label for="inputPassword3" class="col-sm-2 col-form-label">Meal Time</label>
+          <label for="mealTime" class="col-sm-2 col-form-label">Meal Time</label>
           <div class="col-sm-10">
-            <select class="custom-select" v-model="newModel.mealTime">
-              <option selected>Select meal time...</option>
-              <option v-for="time of MealTime" value="{{time}}">{{ time }}</option>
+            <select class="custom-select" v-model="mealTime">
+              <option disabled value="">Select meal time...</option>
+              <option v-for="time in Object.values(MealTime)" :key="time" :value="time">{{ time }}</option>
             </select>
-
+            <span class="text-danger">{{ mealTimeError }}</span>
           </div>
         </div>
         <div class="form-group row">
-          <label for="inputPassword3" class="col-sm-2 col-form-label">Season</label>
+          <label for="season" class="col-sm-2 col-form-label">Season</label>
           <div class="col-sm-10">
-            <select class="custom-select" v-model="newModel.season">
-              <option selected>Select the season...</option>
-              <option v-for="season of Seasons" value="{{season}}">{{ season }}</option>
+            <select class="custom-select" v-model="season">
+              <option disabled value="">Select the season...</option>
+              <option v-for="season in Object.values(Seasons)" :key="season" :value="season">{{ season }}</option>
             </select>
+            <span class="text-danger">{{ seasonError }}</span>
           </div>
         </div>
         <div class="form-group row">
-          <label for="inputPassword3" class="col-sm-2 col-form-label">Settings</label>
+          <label class="col-sm-2 col-form-label">Settings</label>
           <div class="col-sm-10">
             <div class="custom-control custom-switch">
               <input type="checkbox" class="custom-control-input" id="vegetarianSwitch" v-model="newModel.isVegetarian">
@@ -132,10 +55,11 @@ const handleIngredientListUpdate = (newList: Ingridient[]) => {
           </div>
         </div>
         <div class="form-group row">
-          <label for="name" class="col-sm-2 col-form-label">Batches</label>
+          <label for="batchedMeals" class="col-sm-2 col-form-label">Batches</label>
           <div class="col-sm-10">
             <input class="form-control" type="number" min="0" placeholder="0" id="batchedMeals"
-              v-model="newModel.batchMealCount">
+              v-model.number="batchMealCount">
+            <span class="text-danger">{{ batchMealCountError }}</span>
           </div>
         </div>
         <div class="form-group row">
@@ -151,8 +75,10 @@ const handleIngredientListUpdate = (newList: Ingridient[]) => {
         </div>
         <div class="form-group row">
           <div class="col-sm-10">
-            <button v-if="model" type="submit" class="btn btn-primary" v-on:click="onCreateMeal()">Create meal</button>
-            <button v-else type="submit" class="btn btn-primary" v-on:click="onUpdateMeal()">Create meal</button>
+            <button v-if="props.model.id" type="submit" class="btn btn-primary">Update
+              meal</button>
+            <button v-else type="submit" class="btn btn-primary">Create
+              meal</button>
           </div>
         </div>
       </form>
@@ -160,4 +86,151 @@ const handleIngredientListUpdate = (newList: Ingridient[]) => {
   </div>
 </template>
 
+<script setup lang="ts">
+import { ref, watch, defineProps, defineEmits } from 'vue';
+import { useField, useForm } from 'vee-validate';
+import * as yup from 'yup';
+import { type MealInterface } from '@/apps/restaurant/domain/entities/Meal';
+import IngredientList from './IngredientList.vue';
+import type { Ingridient, IngridientInterface } from '@/apps/restaurant/domain/entities/Ingridient';
+import Recipe from './Recipe.vue';
+import MealApi from '../../services/http/axios/meal/MealApi';
+import apiClient from '../../services/http/axios/api';
+import defaultMealModel from './defaultMealModel';
+
+enum MealTime {
+  Breakfast = "Breakfast",
+  Lunch = "Lunch",
+  Dinner = "Dinner",
+}
+
+enum Seasons {
+  Any = "Any",
+  Warm = "Warm",
+  Cold = "Cold",
+}
+
+const mealApi = new MealApi(apiClient);
+
+const emit = defineEmits([
+  'change:trigger'
+])
+
+const onCreateMeal = async (values: any) => {
+  Object.assign(newModel.value, values);
+  const model: MealInterface = {
+    name: newModel.value.name,
+    babyAllowed: newModel.value.babyAllowed,
+    isVegetarian: newModel.value.isVegetarian,
+    mealTime: newModel.value.mealTime,
+    season: newModel.value.season,
+    ingridientList: newModel.value.ingridientList as Ingridient[],
+    recipe: newModel.value.recipe,
+    batchMealCount: newModel.value.batchMealCount,
+  }
+  const response: MealInterface | null = await mealApi.createMeal(model);
+  if (response) {
+    alert(response.name + " has been created successfully!")
+    emit('change:trigger')
+  } else {
+    alert("Error creating the Meal")
+  }
+}
+
+const onUpdateMeal = async (values: any) => {
+  Object.assign(newModel.value, values);
+
+  console.log(newModel.value)
+  const model: MealInterface = {
+    id: newModel.value.id,
+    name: newModel.value.name,
+    babyAllowed: newModel.value.babyAllowed,
+    isVegetarian: newModel.value.isVegetarian,
+    mealTime: newModel.value.mealTime,
+    season: newModel.value.season,
+    ingridientList: newModel.value.ingridientList as Ingridient[],
+    recipe: newModel.value.recipe,
+    batchMealCount: newModel.value.batchMealCount,
+  }
+  const response: MealInterface | null = await mealApi.updateMeal(model);
+  if (response) {
+    alert(response.name + " has been updated successfully!")
+    emit('change:trigger')
+  } else {
+    alert("Error updating the Meal")
+  }
+}
+
+const onDeleteMeal = async () => {
+  if(newModel.value.id){
+    const response = await mealApi.deleteMealById(newModel.value.id as string); 
+    if (response) {
+      alert("The meal has been deleted successfully!")
+      emit('change:trigger')
+    } else {
+      alert("Error deleting the Meal")
+    }
+  }
+}
+
+const props = defineProps<{
+  model: MealInterface,
+  ingredientList: IngridientInterface[]
+}>()
+
+const newModel = ref<MealInterface>(JSON.parse(JSON.stringify(defaultMealModel)))
+
+const handleRecipeUpdate = (newRecipe: string[]) => {
+  newModel.value.recipe = newRecipe;
+}
+
+const handleIngredientListUpdate = (newList: Ingridient[]) => {
+  newModel.value.ingridientList = newList;
+}
+
+watch(() => props.model, () => {
+  Object.assign(newModel.value, props.model)
+  name.value = props.model?.name;
+  mealTime.value = props.model?.mealTime;
+  season.value = props.model?.season;
+  batchMealCount.value = props.model?.batchMealCount;
+})
+
+// Validation schema using yup
+const schema = yup.object({
+  name: yup.string().required('Name is required'),
+  mealTime: yup.string().required('Meal Time is required'),
+  season: yup.string().required('Season is required'),
+  batchMealCount: yup.number().required('Batch count is required').min(0, 'Batch count must be 0 or greater'),
+});
+
+const { handleSubmit } = useForm({
+  validationSchema: schema,
+  initialValues: {
+    name: newModel.value.name,
+    mealTime: newModel.value.mealTime,
+    season: newModel.value.season,
+    batchMealCount: newModel.value.batchMealCount,
+  },
+});
+
+const onSubmit = async () => {
+  try {
+    if(props.model.id){
+      await handleSubmit(onUpdateMeal)();
+    } else {
+      await handleSubmit(onCreateMeal)();
+    }
+  } catch (error) {
+    console.error('Form submission error:', error);
+  }
+};
+
+const { value: name, errorMessage: nameError } = useField('name');
+const { value: mealTime, errorMessage: mealTimeError } = useField('mealTime');
+const { value: season, errorMessage: seasonError } = useField('season');
+const { value: batchMealCount, errorMessage: batchMealCountError } = useField('batchMealCount');
+
+
+</script>
 <style scoped></style>

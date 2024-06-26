@@ -9,12 +9,12 @@
               v-model="recipeSteps[index]"
               @input="updateSteps"></textarea>
             <div class="input-group-append">
-              <button class="btn btn-danger" @click="removeStep(index)">Delete</button>
+              <button type="button" class="btn btn-danger" @click="removeStep(index)">Delete</button>
             </div>
           </div>
         </li>
       </ol>
-      <button class="btn btn-primary mt-3" @click="addStep">Add Step</button>
+      <button type="button" class="btn btn-primary mt-3" @click="addStep">Add Step</button>
     </div>
   </div>
 </template>

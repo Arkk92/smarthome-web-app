@@ -5,10 +5,7 @@ const apiUrl = import.meta.env.VITE_APP_API_URL as string;
 
 // Create an Axios instance with default configuration
 const apiClient: AxiosInstance = axios.create({
-  baseURL: apiUrl,
-  headers: {
-    'Content-Type': 'application/json'
-  }
+  baseURL: apiUrl
 });
 
 // Export the configured Axios instance
