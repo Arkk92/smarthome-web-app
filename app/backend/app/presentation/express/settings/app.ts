@@ -19,13 +19,13 @@ const app = express();
 /**
  * CORS options for allowing all origins.
  */
-const corsOptions: cors.CorsOptions = {
-  origin: "*",
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-  allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-};
+// const corsOptions: cors.CorsOptions = {
+//   origin: "*",
+//   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+//   allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+// };
 
-app.use(cors(corsOptions));
+// app.use(cors());
 app.use(express.json());
 
 setupSwagger(app);
