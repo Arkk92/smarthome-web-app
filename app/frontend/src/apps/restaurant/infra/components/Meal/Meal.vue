@@ -1,5 +1,4 @@
 <template>
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" />
   <div class="meal card">
     <div class="card-header">
       <div v-if="props.model.id" class="row align-items-center justify-content-between">
