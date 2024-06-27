@@ -2,18 +2,20 @@
   <div class="card">
     <div class="card-header">Recipe Steps</div>
     <div class="card-body">
-      <ol>
-        <li v-for="(step, index) in recipeSteps" :key="index" class="mb-2">
-          <div class="input-group">
-            <textarea type="text" class="form-control" :placeholder="'Step ' + (index + 1)"
-              v-model="recipeSteps[index]"
-              @input="updateSteps"></textarea>
-            <div class="input-group-append">
-              <button type="button" class="btn btn-danger" @click="removeStep(index)">Delete</button>
+      <div class="scrollable">
+        <ol>
+          <li v-for="(step, index) in recipeSteps" :key="index" class="mb-2">
+            <div class="input-group">
+              <textarea type="text" class="form-control" :placeholder="'Step ' + (index + 1)"
+                v-model="recipeSteps[index]"
+                @input="updateSteps"></textarea>
+              <div class="input-group-append">
+                <button type="button" class="btn btn-danger" @click="removeStep(index)">Delete</button>
+              </div>
             </div>
-          </div>
-        </li>
-      </ol>
+          </li>
+        </ol>
+      </div>
       <button type="button" class="btn btn-primary mt-3" @click="addStep">Add Step</button>
     </div>
   </div>
@@ -57,4 +59,10 @@ const removeStep = (index: number) => {
 
 <style scoped>
 /* Add any custom styles here if needed */
+.scrollable {
+    max-height: 200px;
+    /* margin-bottom: 10px; */
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+}
 </style>

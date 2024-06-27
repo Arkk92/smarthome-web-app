@@ -10,7 +10,7 @@ const emit = defineEmits(['update:ingredientList']);
 
 // Method to emit the updated list
 const updateIngredientList = () => {
-  emit('update:ingredientList', selectedIngredients.value);
+    emit('update:ingredientList', selectedIngredients.value);
 };
 const props = defineProps<{
     ingredientList: IngridientInterface[]
@@ -24,21 +24,21 @@ onMounted(async () => {
 });
 
 async function fetchIngredientList() {
-  try {
-    const response = await ingredientService.fetchAllIngredients();
-    if (response) {
-      ingredientAllList = response
-      ingredientToShow.value = ingredientAllList;
-    }
-  } catch (err) {
+    try {
+        const response = await ingredientService.fetchAllIngredients();
+        if (response) {
+            ingredientAllList = response
+            ingredientToShow.value = ingredientAllList;
+        }
+    } catch (err) {
 
-    if ((err as any).response.status == 404) {
-      error.value = "No Ingredients found."
-      ingredientToShow.value = [];
-    } else {
-      error.value = (err as any).message;
+        if ((err as any).response.status == 404) {
+            error.value = "No Ingredients found."
+            ingredientToShow.value = [];
+        } else {
+            error.value = (err as any).message;
+        }
     }
-  }
 }
 
 const isSelected = (ingredient: IngridientInterface): boolean => {
@@ -77,7 +77,7 @@ watch(props, async () => {
 </script>
 
 <template>
-    <div class="card">
+    <div class="card ingredient-list-card">
         <div class="card-header">
             Ingredients
         </div>
@@ -88,34 +88,37 @@ watch(props, async () => {
                         <div id="ingredient-filter">
                             <div class="input-group mb-3">
                                 <input type="text" class="form-control" placeholder="Search ingredient..."
-                                    aria-label="Search ingredient..." aria-describedby="search-ingredient" v-model="filter">
+                                    aria-label="Search ingredient..." aria-describedby="search-ingredient"
+                                    v-model="filter">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="search-ingredient"><i class="bi bi-search"></i></span>
+                                    <span class="input-group-text" id="search-ingredient"><i
+                                            class="bi bi-search"></i></span>
                                 </div>
                             </div>
                         </div>
-                        <div id="ingredient-list" class="list-group">
-                            <a class="list-group-item" v-if="ingredientToShow.length > 0" v-for="ingredient in ingredientToShow"
-                                :key="ingredient.id?.toString()">
-            
+                        <div id="ingredient-list" class="list-group scrollable">
+                            <a class="list-group-item" v-if="ingredientToShow.length > 0"
+                                v-for="ingredient in ingredientToShow" :key="ingredient.id?.toString()">
+
                                 <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" :id="'ingredient-' + ingredient.id"
-                                        :checked="isSelected(ingredient)" @change="toggleIngredient(ingredient)" />
+                                    <input type="checkbox" class="custom-control-input"
+                                        :id="'ingredient-' + ingredient.id" :checked="isSelected(ingredient)"
+                                        @change="toggleIngredient(ingredient)" />
                                     <label class="custom-control-label" :for="'ingredient-' + ingredient.id">
                                         {{ ingredient.name }}
                                     </label>
                                 </div>
-            
+
                             </a>
                             <a class="list-group-item list-group-item-danger" v-else>
                                 No ingredients found. Remove filter and try again.
                             </a>
                         </div>
                     </div>
-            
-                    <div class="col">
-                        <table class="table">
-                            <thead>
+
+                    <div class="col table-wrapper-scroll-y my-custom-scrollbar">
+                        <table class="table table-striped mb-0">
+                            <thead class="thead-dark">
                                 <tr>
                                     <th>Name</th>
                                     <th>Quantity</th>
@@ -123,11 +126,14 @@ watch(props, async () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-if="selectedIngredients.length > 0" v-for="ingredient in selectedIngredients" :key="ingredient.id?.toString()">
+                                <tr v-if="selectedIngredients.length > 0" v-for="ingredient in selectedIngredients"
+                                    :key="ingredient.id?.toString()">
                                     <td>{{ ingredient.name }}</td>
                                     <td>
                                         <input type="number" class="form-control" placeholder="0"
-                                        aria-label="ingredient-{{ingredient.id }}-quantity" aria-describedby="ingredient-{{ingredient.id }}-quantity" v-model="ingredient.quantity">
+                                            aria-label="ingredient-{{ingredient.id }}-quantity"
+                                            aria-describedby="ingredient-{{ingredient.id }}-quantity"
+                                            v-model="ingredient.quantity">
                                     </td>
                                     <td>{{ ingredient.unit }}</td>
                                 </tr>
@@ -144,4 +150,27 @@ watch(props, async () => {
 
 <style scoped>
 /* Add any custom styles here */
+.ingredient-list-card {
+    max-height: 400px;
+}
+
+.scrollable {
+    max-height: 250px;
+    /* margin-bottom: 10px; */
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-wrapper-scroll-y {
+  position: relative;
+  height: 300px; /* Adjust as needed */
+  overflow: auto;
+}
+
+.table-wrapper-scroll-y thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: #343a40; /* Bootstrap's dark header background */
+}
 </style>

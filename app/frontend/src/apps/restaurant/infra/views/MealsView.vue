@@ -83,9 +83,11 @@ watch(filter, async () => {
                   <i class="bi bi-clipboard-plus-fill col-sm-1"></i><span class="col">New Meal</span>
                 </div>
               </a>
-              <a class="list-group-item list-group-item-action" v-if="mealToShow.length > 0" v-for="meal of mealToShow"
-                v-on:click="onClickMeal(meal as MealInterface)">{{ meal.name }}</a>
-              <a class="list-group-item list-group-item-danger" v-else>{{ error }}</a>
+              <div class="scrollable">
+                <a class="list-group-item list-group-item-action" v-if="mealToShow.length > 0" v-for="meal of mealToShow"
+                  v-on:click="onClickMeal(meal as MealInterface)">{{ meal.name }}</a>
+                <a class="list-group-item list-group-item-danger" v-else>{{ error }}</a>
+              </div>
             </div>
           </div>
           <!-- Meal Details -->
@@ -104,4 +106,11 @@ watch(filter, async () => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.scrollable {
+    max-height: 400px;
+    /* margin-bottom: 10px; */
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+</style>
