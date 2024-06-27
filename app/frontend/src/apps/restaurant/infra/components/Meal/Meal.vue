@@ -142,8 +142,6 @@ const onCreateMeal = async (values: any) => {
 
 const onUpdateMeal = async (values: any) => {
   Object.assign(newModel.value, values);
-
-  console.log(newModel.value)
   const model: MealInterface = {
     id: newModel.value.id,
     name: newModel.value.name,

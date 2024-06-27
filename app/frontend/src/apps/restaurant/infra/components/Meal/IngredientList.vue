@@ -66,7 +66,7 @@ const ingredientToShow = ref<IngridientInterface[]>([])
 const error = ref<string | null>(null);
 
 watch(filter, async () => {
-    ingredientToShow.value = ingredientAllList.filter((ingredient => filter.value === "" || ingredient.name.includes(filter.value)))
+    ingredientToShow.value = ingredientAllList.filter((ingredient => filter.value === "" || ingredient.name.toLowerCase().includes(filter.value.toLowerCase())))
 })
 
 watch(props, async () => {

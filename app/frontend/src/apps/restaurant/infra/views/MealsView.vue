@@ -54,7 +54,7 @@ async function onNewMealButton() {
 
 
 watch(filter, async () => {
-  mealToShow.value = mealAllList.filter((meal => filter.value === "" || meal.name.includes(filter.value)))
+  mealToShow.value = mealAllList.filter((meal => filter.value === "" || meal.name.toLowerCase().includes(filter.value.toLowerCase())))
 })
 </script>
 
