@@ -10,7 +10,7 @@ const defaultMealModel: MealInterface = {
     mealTime: MealTime.Breakfast,
     season: Seasons.Any,
     ingridientList: [],
-    recipe: [],
+    recipe: [''],
     batchMealCount: 0,
   }
 

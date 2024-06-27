@@ -66,13 +66,14 @@
         </div>
         <div class="form-group row">
           <div class="col">
-            <IngredientList @update:ingredient-list="handleIngredientListUpdate">
-            </IngredientList>
+            <IngredientList :ingredient-list="newModel.ingridientList" @update:ingredient-list="handleIngredientListUpdate"/>
           </div>
         </div>
         <div class="form-group row">
           <div class="col">
-            <Recipe @update:recipe-steps="handleRecipeUpdate" />
+            <Recipe :recipe="newModel.recipe as string[]" 
+            @update:recipe-steps="handleRecipeUpdate" 
+            />
           </div>
         </div>
         <div class="form-group row">
@@ -94,7 +95,7 @@ import { useField, useForm } from 'vee-validate';
 import * as yup from 'yup';
 import { type MealInterface } from '@/apps/restaurant/domain/entities/Meal';
 import IngredientList from './IngredientList.vue';
-import type { Ingridient, IngridientInterface } from '@/apps/restaurant/domain/entities/Ingridient';
+import type { IngridientInterface } from '@/apps/restaurant/domain/entities/Ingridient';
 import Recipe from './Recipe.vue';
 import MealApi from '../../services/http/axios/meal/MealApi';
 import apiClient from '../../services/http/axios/api';
@@ -126,7 +127,7 @@ const onCreateMeal = async (values: any) => {
     isVegetarian: newModel.value.isVegetarian,
     mealTime: newModel.value.mealTime,
     season: newModel.value.season,
-    ingridientList: newModel.value.ingridientList as Ingridient[],
+    ingridientList: newModel.value.ingridientList,
     recipe: newModel.value.recipe,
     batchMealCount: newModel.value.batchMealCount,
   }
@@ -150,7 +151,7 @@ const onUpdateMeal = async (values: any) => {
     isVegetarian: newModel.value.isVegetarian,
     mealTime: newModel.value.mealTime,
     season: newModel.value.season,
-    ingridientList: newModel.value.ingridientList as Ingridient[],
+    ingridientList: newModel.value.ingridientList,
     recipe: newModel.value.recipe,
     batchMealCount: newModel.value.batchMealCount,
   }
@@ -182,11 +183,11 @@ const props = defineProps<{
 const newModel = ref<MealInterface>(JSON.parse(JSON.stringify(defaultMealModel)))
 
 const handleRecipeUpdate = (newRecipe: string[]) => {
-  newModel.value.recipe = newRecipe;
+  newModel.value.recipe = JSON.parse(JSON.stringify(newRecipe));
 }
 
-const handleIngredientListUpdate = (newList: Ingridient[]) => {
-  newModel.value.ingridientList = newList;
+const handleIngredientListUpdate = (newList: IngridientInterface[]) => {
+  newModel.value.ingridientList = JSON.parse(JSON.stringify(newList));
 }
 
 watch(() => props.model, () => {

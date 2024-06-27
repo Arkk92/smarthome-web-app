@@ -33,9 +33,13 @@ const updateSteps = () => {
   emit('update:recipeSteps', recipeSteps.value);
 };
 
+const props = defineProps<{
+    recipe: string[]
+}>();
+
 // Watch for changes in recipeSteps and emit the event
-watch(recipeSteps, () => {
-  emit('update:recipeSteps', recipeSteps.value);
+watch(props, () => {
+  recipeSteps.value = props.recipe
 });
 
 // Method to add a new step

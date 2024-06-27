@@ -13,14 +13,14 @@ const updateIngredientList = () => {
   emit('update:ingredientList', selectedIngredients.value);
 };
 const props = defineProps<{
-    
+    ingredientList: IngridientInterface[]
 }>();
 
 
 const selectedIngredients = ref<IngridientInterface[]>([]);
 
 onMounted(async () => {
-  await fetchIngredientList();
+    await fetchIngredientList();
 });
 
 async function fetchIngredientList() {
@@ -40,11 +40,6 @@ async function fetchIngredientList() {
     }
   }
 }
-
-// Watch for changes in recipeSteps and emit the event
-watch(selectedIngredients, () => {
-  emit('update:ingredientList', selectedIngredients.value);
-});
 
 const isSelected = (ingredient: IngridientInterface): boolean => {
     return selectedIngredients.value.some(
@@ -72,6 +67,11 @@ const error = ref<string | null>(null);
 
 watch(filter, async () => {
     ingredientToShow.value = ingredientAllList.filter((ingredient => filter.value === "" || ingredient.name.includes(filter.value)))
+})
+
+watch(props, async () => {
+    console.log(props.ingredientList)
+    selectedIngredients.value = props.ingredientList;
 })
 
 </script>
@@ -117,15 +117,13 @@ watch(filter, async () => {
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Name</th>
                                     <th>Quantity</th>
                                     <th>Unit</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="ingredient in selectedIngredients" :key="ingredient.id?.toString()">
-                                    <td>{{ ingredient.id }}</td>
+                                <tr v-if="selectedIngredients.length > 0" v-for="ingredient in selectedIngredients" :key="ingredient.id?.toString()">
                                     <td>{{ ingredient.name }}</td>
                                     <td>
                                         <input type="number" class="form-control" placeholder="0"
