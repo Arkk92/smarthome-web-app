@@ -2,7 +2,7 @@ import { ICreateMealRequestDTO } from "../dtos/Meal/CreateMeal";
 import { IUpdateMealRequestDTO } from "../dtos/Meal/UpdateMeal";
 import { MealTime } from "../enums/meal/MealTime";
 import { Seasons } from "../enums/meal/Seasons";
-import { Ingridient } from "./Ingridient";
+import { IngridientInterface } from "./Ingridient";
 
 /**
  * Interface representing the structure of a meal.
@@ -13,7 +13,7 @@ export interface MealInterface {
   id?: String;
   name: String;
   mealTime: MealTime;
-  ingridientList: Array<Ingridient>;
+  ingridientList: Array<IngridientInterface>;
   isVegetarian: Boolean;
   season: Seasons;
   babyAllowed: Boolean;
@@ -34,7 +34,7 @@ export class Meal implements MealInterface {
   private _babyAllowed: Boolean;
   private _recipe: Array<String>;
   private _mealTime: MealTime;
-  private _ingridientList: Array<Ingridient>;
+  private _ingridientList: Array<IngridientInterface>;
   private _batchMealCount: Number;
 
   /**
@@ -96,10 +96,10 @@ export class Meal implements MealInterface {
     this._mealTime = value;
   }
 
-  public get ingridientList(): Array<Ingridient> {
+  public get ingridientList(): Array<IngridientInterface> {
     return this._ingridientList;
   }
-  public set ingridientList(value: Array<Ingridient>) {
+  public set ingridientList(value: Array<IngridientInterface>) {
     this._ingridientList = value;
   }
 
