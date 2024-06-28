@@ -69,7 +69,12 @@ export class MealRepository implements IMealsRepository {
    */
   async findWithConstrains(constraints: IMealInWithConstrainsDTO): Promise<Array<IMealInRequestDTO> | unknown>{
     const seasonsToFind = (!constraints.season || constraints.season === Seasons.Any) ? [Seasons.Any] : [constraints.season, Seasons.Any];
-    const meal = await MealModel.find({season: seasonsToFind, babyAllowed: constraints.babyAllowed}).exec();
+    let meal;
+    if(constraints.babyAllowed){
+      meal = await MealModel.find({season: seasonsToFind, babyAllowed: constraints.babyAllowed}).exec();
+    } else {
+      meal = await MealModel.find({season: seasonsToFind}).exec();
+    }
     return meal.map(function(model) { return model.toObject(); });
   }
 

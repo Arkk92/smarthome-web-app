@@ -24,20 +24,22 @@ export function getMealsForMealTime(
   season: Seasons,
   babyAllowed: boolean
 ): MealInterface[] {
+  let mealList;
   if(!babyAllowed){
-    return meals.filter(
+    mealList = meals.filter(
       (meal) =>
         meal.mealTime === mealTime &&
         (meal.season === season || meal.season === Seasons.Any)
     );
   } else {
-    return meals.filter(
+    mealList = meals.filter(
       (meal) =>
         meal.mealTime === mealTime &&
         (meal.season === season || meal.season === Seasons.Any) &&
         isBabyAllowed(meal, babyAllowed)
     );
   }
+  return mealList;
 }
 
 /**
@@ -115,6 +117,7 @@ export function fillWeekWithMeals(
     };
 
     for (let mealTime of mealTimes) {
+      
       const availableMeals = shuffleArray(
         getMealsForMealTime(meals, mealTime, season, babyAllowed).filter(
           (meal) =>
