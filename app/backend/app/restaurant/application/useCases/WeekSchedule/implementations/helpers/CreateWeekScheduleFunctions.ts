@@ -93,27 +93,35 @@ export function fillWeekWithMeals(
   const days = Object.values(WeekDays);
 
   for (let i = 0; i < 7; i++) {
-    const day: DayInterface = Day.create({
+    const day: DayInterface = {
       name: days[i],
       breakfast: {} as MealInterface,
       lunch: {} as MealInterface,
       dinner: {} as MealInterface,
-    });
+    };
 
-    for (var mealTime of mealTimes) {
-      const availableMeals = getMealsForMealTime(
-        meals,
-        mealTime,
-        season,
-        babyAllowed
-      ).filter(
-        (meal) =>
-          isMealValidForBatchCount(meal, week, i) && canAddMealToDay(day, meal)
+    for (let mealTime of mealTimes) {
+      const availableMeals = shuffleArray(
+        getMealsForMealTime(meals, mealTime, season, babyAllowed).filter(
+          (meal) =>
+            isMealValidForBatchCount(meal, week, i) && canAddMealToDay(day, meal)
+        )
       );
 
       if (availableMeals.length > 0) {
-        day[mealTime.toLowerCase() as keyof DayInterface] =
-          availableMeals[0] as any;
+        const previousDay = week[i - 1];
+        const previousMeal: MealInterface | undefined = previousDay
+          ? previousDay[mealTime.toLowerCase() as keyof DayInterface] as MealInterface
+          : undefined;
+        const selectedMeal = getRandomMeal(availableMeals, previousMeal);
+
+        if (mealTime === MealTime.Breakfast) {
+          day.breakfast = selectedMeal;
+        } else if (mealTime === MealTime.Lunch) {
+          day.lunch = selectedMeal;
+        } else if (mealTime === MealTime.Dinner) {
+          day.dinner = selectedMeal;
+        }
       } else {
         throw new Error(
           `No valid meals available for ${mealTime} on ${days[i]}`
@@ -121,12 +129,7 @@ export function fillWeekWithMeals(
       }
     }
 
-    week.push({
-      name: day.name,
-      breakfast: day.breakfast,
-      dinner: day.dinner,
-      lunch: day.lunch
-    });
+    week.push(day);
   }
 
   if (previousWeek) {
@@ -136,6 +139,8 @@ export function fillWeekWithMeals(
 
   return week;
 }
+
+
 
 /**
  * Given a date, returns the previous start of the week (Monday).
@@ -218,4 +223,28 @@ function isBabyAllowed(
   }
   // Otherwise, return whether the meal's babyAllowed status matches the provided babyAllowed value
   return meal.babyAllowed === babyAllowed;
+}
+
+// Helper function to shuffle an array
+function shuffleArray(array: any[]): any[] {
+  return array.sort(() => Math.random() - 0.5);
+}
+
+// Helper function to get a random meal ensuring it is not repeated consecutively
+function getRandomMeal(availableMeals: MealInterface[], previousMeal?: MealInterface): MealInterface {
+  if (availableMeals.length === 0) {
+    throw new Error('No valid meals available');
+  }
+
+  let filteredMeals = availableMeals;
+
+  if (previousMeal) {
+    filteredMeals = availableMeals.filter((meal) => meal !== previousMeal);
+    if (filteredMeals.length === 0) {
+      // If all available meals are the same as the previous meal, fallback to original list
+      filteredMeals = availableMeals;
+    }
+  }
+
+  return filteredMeals[Math.floor(Math.random() * filteredMeals.length)];
 }
