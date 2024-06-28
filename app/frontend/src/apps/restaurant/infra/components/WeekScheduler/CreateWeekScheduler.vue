@@ -34,6 +34,39 @@
                     <div class="col">
                         <button type="submit" class="btn btn-primary">Create weekSchedule</button>
                     </div>
+                    <div v-if="missingMealsError" class="col">
+                        <div class="row">
+                            <div class="col">
+                                Breakfast: 
+                                <span class="missing-meals-text" v-if="missingMealsError.breakfast < REQUIRED_MEAL_PER_MEAL_TIME.breakfast">
+                                    {{missingMealsError.breakfast}}/{{ REQUIRED_MEAL_PER_MEAL_TIME.breakfast }}
+                                </span>
+                                <span class="correct-meals-text" v-else>
+                                    {{missingMealsError.breakfast}}/{{ REQUIRED_MEAL_PER_MEAL_TIME.breakfast }}
+                                </span>
+                            </div>
+                            <div class="col">
+                                Lunch: 
+                                <span class="missing-meals-text" v-if="missingMealsError.lunch < REQUIRED_MEAL_PER_MEAL_TIME.lunch">
+                                    {{missingMealsError.lunch}}/{{ REQUIRED_MEAL_PER_MEAL_TIME.lunch }}
+                                </span>
+                                <span class="correct-meals-text" v-else>
+                                    {{missingMealsError.lunch}}/{{ REQUIRED_MEAL_PER_MEAL_TIME.lunch }}
+                                </span>
+                            </div>
+                            <div class="col">
+                                Dinner: 
+                                <span class="missing-meals-text" v-if="missingMealsError.dinner < REQUIRED_MEAL_PER_MEAL_TIME.dinner">
+                                    {{missingMealsError.dinner}}/{{ REQUIRED_MEAL_PER_MEAL_TIME.dinner }}
+                                </span>
+                                <span class="correct-meals-text" v-else>
+                                    {{missingMealsError.dinner}}/{{ REQUIRED_MEAL_PER_MEAL_TIME.dinner }}
+                                </span>
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
                 </div>
 
             </form>
@@ -53,6 +86,18 @@ interface WeekScheduleNewModel {
     babyAllowed: boolean
 }
 
+interface CheckedMeals {
+  breakfast: number,
+  lunch: number,
+  dinner: number
+}
+
+const REQUIRED_MEAL_PER_MEAL_TIME: CheckedMeals = {
+    breakfast: 2,
+    lunch: 7,
+    dinner: 7
+}
+
 enum Seasons {
     Any = "Any",
     Warm = "Warm",
@@ -60,7 +105,6 @@ enum Seasons {
 }
 
 const weekSchedulerService = new WeekSchedulerApi(apiClient);
-
 const props = defineProps<{
     dateStart: Date
 }>()
@@ -68,6 +112,9 @@ const props = defineProps<{
 const emit = defineEmits([
     'createWeek:success'
 ])
+
+const missingMealsError = ref<CheckedMeals|null>(null);
+
 const newWeekScheduleModel = ref<WeekScheduleNewModel>({
     babyAllowed: false,
     season: Seasons.Any,
@@ -83,17 +130,35 @@ const createWeekSchedule = async () => {
                 newWeekScheduleModel.value?.start
             );
             if (response) {
+                missingMealsError.value = null;
                 alert("Created successfully")
                 emit('createWeek:success', response)
             }
         }
     } catch (err) {
+        if((err as any).response.status === 400){
+            missingMealsError.value = {
+                breakfast: (err as any).response.data.breakfast,
+                lunch: (err as any).response.data.lunch,
+                dinner: (err as any).response.data.dinner
+            }
+            alert("There are not enough meals to schedule a week.")
+        }else {
 
-        alert(err);
+            alert((err as any).message);
+        }
+        
     }
 }
 const formatDate = (date: Date) => {
     return format(date, 'MM-dd-yyyy');
 }
 </script>
-<style scoped></style>
+<style scoped>
+.missing-meals-text {
+    color: red;
+}
+.correct-meals-text {
+    color: green;
+}
+</style>
