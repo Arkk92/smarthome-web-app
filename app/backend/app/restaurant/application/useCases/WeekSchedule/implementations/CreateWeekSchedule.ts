@@ -2,7 +2,7 @@ import { IWeekSchedulesRepository } from "@/restaurant/application/repositories/
 import { ResponseDTO } from "../../../../domain/dtos/Response";
 import { ICreateWeekScheduleUseCase } from "../CreateWeekSchedule";
 import { ICreateWeekScheduleRequestDTO } from "@/restaurant/domain/dtos/WeekSchedule/CreateWeekSchedule";
-import { WeekSchedule } from "@/restaurant/domain/entities/WeekSchedule";
+import { WeekSchedule, WeekScheduleInterface } from "@/restaurant/domain/entities/WeekSchedule";
 import { WeekScheduleErrorType } from "@/restaurant/domain/enums/meal/ErrorType";
 import { IWeekScheduleInRequestDTO } from "@/restaurant/domain/dtos/WeekSchedule/WeekScheduleIn";
 import {
@@ -50,7 +50,7 @@ export class CreateWeekScheduleUseCase implements ICreateWeekScheduleUseCase {
     request: ICreateWeekScheduleRequestDTO
   ): Promise<ResponseDTO> {
     try {
-      const weekScheduleEntity = WeekSchedule.create({
+      const weekScheduleEntity: WeekScheduleInterface = WeekSchedule.create({
         period: request.period,
         weekDays: [],
       });
@@ -90,7 +90,6 @@ export class CreateWeekScheduleUseCase implements ICreateWeekScheduleUseCase {
       const previousWeek = (await this.weekScheduleRepository.findByDate(
         previousWeekStart
       )) as IWeekScheduleInRequestDTO | null;
-
       try {
         if (!checkMeals(allMeals)) {
           return {
@@ -115,10 +114,10 @@ export class CreateWeekScheduleUseCase implements ICreateWeekScheduleUseCase {
       } catch (error: any) {
         return { data: { error: error.message }, success: false };
       }
-
-      const weekSchedule = await this.weekScheduleRepository.create(
-        weekScheduleEntity
-      );
+      const weekSchedule = await this.weekScheduleRepository.create({
+        period: weekScheduleEntity.period,
+        weekDays: weekScheduleEntity.weekDays
+      });
 
       return { data: weekSchedule, success: true };
     } catch (error: any) {

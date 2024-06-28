@@ -58,9 +58,9 @@
     tags: [WeekSchedules]
     parameters:
       - in: path
-        date: date
-        description: WeekSchedule's date,
-        required: true,
+        name: date
+        description: WeekSchedule's date
+        required: true
         schema:
           type: string
     responses:

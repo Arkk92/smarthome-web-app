@@ -69,7 +69,7 @@ export class Day implements DayInterface{
    * @param {DayInterface} data - The data to create a day.
    * @returns {Day} The created day instance.
    */
-  static create(data: DayInterface): Day {
+  static create(data: DayInterface): DayInterface {
     return new Day(data);
   }
 }

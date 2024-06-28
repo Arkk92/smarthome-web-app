@@ -121,7 +121,12 @@ export function fillWeekWithMeals(
       }
     }
 
-    week.push(day);
+    week.push({
+      name: day.name,
+      breakfast: day.breakfast,
+      dinner: day.dinner,
+      lunch: day.lunch
+    });
   }
 
   if (previousWeek) {
@@ -182,15 +187,15 @@ export function checkMeals(meals: MealInterface[]): boolean {
         break;
     }
   }
-  // if(breakfastCount < 2){
-  //   throw Error("breakfast not enough "+ breakfastCount.toString() + "/2")
-  // }
-  // if(lunchCount < 7){
-  //   throw Error("lunch not enough "+ lunchCount.toString() + "/7")
-  // }
-  // if(dinnerCount < 7){
-  //   throw Error("dinner not enough "+ dinnerCount.toString() + "/7")
-  // }
+  if(breakfastCount < 2){
+    throw Error("breakfast not enough "+ breakfastCount.toString() + "/2")
+  }
+  if(lunchCount < 7){
+    throw Error("lunch not enough "+ lunchCount.toString() + "/7")
+  }
+  if(dinnerCount < 7){
+    throw Error("dinner not enough "+ dinnerCount.toString() + "/7")
+  }
   return breakfastCount >= 2 && lunchCount >= 7 && dinnerCount >= 7;
 }
 
