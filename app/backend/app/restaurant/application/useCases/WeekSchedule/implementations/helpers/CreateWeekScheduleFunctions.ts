@@ -24,12 +24,20 @@ export function getMealsForMealTime(
   season: Seasons,
   babyAllowed: boolean
 ): MealInterface[] {
-  return meals.filter(
-    (meal) =>
-      meal.mealTime === mealTime &&
-      (meal.season === season || meal.season === Seasons.Any) &&
-      isBabyAllowed(meal, babyAllowed)
-  );
+  if(!babyAllowed){
+    return meals.filter(
+      (meal) =>
+        meal.mealTime === mealTime &&
+        (meal.season === season || meal.season === Seasons.Any)
+    );
+  } else {
+    return meals.filter(
+      (meal) =>
+        meal.mealTime === mealTime &&
+        (meal.season === season || meal.season === Seasons.Any) &&
+        isBabyAllowed(meal, babyAllowed)
+    );
+  }
 }
 
 /**
