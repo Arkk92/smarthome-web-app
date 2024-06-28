@@ -2,12 +2,17 @@ import { IWeekSchedulesRepository } from "@/restaurant/application/repositories/
 import { ResponseDTO } from "../../../../domain/dtos/Response";
 import { ICreateWeekScheduleUseCase } from "../CreateWeekSchedule";
 import { ICreateWeekScheduleRequestDTO } from "@/restaurant/domain/dtos/WeekSchedule/CreateWeekSchedule";
-import { WeekSchedule, WeekScheduleInterface } from "@/restaurant/domain/entities/WeekSchedule";
+import {
+  WeekSchedule,
+  WeekScheduleInterface,
+} from "@/restaurant/domain/entities/WeekSchedule";
 import { WeekScheduleErrorType } from "@/restaurant/domain/enums/meal/ErrorType";
 import { IWeekScheduleInRequestDTO } from "@/restaurant/domain/dtos/WeekSchedule/WeekScheduleIn";
 import {
+  CheckedMeals,
   checkMeals,
   fillWeekWithMeals,
+  getCheckedMeals,
   getPreviousStartOfWeek,
 } from "./helpers/CreateWeekScheduleFunctions";
 import { MealInterface } from "@/restaurant/domain/entities/Meal";
@@ -92,8 +97,15 @@ export class CreateWeekScheduleUseCase implements ICreateWeekScheduleUseCase {
       )) as IWeekScheduleInRequestDTO | null;
       try {
         if (!checkMeals(allMeals)) {
+          const checkedMeals: CheckedMeals = getCheckedMeals(allMeals);
+
           return {
-            data: { error: WeekScheduleErrorType.WeekScheduleNotEnoughMeals },
+            data: {
+              error: WeekScheduleErrorType.WeekScheduleNotEnoughMeals,
+              breakfast: checkedMeals.breakfast,
+              lunch: checkedMeals.lunch,
+              dinner: checkedMeals.dinner,
+            },
             success: false,
           };
         }
@@ -116,7 +128,7 @@ export class CreateWeekScheduleUseCase implements ICreateWeekScheduleUseCase {
       }
       const weekSchedule = await this.weekScheduleRepository.create({
         period: weekScheduleEntity.period,
-        weekDays: weekScheduleEntity.weekDays
+        weekDays: weekScheduleEntity.weekDays,
       });
 
       return { data: weekSchedule, success: true };

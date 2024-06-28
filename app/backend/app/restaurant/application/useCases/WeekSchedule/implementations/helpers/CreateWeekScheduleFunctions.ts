@@ -4,6 +4,12 @@ import { Seasons } from "@/restaurant/domain/enums/meal/Seasons";
 import { WeekDays } from "@/restaurant/domain/enums/weekSchedule/WeekDays";
 import { Day, DayInterface } from "@/restaurant/domain/valueObj/Day";
 
+export interface CheckedMeals {
+  breakfast: number,
+  lunch: number,
+  dinner: number
+}
+
 /**
  * Filters meals based on meal time, season, and baby allowance.
  * @param meals - List of all available meals.
@@ -192,16 +198,42 @@ export function checkMeals(meals: MealInterface[]): boolean {
         break;
     }
   }
-  // if(breakfastCount < 2){
-  //   throw Error("breakfast not enough "+ breakfastCount.toString() + "/2")
-  // }
-  // if(lunchCount < 7){
-  //   throw Error("lunch not enough "+ lunchCount.toString() + "/7")
-  // }
-  // if(dinnerCount < 7){
-  //   throw Error("dinner not enough "+ dinnerCount.toString() + "/7")
-  // }
+  
   return breakfastCount >= 2 && lunchCount >= 7 && dinnerCount >= 7;
+}
+
+/**
+ * Return the number of meals that meets the following criteria for each meal time:
+ * - At least 2 different breakfast meals.
+ * - At least 7 different lunch and dinner meals, considering batchMealCount.
+ *
+ * @param meals - Array of meals to be checked.
+ * @returns {boolean} - True if all conditions are met, false otherwise.
+ */
+export function getCheckedMeals(meals: MealInterface[]): CheckedMeals {
+
+  const missingMeals: CheckedMeals = {
+    breakfast: 0,
+    lunch: 0,
+    dinner: 0
+  };
+
+  for (let meal of meals) {
+    const batchMealCount = meal.batchMealCount as number;
+    switch (meal.mealTime) {
+      case MealTime.Breakfast:
+        missingMeals.breakfast++;
+        break;
+      case MealTime.Lunch:
+        missingMeals.lunch += batchMealCount > 0 ? batchMealCount : 1;
+        break;
+      case MealTime.Dinner:
+        missingMeals.dinner += batchMealCount > 0 ? batchMealCount : 1;
+        break;
+    }
+  }
+  
+  return missingMeals;
 }
 
 /**
