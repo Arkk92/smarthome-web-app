@@ -27,13 +27,13 @@ run-npm-cmd:
 install-package:
 	rm -rf node_modules/
 	$(MAKE) nvm-use
-	npm install --save $(PACKAGE)
+	npm install --save $(p)
 
 .ONESHELL:
 install-dev-package:
 	rm -rf node_modules/
 	$(MAKE) nvm-use
-	npm install --save-dev $(PACKAGE)
+	npm install --save-dev $(p)
 
 .ONESHELL:
 build:

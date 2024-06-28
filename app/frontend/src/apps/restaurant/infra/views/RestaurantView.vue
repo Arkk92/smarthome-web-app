@@ -2,11 +2,12 @@
 import { ref } from 'vue';
 import MealsView from './MealsView.vue'
 import IngredientsView from './IngredientsView.vue';
+import WeekScheduleView from './WeekScheduleView.vue';
 
 const restaurantOptions = [
   { name: 'List of Meals', componentView: MealsView },
   { name: 'List of Ingredients', componentView: IngredientsView },
-  { name: 'Week Schedule', componentView: null }
+  { name: 'Week Schedule', componentView: WeekScheduleView }
 ]
 const componentView = ref(MealsView)
 
