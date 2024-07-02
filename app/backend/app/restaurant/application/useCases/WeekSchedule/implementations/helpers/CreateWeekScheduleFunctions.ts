@@ -5,9 +5,9 @@ import { WeekDays } from "@/restaurant/domain/enums/weekSchedule/WeekDays";
 import { DayInterface } from "@/restaurant/domain/valueObj/Day";
 
 export interface CheckedMeals {
-  breakfast: number,
-  lunch: number,
-  dinner: number
+  breakfast: number;
+  lunch: number;
+  dinner: number;
 }
 
 /**
@@ -25,7 +25,7 @@ export function getMealsForMealTime(
   babyAllowed: boolean
 ): MealInterface[] {
   let mealList;
-  if(!babyAllowed){
+  if (!babyAllowed) {
     mealList = meals.filter(
       (meal) =>
         meal.mealTime === mealTime &&
@@ -138,7 +138,8 @@ export function fillWeekWithMeals(
       const availableMeals = shuffleArray(
         getMealsForMealTime(meals, mealTime, season, babyAllowed).filter(
           (meal) =>
-            isMealValidForBatchCount(meal, week, i) && canAddMealToDay(day, meal)
+            isMealValidForBatchCount(meal, week, i) &&
+            canAddMealToDay(day, meal)
         )
       );
 
@@ -162,11 +163,14 @@ export function fillWeekWithMeals(
           previousMeals.dinner.push(selectedMeal);
         }
 
-        if (selectedMeal.batchMealCount as number > 0) {
-          batchTracker[selectedMeal.id as string || ''] = (batchTracker[selectedMeal.id as string || ''] || 0) + 1;
+        if ((selectedMeal.batchMealCount as number) > 0) {
+          batchTracker[(selectedMeal.id as string) || ""] =
+            (batchTracker[(selectedMeal.id as string) || ""] || 0) + 1;
         }
       } else {
-        throw new Error(`No valid meals available for ${mealTime} on ${days[i]}`);
+        throw new Error(
+          `No valid meals available for ${mealTime} on ${days[i]}`
+        );
       }
     }
 
@@ -180,8 +184,6 @@ export function fillWeekWithMeals(
 
   return week;
 }
-
-
 
 /**
  * Given a date, returns the previous start of the week (Monday).
@@ -233,7 +235,7 @@ export function checkMeals(meals: MealInterface[]): boolean {
         break;
     }
   }
-  
+
   return breakfastCount >= 2 && lunchCount >= 7 && dinnerCount >= 7;
 }
 
@@ -246,11 +248,10 @@ export function checkMeals(meals: MealInterface[]): boolean {
  * @returns {boolean} - True if all conditions are met, false otherwise.
  */
 export function getCheckedMeals(meals: MealInterface[]): CheckedMeals {
-
   const missingMeals: CheckedMeals = {
     breakfast: 0,
     lunch: 0,
-    dinner: 0
+    dinner: 0,
   };
 
   for (let meal of meals) {
@@ -267,7 +268,7 @@ export function getCheckedMeals(meals: MealInterface[]): CheckedMeals {
         break;
     }
   }
-  
+
   return missingMeals;
 }
 
@@ -292,12 +293,24 @@ function isBabyAllowed(
   return meal.babyAllowed === babyAllowed;
 }
 
-// Helper function to shuffle an array
+/**
+ * Shuffle an array randomly.
+ * @param array The array to shuffle.
+ * @returns A new array with the elements shuffled.
+ */
 function shuffleArray(array: any[]): any[] {
   return array.sort(() => Math.random() - 0.5);
 }
 
-// Helper function to get a random meal ensuring it is not repeated consecutively
+/**
+ * Get a random meal ensuring it is not repeated consecutively.
+ * @param availableMeals The list of available meals.
+ * @param previousMeals The list of previous meals for the meal time.
+ * @param mealTime The current meal time.
+ * @param dayIndex The current day index.
+ * @param batchTracker The tracker for batch meal counts.
+ * @returns A random meal that meets the criteria.
+ */
 function getRandomMeal(
   availableMeals: MealInterface[],
   previousMeals: MealInterface[],
@@ -305,15 +318,25 @@ function getRandomMeal(
   dayIndex: number,
   batchTracker: Record<string, number>
 ): MealInterface {
-  let filteredMeals = availableMeals.filter(meal => {
+  let filteredMeals = availableMeals.filter((meal) => {
     // Check that the meal was not used the previous day
-    if (dayIndex > 0 && previousMeals[dayIndex - 1] && previousMeals[dayIndex - 1].id === meal.id) {
+    if (
+      dayIndex > 0 &&
+      previousMeals[dayIndex - 1] &&
+      previousMeals[dayIndex - 1].id === meal.id
+    ) {
       return false;
     }
     // For lunch and dinner, check for batch meal logic
-    if (mealTime !== MealTime.Breakfast && meal.batchMealCount as number > 0) {
-      const batchCount = batchTracker[meal.id as string || ''] || 0;
-      return batchCount < (meal.batchMealCount as number) && previousMeals[dayIndex - 2]?.id !== meal.id;
+    if (
+      mealTime !== MealTime.Breakfast &&
+      (meal.batchMealCount as number) > 0
+    ) {
+      const batchCount = batchTracker[(meal.id as string) || ""] || 0;
+      return (
+        batchCount < (meal.batchMealCount as number) &&
+        previousMeals[dayIndex - 2]?.id !== meal.id
+      );
     }
     return true;
   });
@@ -325,12 +348,13 @@ function getRandomMeal(
   // Further filter for breakfast to maximize the distance from last occurrence
   if (mealTime === MealTime.Breakfast) {
     const breakfastCounts = previousMeals.reduce((acc, meal) => {
-      acc[meal.id as string || ''] = (acc[meal.id as string || ''] || 0) + 1;
+      acc[(meal.id as string) || ""] =
+        (acc[(meal.id as string) || ""] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
 
     filteredMeals = filteredMeals.filter((meal) => {
-      if (!(meal.id as string in breakfastCounts)) {
+      if (!((meal.id as string) in breakfastCounts)) {
         return true;
       }
       const lastOccurrence = previousMeals
@@ -338,7 +362,7 @@ function getRandomMeal(
         .filter((index) => index !== -1)
         .pop();
 
-      return lastOccurrence === undefined || (dayIndex - lastOccurrence) >= 2;
+      return lastOccurrence === undefined || dayIndex - lastOccurrence >= 2;
     });
   }
 
