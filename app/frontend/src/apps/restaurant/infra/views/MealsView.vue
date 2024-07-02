@@ -175,7 +175,7 @@ watch(textFilter, async () => {
                       @click.native.capture.stop>
                       <div class="custom-control custom-switch">
                         <input type="checkbox" class="custom-control-input" :id="`switch-${key}`"
-                          v-model="mealFilter[key]">
+                          v-model="mealFilter[key as keyof MealFilter]">
                         <label class="custom-control-label" :for="`switch-${key}`">{{ key.toLowerCase() }}</label>
                       </div>
                     </a>
