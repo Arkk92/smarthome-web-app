@@ -2,7 +2,7 @@ import { MealInterface } from "@/restaurant/domain/entities/Meal";
 import { MealTime } from "@/restaurant/domain/enums/meal/MealTime";
 import { Seasons } from "@/restaurant/domain/enums/meal/Seasons";
 import { WeekDays } from "@/restaurant/domain/enums/weekSchedule/WeekDays";
-import { Day, DayInterface } from "@/restaurant/domain/valueObj/Day";
+import { DayInterface } from "@/restaurant/domain/valueObj/Day";
 
 export interface CheckedMeals {
   breakfast: number,
@@ -108,6 +108,24 @@ export function fillWeekWithMeals(
   const mealTimes = [MealTime.Breakfast, MealTime.Lunch, MealTime.Dinner];
   const days = Object.values(WeekDays);
 
+  const previousMeals: { [key: string]: MealInterface[] } = {
+    breakfast: [],
+    lunch: [],
+    dinner: [],
+  };
+
+  const batchTracker: Record<string, number> = {};
+
+  if (previousWeek) {
+    // Consider the last two days of the previous week for batch meals
+    const lastTwoDays = previousWeek.slice(-2);
+    lastTwoDays.forEach((day) => {
+      previousMeals.breakfast.push(day.breakfast);
+      previousMeals.lunch.push(day.lunch);
+      previousMeals.dinner.push(day.dinner);
+    });
+  }
+
   for (let i = 0; i < 7; i++) {
     const day: DayInterface = {
       name: days[i],
@@ -117,7 +135,6 @@ export function fillWeekWithMeals(
     };
 
     for (let mealTime of mealTimes) {
-      
       const availableMeals = shuffleArray(
         getMealsForMealTime(meals, mealTime, season, babyAllowed).filter(
           (meal) =>
@@ -126,23 +143,30 @@ export function fillWeekWithMeals(
       );
 
       if (availableMeals.length > 0) {
-        const previousDay = week[i - 1];
-        const previousMeal: MealInterface | undefined = previousDay
-          ? previousDay[mealTime.toLowerCase() as keyof DayInterface] as MealInterface
-          : undefined;
-        const selectedMeal = getRandomMeal(availableMeals, previousMeal);
+        const selectedMeal = getRandomMeal(
+          availableMeals,
+          previousMeals[mealTime.toLowerCase() as keyof DayInterface],
+          mealTime,
+          i,
+          batchTracker
+        );
 
         if (mealTime === MealTime.Breakfast) {
           day.breakfast = selectedMeal;
+          previousMeals.breakfast.push(selectedMeal);
         } else if (mealTime === MealTime.Lunch) {
           day.lunch = selectedMeal;
+          previousMeals.lunch.push(selectedMeal);
         } else if (mealTime === MealTime.Dinner) {
           day.dinner = selectedMeal;
+          previousMeals.dinner.push(selectedMeal);
+        }
+
+        if (selectedMeal.batchMealCount as number > 0) {
+          batchTracker[selectedMeal.id as string || ''] = (batchTracker[selectedMeal.id as string || ''] || 0) + 1;
         }
       } else {
-        throw new Error(
-          `No valid meals available for ${mealTime} on ${days[i]}`
-        );
+        throw new Error(`No valid meals available for ${mealTime} on ${days[i]}`);
       }
     }
 
@@ -274,19 +298,48 @@ function shuffleArray(array: any[]): any[] {
 }
 
 // Helper function to get a random meal ensuring it is not repeated consecutively
-function getRandomMeal(availableMeals: MealInterface[], previousMeal?: MealInterface): MealInterface {
-  if (availableMeals.length === 0) {
-    throw new Error('No valid meals available');
+function getRandomMeal(
+  availableMeals: MealInterface[],
+  previousMeals: MealInterface[],
+  mealTime: MealTime,
+  dayIndex: number,
+  batchTracker: Record<string, number>
+): MealInterface {
+  let filteredMeals = availableMeals.filter(meal => {
+    // Check that the meal was not used the previous day
+    if (dayIndex > 0 && previousMeals[dayIndex - 1] && previousMeals[dayIndex - 1].id === meal.id) {
+      return false;
+    }
+    // For lunch and dinner, check for batch meal logic
+    if (mealTime !== MealTime.Breakfast && meal.batchMealCount as number > 0) {
+      const batchCount = batchTracker[meal.id as string || ''] || 0;
+      return batchCount < (meal.batchMealCount as number) && previousMeals[dayIndex - 2]?.id !== meal.id;
+    }
+    return true;
+  });
+
+  if (filteredMeals.length === 0) {
+    filteredMeals = availableMeals;
   }
 
-  let filteredMeals = availableMeals;
+  // Further filter for breakfast to maximize the distance from last occurrence
+  if (mealTime === MealTime.Breakfast) {
+    const breakfastCounts = previousMeals.reduce((acc, meal) => {
+      acc[meal.id as string || ''] = (acc[meal.id as string || ''] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
 
-  if (previousMeal) {
-    filteredMeals = availableMeals.filter((meal) => meal !== previousMeal);
-    if (filteredMeals.length === 0) {
-      // If all available meals are the same as the previous meal, fallback to original list
-      filteredMeals = availableMeals;
-    }
+    filteredMeals = filteredMeals.filter((meal) => {
+      if (!(meal.id as string in breakfastCounts)) {
+        return true;
+      }
+      const lastOccurrence = previousMeals
+        .map((m, index) => (m.id === meal.id ? index : -1))
+        .filter((index) => index !== -1)
+        .pop();
+
+      return lastOccurrence === undefined || (dayIndex - lastOccurrence) >= 2;
+    });
   }
 
   return filteredMeals[Math.floor(Math.random() * filteredMeals.length)];
