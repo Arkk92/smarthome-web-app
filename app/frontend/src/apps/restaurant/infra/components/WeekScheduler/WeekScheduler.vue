@@ -9,6 +9,9 @@
                     <h4>Week schedule: {{ formatDate(weekScheduleModel.period.start) }} to {{
                         formatDate(weekScheduleModel.period.end) }}</h4>
                 </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-primary" v-on:click="saveWeekSchedule">Save</button>
+                </div>
             </div>
         </div>
         <div class="card-body">
@@ -123,26 +126,36 @@ const onDragOver = (event: DragEvent) => {
 };
 
 const onDrop = (event: DragEvent, row: number, meal: keyof DayInterface) => {
-  event.preventDefault();
-  if (draggedItem && draggedItem.meal === meal) {
-    const isVegetarianCheck = (row: number, meal: keyof DayInterface): boolean => {
-      const day = weekScheduleModel.value.weekDays[row];
-      const meals = ['lunch', 'dinner'].map(m => day[m as keyof DayInterface]);
-      const nonVegetarianCount = meals.filter(m => !m.isVegetarian).length;
-      return nonVegetarianCount <= 1;
-    };
+    event.preventDefault();
+    if (draggedItem && draggedItem.meal === meal) {
+        const isVegetarianCheck = (row: number, meal: keyof DayInterface): boolean => {
+            const day = weekScheduleModel.value.weekDays[row];
+            const meals = ['lunch', 'dinner'].map(m => day[m as keyof DayInterface]);
+            const nonVegetarianCount = meals.filter(m => !m.isVegetarian).length;
+            return nonVegetarianCount <= 1;
+        };
 
-    if (meal !== 'breakfast' && !isVegetarianCheck(row, meal)) {
-      alert('Only one non-vegetarian meal allowed per day (excluding breakfast).');
-      return;
+        if (meal !== 'breakfast' && !isVegetarianCheck(row, meal)) {
+            alert('Only one non-vegetarian meal allowed per day (excluding breakfast).');
+            return;
+        }
+
+        const draggedMeal = weekScheduleModel.value.weekDays[draggedItem.row][draggedItem.meal];
+        weekScheduleModel.value.weekDays[draggedItem.row][draggedItem.meal] = weekScheduleModel.value.weekDays[row][meal];
+        weekScheduleModel.value.weekDays[row][meal] = draggedMeal;
+        draggedItem = null;
     }
-
-    const draggedMeal = weekScheduleModel.value.weekDays[draggedItem.row][draggedItem.meal];
-    weekScheduleModel.value.weekDays[draggedItem.row][draggedItem.meal] = weekScheduleModel.value.weekDays[row][meal];
-    weekScheduleModel.value.weekDays[row][meal] = draggedMeal;
-    draggedItem = null;
-  }
 };
+
+const saveWeekSchedule = async () => {
+    const response = await weekSchedulerService.updateWeekScheduler(weekScheduleModel.value);
+
+    if (response) {
+        alert("Week schedule has been updated successfully!")
+    } else {
+        alert("Error updating the Meal")
+    }
+}
 
 onMounted(() => {
     weekScheduleModel.value = props.model;
