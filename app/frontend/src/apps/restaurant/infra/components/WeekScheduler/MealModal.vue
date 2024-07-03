@@ -30,13 +30,13 @@
                             <label class="col-sm-2 col-form-label">Settings</label>
                             <div class="col-sm-10">
                                 <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="vegetarianSwitch"
-                                        :value="props.meal.isVegetarian">
+                                    <input disabled type="checkbox" class="custom-control-input" id="vegetarianSwitch"
+                                        v-model="props.meal.isVegetarian">
                                     <label class="custom-control-label" for="vegetarianSwitch">Vegetarian</label>
                                 </div>
                                 <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="babyAllowedSwitch"
-                                        :value="props.meal.babyAllowed">
+                                    <input disabled type="checkbox" class="custom-control-input" id="babyAllowedSwitch"
+                                        v-model="props.meal.babyAllowed">
                                     <label class="custom-control-label" for="babyAllowedSwitch">Allowed for
                                         babies</label>
                                 </div>
