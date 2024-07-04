@@ -34,7 +34,11 @@
                                 <div class="card">
                                     <div class="card-header"></div>
                                     <div class="card-body" v-on:click="handleMealModalOpen(day.breakfast)">
-                                        {{ day.breakfast.name }}
+                                        <div class="background-image">
+                                            <div class="content">
+                                                {{ day.breakfast.name }}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </td>
@@ -43,7 +47,11 @@
                                 <div class="card">
                                     <div class="card-header"></div>
                                     <div class="card-body" v-on:click="handleMealModalOpen(day.lunch)">
-                                        {{ day.lunch.name }}
+                                        <div :class="day.lunch.isVegetarian ? 'background-image-vegan':'background-image-meet'">
+                                            <div class="content">
+                                                {{ day.lunch.name }}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </td>
@@ -52,7 +60,12 @@
                                 <div class="card">
                                     <div class="card-header"></div>
                                     <div class="card-body" v-on:click="handleMealModalOpen(day.dinner)">
-                                        {{ day.dinner.name }}
+                                        <div :class="day.dinner.isVegetarian ? 'background-image-vegan':'background-image-meet'">
+                                            <div class="content">
+                                                {{ day.dinner.name }}
+                                            </div>
+                                        </div>
+                                        
                                     </div>
                                 </div>
                             </td>
@@ -184,5 +197,42 @@ th {
     z-index: 1;
     background-color: #343a40;
     /* Bootstrap's dark header background */
+}
+.background-image-meet::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 60%;
+  height: 60%;
+  background-image: url('@/assets/images/meet.png'); /* Replace with your image path */
+  background-repeat: no-repeat;
+  background-position: bottom right;
+  background-size: contain; /* Adjust as needed */
+  opacity: 0.6;
+  pointer-events: none; /* Ensures content is clickable */
+  z-index: 1;
+}
+
+.background-image-vegan::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 60%;
+  height: 60%;
+  background-image: url('@/assets/images/vegan.png'); /* Replace with your image path */
+  background-repeat: no-repeat;
+  background-position: bottom right;
+  background-size: contain; /* Adjust as needed */
+  opacity: 0.6;
+  pointer-events: none; /* Ensures content is clickable */
+  z-index: 1;
+}
+
+.content {
+  position: relative;
+  z-index: 2; /* Ensure content is above the background image */
+  padding: 20px; /* Adjust padding as needed */
 }
 </style>
