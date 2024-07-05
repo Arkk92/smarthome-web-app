@@ -13,6 +13,8 @@ import { MealTime } from "@/restaurant/domain/enums/meal/MealTime";
 import { GetAllMealUseCase } from "../../Meal/implementations/GetAllMeal";
 import { Week } from "@/restaurant/domain/valueObj/Week";
 import { GetWeekScheduleByDateUseCase } from "../implementations/GetWeekScheduleByDate";
+import mealDataset from "../implementations/helpers/__tests__/datasets/mealschemas";
+import { MealInterface } from "@/restaurant/domain/entities/Meal";
 
 describe("Get Week Schedule by Date Use Case", () => {
   let weekScheduleRepository: WeekScheduleRepository;
@@ -22,86 +24,7 @@ describe("Get Week Schedule by Date Use Case", () => {
     weekScheduleRepository = new WeekScheduleRepository(mongooseClient);
     mealRepository = new MealRepository(mongooseClient);
 
-    const weekMeals: ICreateMealRequestDTO[] = [
-      {
-        name: "breakfast 1",
-        mealTime: MealTime.Breakfast,
-        ingridientList: [
-          Ingridient.create({ name: "Ingredient 1", quantity: 1, apiUri: "", unit: "" }),
-          Ingridient.create({ name: "Ingredient 2", quantity: 2, apiUri: "", unit: "" }),
-        ],
-        isVegetarian: true,
-        season: Seasons.Any,
-        babyAllowed: false,
-        recipe: ["Step 1", "Step 2"],
-        batchMealCount: 5,
-      },
-      {
-        name: "lunch 1",
-        mealTime: MealTime.Lunch,
-        ingridientList: [
-          Ingridient.create({ name: "Ingredient 1", quantity: 1, apiUri: "", unit: "" }),
-          Ingridient.create({ name: "Ingredient 2", quantity: 2, apiUri: "", unit: "" }),
-        ],
-        isVegetarian: true,
-        season: Seasons.Any,
-        babyAllowed: false,
-        recipe: ["Step 1", "Step 2"],
-        batchMealCount: 5,
-      },
-      {
-        name: "breakfast 2",
-        mealTime: MealTime.Breakfast,
-        ingridientList: [
-          Ingridient.create({ name: "Ingredient 1", quantity: 1, apiUri: "", unit: "" }),
-          Ingridient.create({ name: "Ingredient 2", quantity: 2, apiUri: "", unit: "" }),
-        ],
-        isVegetarian: true,
-        season: Seasons.Any,
-        babyAllowed: false,
-        recipe: ["Step 1", "Step 2"],
-        batchMealCount: 5,
-      },
-      {
-        name: "lunch 2",
-        mealTime: MealTime.Lunch,
-        ingridientList: [
-          Ingridient.create({ name: "Ingredient 1", quantity: 1, apiUri: "", unit: "" }),
-          Ingridient.create({ name: "Ingredient 2", quantity: 2, apiUri: "", unit: "" }),
-        ],
-        isVegetarian: true,
-        season: Seasons.Any,
-        babyAllowed: false,
-        recipe: ["Step 1", "Step 2"],
-        batchMealCount: 5,
-      },
-      {
-        name: "dinner 1",
-        mealTime: MealTime.Dinner,
-        ingridientList: [
-          Ingridient.create({ name: "Ingredient 1", quantity: 1, apiUri: "", unit: "" }),
-          Ingridient.create({ name: "Ingredient 2", quantity: 2, apiUri: "", unit: "" }),
-        ],
-        isVegetarian: true,
-        season: Seasons.Any,
-        babyAllowed: false,
-        recipe: ["Step 1", "Step 2"],
-        batchMealCount: 5,
-      },
-      {
-        name: "dinner 2",
-        mealTime: MealTime.Dinner,
-        ingridientList: [
-          Ingridient.create({ name: "Ingredient 1", quantity: 1, apiUri: "", unit: "" }),
-          Ingridient.create({ name: "Ingredient 2", quantity: 2, apiUri: "", unit: "" }),
-        ],
-        isVegetarian: true,
-        season: Seasons.Any,
-        babyAllowed: false,
-        recipe: ["Step 1", "Step 2"],
-        batchMealCount: 5,
-      },
-    ];
+    const weekMeals: MealInterface[] = mealDataset;
     const createMeal = new CreateMealUseCase(mealRepository);
     for( var meal of weekMeals){
       response = await createMeal.execute(meal);

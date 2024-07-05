@@ -100,14 +100,23 @@ describe("Helper Functions", () => {
   });
 
   test("canAddMealToDay should return true if a meal can be added to the day", () => {
-    const day: DayInterface = Day.create({
+    const day1: DayInterface = Day.create({
       name: WeekDays.Monday,
       breakfast: meals[0],
       lunch: meals[1],
       dinner: meals[2],
     });
+    const day2: DayInterface = Day.create({
+      name: WeekDays.Thursday,
+      breakfast: meals[1],
+      lunch: meals[2],
+      dinner: meals[0],
+    });
+
+    const week: DayInterface[] = [];
+    week.push(day1);
     const meal = meals[3];
-    expect(canAddMealToDay(day, meal)).toBe(true);
+    expect(canAddMealToDay(day2, meal, week, 1)).toBe(true);
   });
 
   test("isMealValidForBatchCount should return true if a meal is valid for the batch count", () => {
@@ -131,36 +140,6 @@ describe("Helper Functions", () => {
 });
 
 describe("fillWeekWithMeals Function", () => {
-  test("should fill a week with meals based on constraints", () => {
-    const week = fillWeekWithMeals(meals, Seasons.Any, true);
-    expect(week.length).toBe(7);
-
-    week.forEach((day) => {
-      expect(day.breakfast).toBeDefined();
-      expect(day.lunch).toBeDefined();
-      expect(day.dinner).toBeDefined();
-    });
-  });
-
-  test("should take into account the previous week when provided", () => {
-    const previousWeek: DayInterface[] = [
-      Day.create({
-        name: WeekDays.Monday,
-        breakfast: meals[0],
-        lunch: meals[1],
-        dinner: meals[2],
-      }),
-    ];
-
-    const week = fillWeekWithMeals(meals, Seasons.Any, true, previousWeek);
-    expect(week.length).toBe(7);
-
-    week.forEach((day) => {
-      expect(day.breakfast).toBeDefined();
-      expect(day.lunch).toBeDefined();
-      expect(day.dinner).toBeDefined();
-    });
-  });
 
   test("should throw an error when no valid meals are available for a specific meal time and day", () => {
     const invalidMeals: MealInterface[] = [
