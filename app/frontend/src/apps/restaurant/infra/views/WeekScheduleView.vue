@@ -10,11 +10,6 @@ import type { WeekScheduleInterface } from '../../domain/entities/WeekSchedule';
 import CreateWeekScheduler from '../components/WeekScheduler/CreateWeekScheduler.vue';
 import WeekScheduler from '../components/WeekScheduler/WeekScheduler.vue';
 
-enum Seasons {
-  Any = "Any",
-  Warm = "Warm",
-  Cold = "Cold",
-}
 
 const weekSchedulerService = new WeekSchedulerApi(apiClient);
 const weekScheduleModel = ref<WeekScheduleInterface | null>(null);
@@ -26,7 +21,7 @@ prevMonday.setDate(prevMonday.getDate() - (prevMonday.getDay() + 6) % 7);
 const selectedDate = ref<Date>(prevMonday);
 // Locale setting
 const locale: string = es as any;
-const creating = ref<boolean>(false);
+const loading = ref<boolean>(false);
 
 onMounted(() => {
   handleDateChange(selectedDate.value);
@@ -38,6 +33,7 @@ async function fetchWeekScheduleByDate(date: Date) {
     const response = await weekSchedulerService.fetchWeekSchedulerByDate(date);
     if (response) {
       weekScheduleModel.value = response
+      loading.value = false;
     }
   } catch (err) {
 
@@ -76,6 +72,7 @@ const handleDateChange = async (date: Date) => {
   if (date) {
     date.setHours(12, 0, 0, 0); // Set time to 12 PM
     selectedDate.value = date;
+    loading.value = true;
     await fetchWeekScheduleByDate(date);
   }
 };
@@ -110,7 +107,7 @@ const handleDeleteWeekSchedule = async () => {
         </div>
       </div>
       <div class="card-body" v-if="selectedDate">
-        <div v-if="weekScheduleModel">
+        <div v-if="weekScheduleModel&&!loading">
           <WeekScheduler :model="weekScheduleModel" />
         </div>
         <div v-else>
