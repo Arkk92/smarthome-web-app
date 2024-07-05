@@ -43,24 +43,6 @@ export function getMealsForMealTime(
 }
 
 /**
- * Checks if a meal can be added to the day without violating constraints.
- * @param day - The current day's meal plan.
- * @param meal - The meal to be added.
- * @returns True if the meal can be added, false otherwise.
- */
-export function canAddMealToDay(
-  day: DayInterface,
-  meal: MealInterface
-): boolean {
-  const meals = [day.breakfast, day.lunch, day.dinner];
-  return (
-    meals.filter((m) => m === null).length == 0 ||
-    (!meals.some((m) => m.name === meal.name) &&
-      meals.filter((m) => !m.isVegetarian).length < 1)
-  );
-}
-
-/**
  * Validates if a meal can be added based on its batch meal count.
  * @param meal - The meal to be validated.
  * @param days - The current week's meal plan.
@@ -76,18 +58,27 @@ export function isMealValidForBatchCount(
     return true;
   }
 
-  const currentCount: Number = mealsInCurrentWeek
-    .slice(Math.max(0, dayIndex - 3), dayIndex)
+  const currentCount: number = mealsInCurrentWeek
+    .slice(Math.max(0, dayIndex - (meal.batchMealCount as number)), dayIndex)
     .reduce((count, day) => {
       return (
         count +
         [day.breakfast, day.lunch, day.dinner].filter(
-          (m) => m.name === meal.name
+          (m) => m && m.name === meal.name
         ).length
       );
     }, 0);
 
-  return currentCount < meal.batchMealCount;
+  // Ensure batch meal is repeated the second day after it was initially served
+  if (dayIndex >= 2 && currentCount < (meal.batchMealCount as number)) {
+    const twoDaysAgoMeal = mealsInCurrentWeek[dayIndex - 2];
+    if (twoDaysAgoMeal && [twoDaysAgoMeal.lunch, twoDaysAgoMeal.dinner].some(m => m && m.name === meal.name)) {
+      console.log(`Validating batch meal ${meal.name}: It must be repeated today.`);
+      return true;
+    }
+  }
+
+  return currentCount < (meal.batchMealCount as number);
 }
 
 /**
@@ -117,7 +108,6 @@ export function fillWeekWithMeals(
   const batchTracker: Record<string, number> = {};
 
   if (previousWeek) {
-    // Consider the last two days of the previous week for batch meals
     const lastTwoDays = previousWeek.slice(-2);
     lastTwoDays.forEach((day) => {
       previousMeals.breakfast.push(day.breakfast);
@@ -133,13 +123,14 @@ export function fillWeekWithMeals(
       lunch: {} as MealInterface,
       dinner: {} as MealInterface,
     };
-
+    // console.error("NEW DAY:\n")
     for (let mealTime of mealTimes) {
+
       const availableMeals = shuffleArray(
         getMealsForMealTime(meals, mealTime, season, babyAllowed).filter(
           (meal) =>
             isMealValidForBatchCount(meal, week, i) &&
-            canAddMealToDay(day, meal)
+            canAddMealToDay(day, meal, week, i)
         )
       );
 
@@ -168,12 +159,26 @@ export function fillWeekWithMeals(
             (batchTracker[(selectedMeal.id as string) || ""] || 0) + 1;
         }
       } else {
+        // console.error("mealForMealTime: ");
+        
+        getMealsForMealTime(meals, mealTime, season, babyAllowed).filter(
+            (meal) => {
+              // console.error({
+              //   meal: meal.name,
+              //   day: {breakfast: day.breakfast.name, lunch: day.lunch.name, dinner: day.dinner.name},
+              //   week: week.map((day) => {return {breakfast: day.breakfast.name, lunch: day.lunch.name, dinner: day.dinner.name}}),
+              //   canAddMealToDay: canAddMealToDay(day, meal, week, i),
+              //   isMealValidForBatchCount: isMealValidForBatchCount(meal, week, i)
+              // })
+              return isMealValidForBatchCount(meal, week, i) &&
+              canAddMealToDay(day, meal, week, i)
+            }
+        )
         throw new Error(
           `No valid meals available for ${mealTime} on ${days[i]}`
         );
       }
     }
-
     week.push(day);
   }
 
@@ -319,24 +324,34 @@ function getRandomMeal(
   batchTracker: Record<string, number>
 ): MealInterface {
   let filteredMeals = availableMeals.filter((meal) => {
-    // Check that the meal was not used the previous day
-    if (
-      dayIndex > 0 &&
-      previousMeals[dayIndex - 1] &&
-      previousMeals[dayIndex - 1].id === meal.id
-    ) {
-      return false;
-    }
-    // For lunch and dinner, check for batch meal logic
-    if (
-      mealTime !== MealTime.Breakfast &&
-      (meal.batchMealCount as number) > 0
-    ) {
-      const batchCount = batchTracker[(meal.id as string) || ""] || 0;
-      return (
-        batchCount < (meal.batchMealCount as number) &&
-        previousMeals[dayIndex - 2]?.id !== meal.id
-      );
+    if (mealTime === MealTime.Breakfast) {
+      // Ensure breakfast meals are spaced as far apart as possible
+      const previousMealIndices = previousMeals
+        .map((m, index) => (m.name === meal.name ? index : -1))
+        .filter((index) => index !== -1);
+      if (previousMealIndices.some((index) => dayIndex - index < 2)) {
+        return false;
+      }
+    } else {
+      // Check that the meal was not used the previous day
+      if (
+        dayIndex > 0 &&
+        previousMeals[dayIndex - 1] &&
+        previousMeals[dayIndex - 1].id === meal.id
+      ) {
+        return false;
+      }
+      // For lunch and dinner, check for batch meal logic
+      if ((meal.batchMealCount as number) > 0) {
+        const batchCount = batchTracker[(meal.id as string) || ""] || 0;
+        return (
+          batchCount < (meal.batchMealCount as number) &&
+          previousMeals[dayIndex - 1]?.id !== meal.id
+        );
+      } else {
+        // Check the meal is not in the previous meals
+        return !previousMeals.includes(meal);
+      }
     }
     return true;
   });
@@ -344,27 +359,112 @@ function getRandomMeal(
   if (filteredMeals.length === 0) {
     filteredMeals = availableMeals;
   }
-
-  // Further filter for breakfast to maximize the distance from last occurrence
-  if (mealTime === MealTime.Breakfast) {
-    const breakfastCounts = previousMeals.reduce((acc, meal) => {
-      acc[(meal.id as string) || ""] =
-        (acc[(meal.id as string) || ""] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
-
-    filteredMeals = filteredMeals.filter((meal) => {
-      if (!((meal.id as string) in breakfastCounts)) {
-        return true;
-      }
-      const lastOccurrence = previousMeals
-        .map((m, index) => (m.id === meal.id ? index : -1))
-        .filter((index) => index !== -1)
-        .pop();
-
-      return lastOccurrence === undefined || dayIndex - lastOccurrence >= 2;
-    });
+  const intersect = filteredMeals.filter(meal => 
+    Object.keys(batchTracker).some(id => id === (meal.id as string) || ""));
+  if(intersect.length > 0){
+    // Prioritize batched meals
+    return intersect[0];
   }
+  
 
   return filteredMeals[Math.floor(Math.random() * filteredMeals.length)];
+}
+
+/**
+ * Checks if a meal can be added to the day without violating constraints.
+ * @param day - The current day's meal plan.
+ * @param meal - The meal to be added.
+ * @param mealsInCurrentWeek - The current week's meal plan.
+ * @param dayIndex - The index of the current day.
+ * @returns True if the meal can be added, false otherwise.
+ */
+export function canAddMealToDay(
+  day: DayInterface,
+  meal: MealInterface,
+  mealsInCurrentWeek: DayInterface[],
+  dayIndex: number
+): boolean {
+  if (meal.mealTime === MealTime.Breakfast) {
+    return canAddBreakfast(meal, mealsInCurrentWeek, dayIndex);
+  } else {
+    return canAddLunchOrDinner(day, meal, mealsInCurrentWeek, dayIndex);
+  }
+}
+
+/**
+ * Checks if a breakfast meal can be added to the day without violating constraints.
+ * @param meal - The meal to be added.
+ * @param mealsInCurrentWeek - The current week's meal plan.
+ * @param dayIndex - The index of the current day.
+ * @returns True if the meal can be added, false otherwise.
+ */
+function canAddBreakfast(
+  meal: MealInterface,
+  mealsInCurrentWeek: DayInterface[],
+  dayIndex: number
+): boolean {
+  const previousBreakfast =
+    dayIndex > 0 ? mealsInCurrentWeek[dayIndex - 1].breakfast : null;
+  const furtherBackBreakfast =
+    dayIndex > 1 ? mealsInCurrentWeek[dayIndex - 2].breakfast : null;
+
+  if (previousBreakfast && meal.name === previousBreakfast.name) {
+    return false;
+  }
+  if (furtherBackBreakfast && meal.name === furtherBackBreakfast.name) {
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * Checks if a lunch or dinner meal can be added to the day without violating constraints.
+ * @param day - The current day's meal plan.
+ * @param meal - The meal to be added.
+ * @param mealsInCurrentWeek - The current week's meal plan.
+ * @param dayIndex - The index of the current day.
+ * @returns True if the meal can be added, false otherwise.
+ */
+function canAddLunchOrDinner(
+  day: DayInterface,
+  meal: MealInterface,
+  mealsInCurrentWeek: DayInterface[],
+  dayIndex: number
+): boolean {
+  const isVegetarianMeal = meal.isVegetarian;
+  const meals = [day.lunch, day.dinner].filter(m => m && Object.keys(m).length > 0);
+  const nonVegetarianCount = meals.filter((m) => m && !m.isVegetarian).length;
+
+  if (!isVegetarianMeal && nonVegetarianCount >= 1) {
+    console.log(`Cannot add ${meal.name}: There is already a non-vegetarian meal.`);
+    return false;
+  }
+
+  const otherMeal = meal.mealTime === MealTime.Lunch ? day.dinner : day.lunch;
+  if (otherMeal && Object.keys(otherMeal).length > 0 && isVegetarianMeal && otherMeal.isVegetarian) {
+    const remainingDays = mealsInCurrentWeek.slice(dayIndex + 1);
+    const remainingMeals = remainingDays.flatMap((d) => [d.lunch, d.dinner]).filter(m => m && Object.keys(m).length > 0);
+    const availableNonVegMeals = remainingMeals.filter((m) => !m.isVegetarian);
+    
+    if (availableNonVegMeals.length === 0) {
+      console.log(`Allowing ${meal.name}: No more non-vegetarian meals available.`);
+    } else {
+      console.log(`Cannot add ${meal.name}: Both lunch and dinner would be vegetarian.`);
+      return false;
+    }
+  }
+
+  // Check if the meal has already been used this week (for non-batch meals)
+  const mealOccurrences = mealsInCurrentWeek
+    .slice(0, dayIndex)
+    .flatMap((d) => [d.lunch, d.dinner])
+    .filter((m) => m && Object.keys(m).length > 0 && m.name === meal.name).length;
+
+  if (meal.batchMealCount === 0 && mealOccurrences > 0) {
+    console.log(`Cannot add ${meal.name}: It has already been added earlier this week.`);
+    return false;
+  }
+
+  return true;
 }
