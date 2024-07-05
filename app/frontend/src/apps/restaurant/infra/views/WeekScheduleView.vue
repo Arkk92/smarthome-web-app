@@ -78,6 +78,7 @@ const handleDateChange = async (date: Date) => {
 };
 const handleCreateWeekSchedule = async (model: WeekScheduleInterface) => {
   weekScheduleModel.value = model;
+  loading.value = false;
 };
 
 const handleDeleteWeekSchedule = async () => {
