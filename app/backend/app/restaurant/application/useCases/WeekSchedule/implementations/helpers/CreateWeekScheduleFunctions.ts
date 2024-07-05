@@ -73,7 +73,7 @@ export function isMealValidForBatchCount(
   if (dayIndex >= 2 && currentCount < (meal.batchMealCount as number)) {
     const twoDaysAgoMeal = mealsInCurrentWeek[dayIndex - 1];
     if (twoDaysAgoMeal && [twoDaysAgoMeal.lunch, twoDaysAgoMeal.dinner].some(m => m && m.name === meal.name)) {
-      console.log(`Validating batch meal ${meal.name}: It must be repeated today.`);
+      // console.log(`Validating batch meal ${meal.name}: It must be repeated today.`);
       return true;
     }
   }
@@ -437,7 +437,7 @@ function canAddLunchOrDinner(
   const nonVegetarianCount = meals.filter((m) => m && !m.isVegetarian).length;
 
   if (!isVegetarianMeal && nonVegetarianCount >= 1) {
-    console.log(`Cannot add ${meal.name}: There is already a non-vegetarian meal.`);
+    // console.log(`Cannot add ${meal.name}: There is already a non-vegetarian meal.`);
     return false;
   }
 
@@ -448,9 +448,9 @@ function canAddLunchOrDinner(
     const availableNonVegMeals = remainingMeals.filter((m) => !m.isVegetarian);
     
     if (availableNonVegMeals.length === 0) {
-      console.log(`Allowing ${meal.name}: No more non-vegetarian meals available.`);
+      // console.log(`Allowing ${meal.name}: No more non-vegetarian meals available.`);
     } else {
-      console.log(`Cannot add ${meal.name}: Both lunch and dinner would be vegetarian.`);
+      // console.log(`Cannot add ${meal.name}: Both lunch and dinner would be vegetarian.`);
       return false;
     }
   }
@@ -462,7 +462,7 @@ function canAddLunchOrDinner(
     .filter((m) => m && Object.keys(m).length > 0 && m.name === meal.name).length;
 
   if (meal.batchMealCount === 0 && mealOccurrences > 0) {
-    console.log(`Cannot add ${meal.name}: It has already been added earlier this week.`);
+    // console.log(`Cannot add ${meal.name}: It has already been added earlier this week.`);
     return false;
   }
 
