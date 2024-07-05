@@ -71,7 +71,7 @@ export function isMealValidForBatchCount(
 
   // Ensure batch meal is repeated the second day after it was initially served
   if (dayIndex >= 2 && currentCount < (meal.batchMealCount as number)) {
-    const twoDaysAgoMeal = mealsInCurrentWeek[dayIndex - 2];
+    const twoDaysAgoMeal = mealsInCurrentWeek[dayIndex - 1];
     if (twoDaysAgoMeal && [twoDaysAgoMeal.lunch, twoDaysAgoMeal.dinner].some(m => m && m.name === meal.name)) {
       console.log(`Validating batch meal ${meal.name}: It must be repeated today.`);
       return true;
