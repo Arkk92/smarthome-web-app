@@ -2,6 +2,9 @@
     <Transition name="meal-modal" :appear="true">
         <MealModal v-if="showMealModal" :meal="mealToModal" @modal:close="showMealModal = false" />
     </Transition>
+    <Transition name="meal-modal" :appear="true">
+        <ShopList v-if="showShopListModal" :ingredient-list="shoppingIngredients" @modal:close="showShopListModal = false" />
+    </Transition>
     <div class="weekSchedule card" v-if="weekScheduleModel">
         <div class="card-header">
             <div class="row align-items-center justify-content-between">
@@ -11,6 +14,7 @@
                 </div>
                 <div class="col-md-2">
                     <button type="button" class="btn btn-primary" v-on:click="saveWeekSchedule">Save</button>
+                    <button type="button" class="btn btn-success" v-on:click="onShoppingList">Shopping List</button>
                 </div>
             </div>
         </div>
@@ -129,6 +133,10 @@ import MealModal from './MealModal.vue';
 import type MealInterface from '@/apps/restaurant/domain/valueObj/Day';
 import MealApi from '../../services/http/axios/meal/MealApi';
 import type { Day } from '@/apps/restaurant/domain/valueObj/Day';
+import ShopList from './ShopList.vue';
+import IngredientApi from '../../services/http/axios/ingredient/IngredientApi';
+import type { IngridientInterface } from '@/apps/restaurant/domain/entities/Ingridient';
+import { GenerateListOfIngredientsUseCase } from '@/apps/restaurant/application/useCases/implementations/generateListOfIngredients';
 
 enum MealTime {
     Breakfast = "Breakfast",
@@ -138,7 +146,9 @@ enum MealTime {
 
 const weekSchedulerService = new WeekSchedulerApi(apiClient);
 const allMeals = ref<MealInterface[] | null>([])
+const shoppingIngredients = ref<IngridientInterface[]>([])
 const showMealModal = ref<boolean>(false);
+const showShopListModal = ref<boolean>(false);    
 const mealToModal = ref<MealInterface | null>(null);
 const props = defineProps<{
     model: WeekScheduleInterface
@@ -245,6 +255,17 @@ async function fetchMealList(): Promise<MealInterface[]> {
     }
 }
 
+async function fetchIngredientList(): Promise<IngridientInterface[]> {
+    const ingredientService = new IngredientApi(apiClient);
+    try {
+        return await ingredientService.fetchAllIngredients();
+
+    } catch (err) {
+
+        return []
+    }
+}
+
 function getMealsOfWeek(week: WeekScheduleInterface): {breakfast: MealInterface[], dinner: MealInterface[], lunch: MealInterface[] } {
     const mealList: {breakfast: MealInterface[], dinner: MealInterface[], lunch: MealInterface[] } = {
         breakfast: [],
@@ -281,6 +302,20 @@ const handleMealChange = (meal: MealInterface, mealTime: MealTime, day: Day) => 
             }
         }
     }
+}
+
+const onShoppingList = async () => {
+    const ingredientService = new IngredientApi(apiClient);
+    const shoppingListGeneratorUseCase = new GenerateListOfIngredientsUseCase(ingredientService)
+    const allIngredients = await fetchIngredientList();
+    const shoppingListResponse = await shoppingListGeneratorUseCase.execute(weekScheduleModel.value as WeekScheduleInterface)
+    if(shoppingListResponse.success){
+        shoppingIngredients.value = shoppingListResponse.data;
+        showShopListModal.value = true;
+    } else {
+        alert(shoppingListResponse.data);
+    }
+
 }
 
 onMounted(async () => {
