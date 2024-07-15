@@ -32,7 +32,20 @@
                             <td draggable="true" @dragstart="onDragStart($event, rowIndex, 'breakfast')"
                                 @dragover="onDragOver" @drop="onDrop($event, rowIndex, 'breakfast')">
                                 <div class="card">
-                                    <div class="card-header"></div>
+                                    <div class="card-header">
+                                        <div class="dropdown">
+                                            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                                <i class="bi bi-arrow-clockwise"></i>
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <a v-for="meal of availableMealList(MealTime.Breakfast)" class="dropdown-item"
+                                                v-on:click="handleMealChange(meal, MealTime.Breakfast, day)">
+                                                    {{ meal.name }}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="card-body" v-on:click="handleMealModalOpen(day.breakfast)">
                                         <div class="background-image">
                                             <div class="content">
@@ -45,9 +58,23 @@
                             <td draggable="true" @dragstart="onDragStart($event, rowIndex, 'lunch')"
                                 @dragover="onDragOver" @drop="onDrop($event, rowIndex, 'lunch')">
                                 <div class="card">
-                                    <div class="card-header"></div>
+                                    <div class="card-header">
+                                        <div class="dropdown">
+                                            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                                <i class="bi bi-arrow-clockwise"></i>
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <a v-for="meal of availableMealList(MealTime.Lunch)" class="btn dropdown-item"
+                                                v-on:click="handleMealChange(meal, MealTime.Lunch, day)">
+                                                    {{ meal.name }}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="card-body" v-on:click="handleMealModalOpen(day.lunch)">
-                                        <div :class="day.lunch.isVegetarian ? 'background-image-vegan':'background-image-meet'">
+                                        <div
+                                            :class="day.lunch.isVegetarian ? 'background-image-vegan' : 'background-image-meet'">
                                             <div class="content">
                                                 {{ day.lunch.name }}
                                             </div>
@@ -58,14 +85,28 @@
                             <td draggable="true" @dragstart="onDragStart($event, rowIndex, 'dinner')"
                                 @dragover="onDragOver" @drop="onDrop($event, rowIndex, 'dinner')">
                                 <div class="card">
-                                    <div class="card-header"></div>
+                                    <div class="card-header">
+                                        <div class="dropdown">
+                                            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                                <i class="bi bi-arrow-clockwise"></i>
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <a v-for="meal of availableMealList(MealTime.Dinner)" class="dropdown-item"
+                                                v-on:click="handleMealChange(meal, MealTime.Dinner, day)">
+                                                    {{ meal.name }}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="card-body" v-on:click="handleMealModalOpen(day.dinner)">
-                                        <div :class="day.dinner.isVegetarian ? 'background-image-vegan':'background-image-meet'">
+                                        <div
+                                            :class="day.dinner.isVegetarian ? 'background-image-vegan' : 'background-image-meet'">
                                             <div class="content">
                                                 {{ day.dinner.name }}
                                             </div>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                             </td>
@@ -86,6 +127,8 @@ import { format } from 'date-fns';
 import type { DayInterface } from '@/apps/restaurant/domain/valueObj/Day';
 import MealModal from './MealModal.vue';
 import type MealInterface from '@/apps/restaurant/domain/valueObj/Day';
+import MealApi from '../../services/http/axios/meal/MealApi';
+import type { Day } from '@/apps/restaurant/domain/valueObj/Day';
 
 enum MealTime {
     Breakfast = "Breakfast",
@@ -94,7 +137,7 @@ enum MealTime {
 }
 
 const weekSchedulerService = new WeekSchedulerApi(apiClient);
-
+const allMeals = ref<MealInterface[] | null>([])
 const showMealModal = ref<boolean>(false);
 const mealToModal = ref<MealInterface | null>(null);
 const props = defineProps<{
@@ -170,9 +213,82 @@ const saveWeekSchedule = async () => {
     }
 }
 
-onMounted(() => {
+const availableMealList = (mealTime: MealTime) => {
+    const mealsOfWeek = getMealsOfWeek(props.model);
+    const allMealsByMealTime = (allMeals.value as MealInterface[]).filter(meal => meal.mealTime === mealTime)
+
+    let result: MealInterface[] = []
+    if(allMeals.value){
+        switch(mealTime){
+            case MealTime.Breakfast:
+                result = allMealsByMealTime;
+                break;
+            case MealTime.Lunch:
+                result = allMealsByMealTime.filter(meal => !mealsOfWeek.lunch.some(usedMeal => usedMeal.name === meal.name));
+                break;
+            case MealTime.Dinner:
+                result = allMealsByMealTime.filter(meal => !mealsOfWeek.dinner.some(usedMeal => usedMeal.name === meal.name));
+                break;
+        }
+    } 
+    return result;
+}
+
+async function fetchMealList(): Promise<MealInterface[]> {
+    const mealService = new MealApi(apiClient);
+    try {
+        return await mealService.fetchAllMeals();
+
+    } catch (err) {
+
+        return []
+    }
+}
+
+function getMealsOfWeek(week: WeekScheduleInterface): {breakfast: MealInterface[], dinner: MealInterface[], lunch: MealInterface[] } {
+    const mealList: {breakfast: MealInterface[], dinner: MealInterface[], lunch: MealInterface[] } = {
+        breakfast: [],
+        dinner: [],
+        lunch: []
+    }
+    for (let day of week.weekDays) {
+        if (!mealList.breakfast.includes(day.breakfast)) {
+            mealList.breakfast.push(day.breakfast)
+        }
+        if (!mealList.dinner.includes(day.dinner)) {
+            mealList.dinner.push(day.dinner)
+        }
+        if (!mealList.lunch.includes(day.lunch)) {
+            mealList.lunch.push(day.lunch)
+        }
+    }
+    return mealList;
+}
+
+const handleMealChange = (meal: MealInterface, mealTime: MealTime, day: Day) => {
+    for( var index = 0; index < weekScheduleModel.value.weekDays.length; index++){
+        if(weekScheduleModel.value.weekDays[index].name === day.name){
+            switch(mealTime){
+                case MealTime.Breakfast:
+                    weekScheduleModel.value.weekDays[index].breakfast = meal;
+                    break;
+                case MealTime.Lunch:
+                    weekScheduleModel.value.weekDays[index].lunch = meal;
+                    break;
+                case MealTime.Dinner:
+                    weekScheduleModel.value.weekDays[index].dinner = meal;
+                    break;
+            }
+        }
+    }
+}
+
+onMounted(async () => {
     weekScheduleModel.value = props.model;
+    allMeals.value = await fetchMealList()
 })
+
+
 
 </script>
 <style scoped>
@@ -198,41 +314,50 @@ th {
     background-color: #343a40;
     /* Bootstrap's dark header background */
 }
+
 .background-image-meet::before {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 60%;
-  height: 60%;
-  background-image: url('@/assets/images/meet.png'); /* Replace with your image path */
-  background-repeat: no-repeat;
-  background-position: bottom right;
-  background-size: contain; /* Adjust as needed */
-  opacity: 0.6;
-  pointer-events: none; /* Ensures content is clickable */
-  z-index: 1;
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 60%;
+    height: 60%;
+    background-image: url('@/assets/images/meet.png');
+    /* Replace with your image path */
+    background-repeat: no-repeat;
+    background-position: bottom right;
+    background-size: contain;
+    /* Adjust as needed */
+    opacity: 0.6;
+    pointer-events: none;
+    /* Ensures content is clickable */
+    z-index: 1;
 }
 
 .background-image-vegan::before {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 60%;
-  height: 60%;
-  background-image: url('@/assets/images/vegan.png'); /* Replace with your image path */
-  background-repeat: no-repeat;
-  background-position: bottom right;
-  background-size: contain; /* Adjust as needed */
-  opacity: 0.6;
-  pointer-events: none; /* Ensures content is clickable */
-  z-index: 1;
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 60%;
+    height: 60%;
+    background-image: url('@/assets/images/vegan.png');
+    /* Replace with your image path */
+    background-repeat: no-repeat;
+    background-position: bottom right;
+    background-size: contain;
+    /* Adjust as needed */
+    opacity: 0.6;
+    pointer-events: none;
+    /* Ensures content is clickable */
+    z-index: 1;
 }
 
 .content {
-  position: relative;
-  z-index: 2; /* Ensure content is above the background image */
-  padding: 20px; /* Adjust padding as needed */
+    position: relative;
+    z-index: 2;
+    /* Ensure content is above the background image */
+    padding: 20px;
+    /* Adjust padding as needed */
 }
 </style>
