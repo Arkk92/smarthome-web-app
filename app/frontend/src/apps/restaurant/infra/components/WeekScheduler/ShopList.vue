@@ -16,7 +16,8 @@
                     <div class="modal-body">
                         <ul>
                             <li v-for="ingredient of props.ingredientList">
-                                {{ingredient.ingredient.name}}: {{ ingredient.ingredient.quantity }} {{ ingredient.ingredient.unit }} ({{ingredient.quantity}})
+                                ☐ {{ ingredient.ingredient.name }}: {{ ingredient.ingredient.quantity }} {{
+                                    ingredient.ingredient.unit }} ({{ ingredient.quantity }})
                             </li>
                         </ul>
                     </div>
@@ -57,27 +58,52 @@ const onCloseModal = async () => {
 function formatItemListToString(ingredients: IngredientList[]): string {
     let text: string = ""
     ingredients.forEach(ingredient => {
-        text += `☐ ${ingredient.ingredient.name}: ${ ingredient.ingredient.quantity } ${ ingredient.ingredient.unit } (${ingredient.quantity})\n`;
+        text += `☐ ${ingredient.ingredient.name}: ${ingredient.ingredient.quantity} ${ingredient.ingredient.unit} (${ingredient.quantity})\n`;
     })
     return text;
 }
 
 const copyToClipboard = async () => {
-   const itemListString = formatItemListToString(props.ingredientList)
-  try {
-    await navigator.clipboard.writeText(itemListString);
-  } catch (err) {
-    console.error('Failed to copy: ', err);
-    alert('Failed to copy text.');
-  }
-  textCopied.value = true;
+    const itemListString = formatItemListToString(props.ingredientList)
+    if (navigator.clipboard) {
+        try {
+            console.log('Using Clipboard API...');
+            await navigator.clipboard.writeText(itemListString);
+            console.log('Text copied to clipboard');
+        } catch (error) {
+            console.error('Failed to copy text using Clipboard API: ', error);
+        }
+    } else {
+        console.log('Clipboard API not available, using fallback...');
+        fallbackCopyTextToClipboard(itemListString);
+    }
+    textCopied.value = true;
 };
+
+const fallbackCopyTextToClipboard = (text: string) => {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+        document.execCommand('copy');
+        console.log('Text copied using fallback');
+    } catch (err) {
+        console.error('Failed to copy text using fallback: ', err);
+    }
+    document.body.removeChild(textArea);
+};
+
 
 </script>
 <style scoped>
+.modal {
+    /* bug fix - custom overlay */
+    background-color: rgba(10, 10, 10, 0.45);
+}
 
-.modal{
-    /* bug fix - custom overlay */   
-    background-color: rgba(10,10,10,0.45);
+ul {
+    list-style-type: none;
 }
 </style>
