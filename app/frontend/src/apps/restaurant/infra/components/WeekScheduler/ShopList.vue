@@ -16,7 +16,7 @@
                     <div class="modal-body">
                         <ul>
                             <li v-for="ingredient of props.ingredientList">
-                                ☐ {{ ingredient.ingredient.name }}: {{ ingredient.ingredient.quantity }} {{
+                                {{ ingredient.ingredient.name }}: {{ ingredient.ingredient.quantity }} {{
                                     ingredient.ingredient.unit }} ({{ ingredient.quantity }})
                             </li>
                         </ul>
@@ -58,7 +58,7 @@ const onCloseModal = async () => {
 function formatItemListToString(ingredients: IngredientList[]): string {
     let text: string = ""
     ingredients.forEach(ingredient => {
-        text += `☐ ${ingredient.ingredient.name}: ${ingredient.ingredient.quantity} ${ingredient.ingredient.unit} (${ingredient.quantity})\n`;
+        text += `${ingredient.ingredient.name}: ${ingredient.ingredient.quantity} ${ingredient.ingredient.unit} (${ingredient.quantity})\n`;
     })
     return text;
 }
@@ -101,9 +101,5 @@ const fallbackCopyTextToClipboard = (text: string) => {
 .modal {
     /* bug fix - custom overlay */
     background-color: rgba(10, 10, 10, 0.45);
-}
-
-ul {
-    list-style-type: none;
 }
 </style>
