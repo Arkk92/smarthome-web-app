@@ -30,23 +30,12 @@ export class GenerateListOfIngredientsUseCase
    */
   async execute(week: WeekScheduleInterface): Promise<ResponseDTO> {
     try {
-      const ingredientList: IngridientInterface[] = [];
+      let ingredientList: IngridientInterface[] = [];
 
       week.weekDays.forEach((day) => {
-        day.breakfast.ingridientList.forEach((ingredient) => {
-          if (
-            ingredientList.filter((ing) => ing.name === ingredient.name)
-              .length > 1
-          ) {
-            const pos = ingredientList.findIndex(
-              (i) => i.name === ingredient.name
-            );
-            (ingredientList[pos].quantity as number) +=
-              ingredient.quantity as number;
-          } else {
-            ingredientList.push(ingredient);
-          }
-        });
+        ingredientList = addOrUpdateIngredientList(ingredientList, day.breakfast.ingridientList)
+        ingredientList = addOrUpdateIngredientList(ingredientList, day.dinner.ingridientList)
+        ingredientList = addOrUpdateIngredientList(ingredientList, day.lunch.ingridientList)
       });
 
       const ingredientsToShop: IngredientList[] = []
@@ -72,4 +61,22 @@ export class GenerateListOfIngredientsUseCase
       return { data: { error: error.message }, success: false };
     }
   }
+}
+
+function addOrUpdateIngredientList(ingredientList: IngridientInterface[], newIngredients: IngridientInterface[]): IngridientInterface[]{
+  newIngredients.forEach((ingredient) => {
+    if (
+      ingredientList.filter((ing) => ing.name === ingredient.name)
+        .length > 0
+    ) {
+      const pos = ingredientList.findIndex(
+        (i) => i.name === ingredient.name
+      );
+      (ingredientList[pos].quantity as number) +=
+        ingredient.quantity as number;
+    } else {
+      ingredientList.push(ingredient);
+    }
+  });
+  return ingredientList;
 }

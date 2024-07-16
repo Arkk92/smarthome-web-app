@@ -164,17 +164,6 @@ const formatDate = (date: Date) => {
     return format(date, 'MM-dd-yyyy');
 }
 
-const getMealOfDayByMealTime = (day: DayInterface, mealTime: MealTime) => {
-    switch (mealTime) {
-        case MealTime.Breakfast:
-            return day.breakfast;
-        case MealTime.Dinner:
-            return day.dinner;
-        case MealTime.Lunch:
-            return day.lunch;
-    }
-}
-
 const handleMealModalOpen = (meal: MealInterface) => {
     showMealModal.value = true;
     mealToModal.value = meal;
@@ -307,7 +296,6 @@ const handleMealChange = (meal: MealInterface, mealTime: MealTime, day: Day) => 
 const onShoppingList = async () => {
     const ingredientService = new IngredientApi(apiClient);
     const shoppingListGeneratorUseCase = new GenerateListOfIngredientsUseCase(ingredientService)
-    const allIngredients = await fetchIngredientList();
     const shoppingListResponse = await shoppingListGeneratorUseCase.execute(weekScheduleModel.value as WeekScheduleInterface)
     if(shoppingListResponse.success){
         shoppingIngredients.value = shoppingListResponse.data;
